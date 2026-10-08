@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#ff9c9c" />
+    <title>티니핑 세상</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="webview-stage" aria-label="티니핑 세상 미니게임">
+      <div class="screen-viewport" id="screenViewport">
+        <section class="game-screen" id="gameScreen" data-node-id="76:14897">
+          <header class="status-bar" aria-label="상태 표시줄" data-node-id="76:15043">
+            <time class="status-time" id="statusTime">9:41</time>
+            <div class="status-signals" aria-hidden="true">
+              <img src="assets/imgCellularConnection.svg" width="17.68" height="11.15" alt="" />
+              <img src="assets/imgWifi.svg" width="15.95" height="11.5" alt="" />
+              <img src="assets/imgBattery.svg" width="25.3" height="11.79" alt="" />
+            </div>
+          </header>
+
+          <button class="round-control back-control" type="button" data-action="back" aria-label="뒤로 가기">
+            <img src="assets/imgBtnBack.svg" width="30" height="30" alt="" />
+          </button>
+
+          <button class="soul-card" type="button" data-action="soul" aria-label="나의 소울 게이지 75점, 100점 만점" data-node-id="76:14908">
+            <strong>나의 소울 게이지</strong>
+            <span class="gauge-track">
+              <span class="gauge-fill" id="gaugeFill"></span>
+              <span class="gauge-value" id="gaugeValue">75/100</span>
+            </span>
+            <span class="rank-summary" id="rankSummary" aria-label="나의 랭킹점수 2,184,600점, 현재 순위 518위">
+              <span>랭킹점수 <strong id="rankScoreValue">2,184,600</strong>점</span>
+              <i aria-hidden="true"></i>
+              <span><strong id="rankPositionValue">518</strong>위</span>
+            </span>
+          </button>
+
+          <button class="round-control help-control" type="button" data-action="help" aria-label="참여 방법">
+            <img src="assets/imgBtnHelp.svg" width="30" height="30" alt="" />
+          </button>
+
+          <button class="demo-toggle" type="button" data-action="open-demo" aria-label="개발용 데모 패널 열기">
+            <span aria-hidden="true">⚙</span> DEMO
+          </button>
+
+          <section class="world-scroll" id="worldScroll" aria-label="티니핑 세상">
+            <div class="ping-world" id="pingWorld" aria-live="polite"></div>
+          </section>
+
+          <nav class="bottom-actions" aria-label="게임 메뉴">
+            <button class="menu-button menu-ranking" type="button" data-action="ranking" data-node-id="76:14915">
+              <span class="menu-icon small-icon">
+                <img class="icon-base" src="assets/imgEllipse361.svg" width="60" height="60" alt="" />
+                <img class="icon-color" src="assets/imgEllipse362.svg" width="60" height="60" alt="" />
+                <img class="trophy" src="assets/imgGroup4430.svg" width="36.96" height="29.88" alt="" />
+              </span>
+              <span class="menu-label">랭킹</span>
+            </button>
+
+            <button class="menu-button menu-book" type="button" data-action="collection" data-node-id="79:15341">
+              <span class="menu-icon small-icon">
+                <img class="icon-base" src="assets/imgEllipse361.svg" width="60" height="60" alt="" />
+                <img class="icon-color" src="assets/imgEllipse363.svg" width="60" height="60" alt="" />
+                <img class="collection-art" src="assets/imgChatGpt202610606003431.png" width="36" height="36" alt="" />
+              </span>
+              <span class="menu-label">도감</span>
+            </button>
+
+            <button class="menu-button menu-draw" type="button" data-action="draw" data-node-id="79:15368">
+              <span class="menu-icon small-icon">
+                <img class="icon-base" src="assets/imgEllipse361.svg" width="60" height="60" alt="" />
+                <img class="icon-color" src="assets/imgEllipse364.svg" width="60" height="60" alt="" />
+                <img class="draw-art" src="assets/imgChatGpt202610606003641.png" width="39" height="39" alt="" />
+              </span>
+              <span class="menu-label">뽑기</span>
+            </button>
+
+            <button class="menu-button charge-button" type="button" data-action="charge" data-node-id="76:14998">
+              <span class="charge-icon">
+                <img class="charge-orb" src="assets/imgEllipse365.svg" width="80" height="80" alt="" />
+                <img class="zem" src="assets/imgGroup2399.svg" width="47.29" height="41.39" alt="" />
+                <span class="energy-wrap" aria-hidden="true">
+                  <img class="energy" src="assets/imgVector370.svg" width="41.51" height="48.71" alt="" />
+                  <span class="energy-shine energy-shine-bottom">
+                    <img src="assets/imgSubtract1.svg" width="29.8" height="21.52" alt="" />
+                  </span>
+                  <span class="energy-shine energy-shine-top">
+                    <img src="assets/imgVector372.svg" width="33.13" height="9.08" alt="" />
+                  </span>
+                </span>
+              </span>
+              <span class="charge-label">한번에<br />충전하기</span>
+            </button>
+          </nav>
+
+          <div class="home-indicator" aria-hidden="true"><span></span></div>
+
+          <div class="sheet-layer" id="sheetLayer" hidden>
+            <button class="sheet-dim" type="button" data-action="close-sheet" aria-label="닫기"></button>
+            <section class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+              <span class="sheet-handle" aria-hidden="true"></span>
+              <button class="sheet-close" type="button" data-action="close-sheet" aria-label="팝업 닫기">✕</button>
+              <div class="sheet-emoji" id="sheetEmoji" aria-hidden="true">✨</div>
+              <h2 id="sheetTitle">안내</h2>
+              <div class="sheet-content" id="sheetContent"></div>
+              <button class="sheet-primary" type="button" id="sheetPrimary">확인</button>
+            </section>
+          </div>
+
+          <div class="demo-layer" id="demoLayer" hidden>
+            <button class="demo-dim" type="button" data-action="close-demo" aria-label="데모 패널 닫기"></button>
+            <aside class="demo-panel" role="dialog" aria-modal="true" aria-labelledby="demoTitle">
+              <header class="demo-header">
+                <div>
+                  <span class="demo-eyebrow">DEVELOPER TOOLS</span>
+                  <h2 id="demoTitle">데모 패널</h2>
+                </div>
+                <button class="demo-close" type="button" data-action="close-demo" aria-label="데모 패널 닫기">✕</button>
+              </header>
+
+              <div class="demo-summary" aria-live="polite">
+                <span><small>전체 게이지</small><strong id="demoGaugeSummary">100%</strong></span>
+                <span><small>보유 티니핑</small><strong id="demoCountSummary">5 / 30</strong></span>
+              </div>
+              <p class="demo-pause-note"><span aria-hidden="true">Ⅱ</span> 패널을 연 동안 XP 자동 감소가 일시정지됩니다.</p>
+
+              <section class="demo-control-group" aria-labelledby="demoXpLabel">
+                <div class="demo-control-head">
+                  <div>
+                    <span class="demo-step">01</span>
+                    <strong id="demoXpLabel">게이지양</strong>
+                  </div>
+                  <label class="demo-number-wrap">
+                    <span class="sr-only">게이지 직접 입력</span>
+                    <input id="demoXpNumber" type="number" min="0" max="100" step="1" value="100" inputmode="numeric" />
+                    <span>%</span>
+                  </label>
+                </div>
+                <input class="demo-range demo-xp-range" id="demoXpRange" type="range" min="0" max="100" step="1" value="100" aria-labelledby="demoXpLabel" />
+                <div class="demo-presets" aria-label="게이지 빠른 설정">
+                  <button type="button" data-demo-xp="0">0%</button>
+                  <button type="button" data-demo-xp="30">30%</button>
+                  <button type="button" data-demo-xp="50">50%</button>
+                  <button type="button" data-demo-xp="100">100%</button>
+                </div>
+                <p class="demo-hint">모든 보유 티니핑의 XP를 같은 값으로 즉시 변경합니다.</p>
+              </section>
+
+              <section class="demo-control-group" aria-labelledby="demoCountLabel">
+                <div class="demo-control-head">
+                  <div>
+                    <span class="demo-step">02</span>
+                    <strong id="demoCountLabel">보유 티니핑</strong>
+                  </div>
+                  <div class="demo-stepper" aria-label="보유 티니핑 마릿수 조절">
+                    <button type="button" data-demo-count-delta="-1" aria-label="한 마리 줄이기">−</button>
+                    <output id="demoCountOutput" for="demoCountRange">5마리</output>
+                    <button type="button" data-demo-count-delta="1" aria-label="한 마리 늘리기">＋</button>
+                  </div>
+                </div>
+                <input class="demo-range demo-count-range" id="demoCountRange" type="range" min="0" max="30" step="1" value="5" aria-labelledby="demoCountLabel" />
+                <div class="demo-presets" aria-label="보유 마릿수 빠른 설정">
+                  <button type="button" data-demo-count="0">0마리</button>
+                  <button type="button" data-demo-count="1">1마리</button>
+                  <button type="button" data-demo-count="5">5마리</button>
+                  <button type="button" data-demo-count="10">10마리</button>
+                  <button type="button" data-demo-count="15">15마리</button>
+                  <button type="button" data-demo-count="20">20마리</button>
+                  <button type="button" data-demo-count="25">25마리</button>
+                  <button type="button" data-demo-count="30">30마리</button>
+                </div>
+                <p class="demo-hint">10종 캐릭터를 반복 배치해 최대 30마리 환경을 테스트합니다.</p>
+              </section>
+
+              <section class="demo-control-group demo-visibility-control" aria-labelledby="demoRankDisplayLabel">
+                <div class="demo-control-head">
+                  <div>
+                    <span class="demo-step">03</span>
+                    <strong id="demoRankDisplayLabel">점수·순위 표시</strong>
+                  </div>
+                  <label class="demo-switch">
+                    <input id="demoRankVisibility" type="checkbox" checked />
+                    <span aria-hidden="true"></span>
+                    <em>표시</em>
+                  </label>
+                </div>
+                <p class="demo-hint">상단 소울게이지 아래의 랭킹점수와 순위 노출 여부를 변경합니다.</p>
+              </section>
+
+              <div class="demo-footer">
+                <button class="demo-reset" type="button" data-action="reset-demo">초기 상태로</button>
+                <button class="demo-done" type="button" data-action="close-demo">적용 완료</button>
+              </div>
+            </aside>
+          </div>
+
+          <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
