@@ -16,7 +16,7 @@ body {
   min-height: 100%;
   margin: 0;
   overflow: hidden;
-  background: #24131f;
+  background: #000;
 }
 
 button {
@@ -32,6 +32,7 @@ button:focus-visible {
   display: grid;
   min-height: 100dvh;
   place-items: center;
+  background: #000;
 }
 
 .screen-viewport {
@@ -159,7 +160,7 @@ button:focus-visible {
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
-  touch-action: pan-y;
+  touch-action: pan-y pinch-zoom;
   -webkit-overflow-scrolling: touch;
 }
 
