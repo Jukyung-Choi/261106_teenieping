@@ -518,20 +518,9 @@ function feedPing(id) {
 }
 
 function resizeScreen() {
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.visualViewport?.height || window.innerHeight;
-  const isMobileViewport = viewportWidth <= 600;
-  const scale = isMobileViewport
-    ? viewportWidth / DESIGN_WIDTH
-    : Math.min(viewportWidth / DESIGN_WIDTH, viewportHeight / DESIGN_HEIGHT, 1);
-  const designViewportHeight = isMobileViewport ? viewportHeight / scale : DESIGN_HEIGHT;
-  const bottomShift = designViewportHeight - DESIGN_HEIGHT;
-
+  const scale = Math.min(window.innerWidth / DESIGN_WIDTH, window.innerHeight / DESIGN_HEIGHT, 1);
   screenViewport.style.width = `${DESIGN_WIDTH * scale}px`;
-  screenViewport.style.height = `${isMobileViewport ? viewportHeight : DESIGN_HEIGHT * scale}px`;
-  gameScreen.style.height = `${designViewportHeight}px`;
-  gameScreen.style.setProperty("--viewport-design-height", `${designViewportHeight}px`);
-  gameScreen.style.setProperty("--bottom-shift", `${bottomShift}px`);
+  screenViewport.style.height = `${DESIGN_HEIGHT * scale}px`;
   gameScreen.style.transform = `scale(${scale})`;
 }
 
@@ -1037,7 +1026,6 @@ document.addEventListener("keydown", (event) => {
   else if (!sheetLayer.hidden) closeSheet();
 });
 window.addEventListener("resize", resizeScreen);
-window.visualViewport?.addEventListener("resize", resizeScreen);
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
