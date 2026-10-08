@@ -518,7 +518,7 @@ function feedPing(id) {
 }
 
 function resizeScreen() {
-  const viewportWidth = window.visualViewport?.width || window.innerWidth;
+  const viewportWidth = window.innerWidth;
   const viewportHeight = window.visualViewport?.height || window.innerHeight;
   const isMobileViewport = viewportWidth <= 600;
   const scale = isMobileViewport
