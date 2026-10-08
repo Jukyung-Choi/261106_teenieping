@@ -4,6 +4,8 @@
   --screen-w: 390px;
   --screen-h: 844px;
   --ink: #292930;
+  --viewport-design-height: 844px;
+  --bottom-shift: 0px;
 }
 
 * {
@@ -13,6 +15,8 @@
 
 html,
 body {
+  width: 100%;
+  height: 100%;
   min-height: 100%;
   margin: 0;
   overflow: hidden;
@@ -30,8 +34,11 @@ button:focus-visible {
 
 .webview-stage {
   display: grid;
+  width: 100%;
+  height: 100dvh;
   min-height: 100dvh;
   place-items: center;
+  background: linear-gradient(180deg, rgb(255 166 166) 0%, rgb(255 148 223) 100%);
 }
 
 .screen-viewport {
@@ -45,7 +52,7 @@ button:focus-visible {
 .game-screen {
   position: absolute;
   width: var(--screen-w);
-  height: var(--screen-h);
+  height: var(--viewport-design-height);
   overflow: hidden;
   transform-origin: top left;
   color: var(--ink);
@@ -635,17 +642,17 @@ button:focus-visible {
 }
 
 .menu-ranking {
-  top: 718px;
+  top: calc(718px + var(--bottom-shift));
   left: 20px;
 }
 
 .menu-book {
-  top: 718px;
+  top: calc(718px + var(--bottom-shift));
   left: 92px;
 }
 
 .menu-draw {
-  top: 718px;
+  top: calc(718px + var(--bottom-shift));
   left: 164px;
 }
 
@@ -712,7 +719,7 @@ button:focus-visible {
 }
 
 .charge-button {
-  top: 674px;
+  top: calc(674px + var(--bottom-shift));
   left: 270px;
   width: 100px;
   height: 122px;
