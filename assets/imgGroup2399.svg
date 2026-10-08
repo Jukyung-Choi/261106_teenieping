@@ -1,0 +1,37 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="47.2947" height="41.392" viewBox="0 0 47.2947 41.392" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 2399">
+<g id="Vector 368" filter="url(#filter0_d_0_153)">
+<path d="M32.8657 2H14.6386C12.9788 2 11.4095 2.75623 10.3753 4.05439L5.18756 10.5661C3.53107 12.6453 3.61611 15.6163 5.38883 17.5974L19.6867 33.5759C21.8652 36.0105 25.6813 35.9951 27.84 33.543L41.9351 17.5329C43.6569 15.5772 43.7538 12.6765 42.1665 10.6102L37.1883 4.13016C36.1566 2.78716 34.5593 2 32.8657 2Z" fill="#D9D9D9" fill-opacity="0.01" shape-rendering="crispEdges"/>
+</g>
+<g id="Group 2395">
+<mask id="mask0_0_153" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="3" y="2" width="40" height="34">
+<path id="Vector 369" d="M32.5651 2H14.28C12.6241 2 11.058 2.75271 10.0236 4.04575L4.83679 10.5292C3.1708 12.6117 3.25622 15.5938 5.03869 17.5776L19.3647 33.521C21.5422 35.9444 25.3452 35.929 27.5031 33.4882L41.626 17.513C43.3574 15.5546 43.4547 12.6429 41.8581 10.5732L36.881 4.12147C35.849 2.7836 34.2548 2 32.5651 2Z" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_0_153)">
+<path id="Triangle" fill-rule="evenodd" clip-rule="evenodd" d="M23.3108 38.0698L44.6727 14.2566H1.94897L23.3108 38.0698Z" fill="#FF56D4"/>
+<path id="Combined Shape" d="M35.242 2H11.4141L1.94897 14.2568H44.6727L35.242 2Z" fill="#FF56D4"/>
+<path id="Path 25" fill-rule="evenodd" clip-rule="evenodd" d="M11.7549 14.2569H34.5176L23.3113 38.0702L11.7549 14.2569Z" fill="#F238C3"/>
+<path id="Path 27" fill-rule="evenodd" clip-rule="evenodd" d="M34.5171 14.2569H44.6728L23.1358 38.0702L34.5171 14.2569Z" fill="#DE07A7"/>
+<path id="Path 28" fill-rule="evenodd" clip-rule="evenodd" d="M11.7549 14.2568L23.3113 2L34.5176 14.2568H11.7549Z" fill="#FF56D4"/>
+<path id="Path 24" fill-rule="evenodd" clip-rule="evenodd" d="M11.7544 14.2568L11.4042 2L1.94897 14.2568H11.7544Z" fill="#FF9FE7"/>
+<path id="Path 24 Copy" fill-rule="evenodd" clip-rule="evenodd" d="M34.5171 14.2568L35.2391 2L44.6728 14.2568H34.5171Z" fill="#E807AF"/>
+<path id="Path 26" fill-rule="evenodd" clip-rule="evenodd" d="M11.7544 14.2569H1.94897L23.3108 38.0702L11.7544 14.2569Z" fill="#FF56D4"/>
+<path id="Path 29" fill-rule="evenodd" clip-rule="evenodd" d="M11.4038 2L11.754 14.2568L23.3104 2H11.4038Z" fill="#FF85E0"/>
+<path id="Path 30" fill-rule="evenodd" clip-rule="evenodd" d="M23.3114 2L34.5176 14.2568L35.2396 2H23.3114Z" fill="#F238C3"/>
+</g>
+</g>
+<path id="Vector 369_2" d="M32.8653 2H14.6382C12.9784 2 11.409 2.75623 10.3748 4.05439L5.18714 10.5661C3.53065 12.6453 3.61569 15.6163 5.38841 17.5974L19.6863 33.5759C21.8648 36.0105 25.6809 35.9951 27.8396 33.543L41.9347 17.5329C43.6564 15.5772 43.7534 12.6765 42.166 10.6102L37.1879 4.13016C36.1562 2.78716 34.5588 2 32.8653 2Z" stroke="#830062" stroke-width="1.5"/>
+</g>
+<defs>
+<filter id="filter0_d_0_153" x="0" y="0" width="47.2947" height="41.392" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_153"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_153" result="shape"/>
+</filter>
+</defs>
+</svg>
