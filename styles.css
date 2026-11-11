@@ -1919,3 +1919,114 @@ button:focus-visible {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* Figma Teenieping_Main · 664:41273 · 393 × 852 */
+:root { --screen-w:393px; --screen-h:852px; --ink:#5c0041; }
+.game-screen { background:#f6b4d1 url("assets/design/clouds.png") center center / 992px 1586px no-repeat; }
+.status-bar,.ping-world { width:393px; }
+.status-time { top:15.02px;left:22.01px;width:56.592px;font-size:15.72px; }
+.status-signals {top:18.17px;right:15.03px;gap:5.24px;}
+.help-control {left:349px;}
+.soul-card,.soul-card.is-rank-visible {top:61.22px;left:61px;width:270px;height:94px;color:#5c0041;box-shadow:inset 0 -3px 1px #f7e6ee,0 2px 6px #0004;}
+.soul-card > strong {top:17px;line-height:20px;}
+.soul-emblem {position:absolute;top:-11.22px;left:101px;width:68px;height:26.444px;}
+.soul-emblem img {position:absolute;display:block;}
+.wing {width:22.828px;height:17.679px;top:2.62px;}
+.wing-right {left:43.98px;transform:rotate(-14.78deg);}
+.wing-left {left:1.88px;transform:rotate(-14.78deg) scaleX(-1);}
+.soul-heart {left:19.98px;top:.02px;width:28.206px;height:25.206px;}
+.gauge-track {top:41px;left:15px;width:240px;height:20px;background:#5c0041;border:1px solid white;}
+.gauge-value {line-height:18px;font-weight:900;}
+.rank-summary {top:69px;width:240px;height:13px;gap:5px;font-size:11px;color:#966788;}
+.rank-summary strong {font-size:11px;color:#ff096e;}
+.rank-summary i {height:10px;width:1.5px;background:#966788;}
+.teenieping,.ping-visual {width:100px;height:127px;}
+.ping-info {height:25px;gap:4px;}
+.ping-name {font-size:10px;line-height:12px;}
+.ping-xp-track {width:62px;height:6px;border:0;}
+.teenieping.is-full .ping-xp-track {box-shadow:none;}
+.ping-art-wrap {width:100px;height:100px;margin-top:2px;}
+.ping-art {filter:saturate(var(--ping-saturation));}
+.menu-button {width:74px;height:80px;}
+.menu-ranking {top:722px;left:18px;}
+.menu-book {top:722px;left:98px;}
+.menu-draw {top:722px;left:178px;}
+.menu-icon {top:.52px;left:7px;}
+.menu-bg {top:0;left:0;}
+.menu-label {top:50px;width:74px;height:30px;font-size:12px;color:#5c0041;box-shadow:inset 0 -2px 1px #f7e6ee;}
+.rank-outline {left:10px;top:12.05px;}
+.rank-art {left:11.5px;top:13.59px;width:36.993px;height:29.879px;}
+.rank-star {left:25.094px;top:19.6px;}
+.book-outline {left:11.75px;top:9.66px;}
+.book-art {left:13.25px;top:11.16px;width:33.499px;height:34.49px;}
+.book-heart {left:25.16px;top:18.1px;transform:rotate(-10.19deg);}
+.gacha-outline {left:15.54px;top:6.69px;}
+.gacha-art {left:17.03px;top:8.15px;width:25.929px;height:36.014px;}
+.charge-button {top:678px;left:275px;width:100px;height:124px;}
+.charge-icon {top:4.82px;left:9px;width:82px;height:82px;}
+.charge-orb {width:auto;height:auto;}
+.zem {top:22.25px;left:7px;}
+.energy-wrap {top:17px;left:35px;width:34px;height:44px;}
+.energy {top:.79px;left:.58px;}
+.energy-shine {mask-image:url("assets/design/mask.svg");-webkit-mask-image:url("assets/design/mask.svg");mask-size:30.637px 37.739px;-webkit-mask-size:30.637px 37.739px;}
+.energy-shine-bottom {top:18.61px;left:2.08px;width:30.094px;height:21.867px;mask-position:.009px -16.305px;-webkit-mask-position:.009px -16.305px;}
+.energy-shine-top {top:-1.68px;left:-.88px;width:35.918px;height:9.148px;mask-position:2.969px 3.986px;-webkit-mask-position:2.969px 3.986px;}
+.energy-shine-top img {left:1.113px;}
+.charge-label {top:70px;left:0;width:100px;height:54px;border-radius:18px;color:#5c0041;font-size:14px;line-height:17px;padding-top:10.24px;box-shadow:inset 0 -3px 1px #f7e6ee;}
+.home-indicator {width:393px;bottom:-.49px;height:36.277px;}
+.home-indicator span {width:140.432px;height:5.24px;bottom:9.43px;}
+
+/* Reward artwork leads; conditions remain secondary. */
+.soul-reward-summary .soul-gauge-caption {
+  margin: 0 0 18px;
+  color: #966788;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 500;
+}
+.soul-gauge-caption strong {
+  margin-left: 5px;
+  color: #e0388a;
+  font-size: 15px;
+  font-weight: 800;
+}
+.soul-reward-scroll .popup-list { gap: 0; }
+.soul-reward-scroll .reward-row {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr) 64px;
+  gap: 12px;
+  min-height: 88px;
+  padding: 14px 0;
+  border: 0;
+  border-bottom: 1px solid #eedce6;
+  border-radius: 0;
+  background: transparent;
+}
+.soul-reward-scroll .reward-row:last-child { border-bottom: 0; }
+.soul-reward-scroll .reward-icon {
+  display: grid;
+  width: 60px;
+  height: 60px;
+  place-items: center;
+  background: transparent;
+  font-size: 42px;
+  line-height: 1;
+}
+.soul-reward-scroll .reward-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.reward-name { color: #3a2030; font-size: 14px; font-weight: 800; }
+.reward-condition { color: #966788; font-size: 10px; font-weight: 500; }
+.soul-reward-scroll .reward-action,
+.soul-reward-scroll .reward-received {
+  width: 64px;
+  min-width: 64px;
+  padding-right: 4px;
+  padding-left: 4px;
+}
+.soul-reward-scroll .reward-row.is-claimed { opacity: 1; }
+.soul-reward-scroll .is-claimed .reward-received { color: #966788; }

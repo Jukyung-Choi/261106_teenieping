@@ -1,5 +1,5 @@
-const DESIGN_WIDTH = 390;
-const DESIGN_HEIGHT = 844;
+const DESIGN_WIDTH = 393;
+const DESIGN_HEIGHT = 852;
 
 const screenViewport = document.querySelector("#screenViewport");
 const gameScreen = document.querySelector("#gameScreen");
@@ -26,8 +26,8 @@ const rankScoreValue = document.querySelector("#rankScoreValue");
 const rankPositionValue = document.querySelector("#rankPositionValue");
 const demoRankVisibility = document.querySelector("#demoRankVisibility");
 
-const PING_WIDTH = 94;
-const PING_HEIGHT = 126;
+const PING_WIDTH = 100;
+const PING_HEIGHT = 127;
 const COLLISION_WIDTH = 48;
 const COLLISION_HEIGHT = 68;
 const WORLD_TOP = 154;
@@ -42,9 +42,9 @@ const PLAYER_RANK = 518;
 let activeWorldHeight = 1180;
 
 const BASE_PINGS = [
-  { id: "hachuping", name: "하츄핑", image: "assets/teeniepings/hachuping.png", color: "#ff4abd", xp: 100, artW: 69.091, artH: 68.283, eyeL: [36, 48, 20, 18], eyeR: [65, 48, 20, 18], lid: "#f3d3e3" },
-  { id: "yogurping", name: "요거핑", image: "assets/teeniepings/yogurping.png", color: "#d1f100", xp: 100, artW: 65, artH: 81, eyeL: [35, 56, 20, 16], eyeR: [65, 56, 20, 16], lid: "#e9e0a7" },
-  { id: "dalkomping", name: "달콤핑", image: "assets/teeniepings/dalkomping.png", color: "#ff6f65", xp: 100, artW: 58.018, artH: 81.259, eyeL: [37, 48, 20, 15], eyeR: [66, 48, 20, 15], lid: "#f7c7c9" },
+  { id: "hachuping", name: "하츄핑", image: "assets/design/hachuping.png", color: "#ff4abd", xp: 100, artW: 100, artH: 100, eyeL: [36, 48, 20, 18], eyeR: [65, 48, 20, 18], lid: "#f3d3e3" },
+  { id: "yogurping", name: "요거핑", image: "assets/design/yogurping.png", color: "#d1f100", xp: 100, artW: 100, artH: 100, eyeL: [35, 56, 20, 16], eyeR: [65, 56, 20, 16], lid: "#e9e0a7" },
+  { id: "dalkomping", name: "달콤핑", image: "assets/design/dalkomping.png", color: "#ff6f65", xp: 100, artW: 100, artH: 100, eyeL: [37, 48, 20, 15], eyeR: [66, 48, 20, 15], lid: "#f7c7c9" },
   { id: "baroping", name: "바로핑", image: "assets/teeniepings/baroping.png", color: "#4acfff", xp: 100, artW: 68.59, artH: 88.822, eyeL: [39, 55, 18, 16], eyeR: [65, 55, 18, 16], lid: "#d4ebf2" },
   { id: "posilping", name: "포실핑", image: "assets/teeniepings/posilping.png", color: "#7effa9", xp: 100, artW: 96.783, artH: 82.511, eyeL: [41, 47, 13, 16], eyeR: [61, 47, 13, 16], lid: "#f1e1d9" },
   { id: "mallangping", name: "말랑핑", image: "assets/teeniepings/mallangping.png", color: "#e261ff", xp: 100, artW: 91.035, artH: 87.812, eyeL: [42, 52, 14, 15], eyeR: [63, 52, 14, 15], lid: "#efd5e3" },
@@ -55,7 +55,7 @@ const BASE_PINGS = [
 ];
 
 const MAX_DEMO_PINGS = 30;
-const DEFAULT_OWNED_PING_COUNT = 5;
+const DEFAULT_OWNED_PING_COUNT = 3;
 const PINGS = Array.from({ length: MAX_DEMO_PINGS }, (_, index) => {
   const base = BASE_PINGS[index % BASE_PINGS.length];
   const group = Math.floor(index / BASE_PINGS.length) + 1;
@@ -186,6 +186,7 @@ function seededUnit(index, salt) {
 }
 
 function createCenteredPositions(count) {
+  if (count === 3) return { positions: [[215, 246], [99, 337], [223, 485]], rows: 3 };
   const worldWidth = pingWorld.clientWidth || DESIGN_WIDTH;
   const isDenseLayout = count > 10;
   const denseColumns = count >= 20 ? 5 : 4;
@@ -537,15 +538,16 @@ function soulXp() {
 
 function renderSoulRewards() {
   const currentXp = soulXp();
-  const progress = Math.min(100, (currentXp / 8060) * 100);
   const rows = MILESTONES.map((item) => {
     const claimed = claimedRewards.has(item.level);
     const available = currentXp >= item.need && !claimed;
     return `
       <div class="reward-row ${claimed ? "is-claimed" : available ? "is-available" : "is-locked"}">
-        <span class="reward-step">${item.level}단계<br>${item.need.toLocaleString()}</span>
-        <span class="reward-icon">${item.icon}</span>
-        <span class="reward-copy">${item.name}</span>
+        <span class="reward-icon" aria-hidden="true">${item.icon}</span>
+        <span class="reward-copy">
+          <strong class="reward-name">${item.name}</strong>
+          <span class="reward-condition">${item.level}단계 · 소울게이지 ${item.need.toLocaleString()} 달성</span>
+        </span>
         ${claimed
           ? '<span class="reward-received">✓ 수령</span>'
           : `<button class="reward-action" type="button" data-claim="${item.level}" ${available ? "" : "disabled"}>${available ? "받기" : "🔒 미달성"}</button>`}
@@ -556,11 +558,7 @@ function renderSoulRewards() {
   return `
     <div class="soul-reward-shell">
       <div class="soul-reward-summary">
-        <div class="soul-reward-progress">
-          <span style="width:${progress}%"></span>
-          <strong>${currentXp.toLocaleString()} / 8,060</strong>
-        </div>
-        <p>기간 중 최고 소울게이지 ${currentXp.toLocaleString()} 기준으로 달성됩니다.</p>
+        <p class="soul-gauge-caption">나의 소울게이지 <strong>${currentXp.toLocaleString()}</strong></p>
       </div>
       <div class="soul-reward-scroll">
         <div class="popup-list">${rows}</div>
@@ -735,6 +733,7 @@ function renderCharge() {
 }
 
 function openSheet(type) {
+  if (!demoLayer.hidden) closeDemoPanel();
   if (type === "draw") {
     bridgeAction("draw");
     return;

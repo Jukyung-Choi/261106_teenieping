@@ -1,0 +1,22 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="44" height="37.75" viewBox="0 0 44 37.75" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 2399">
+<g id="Group 2395">
+<mask id="mask0_0_201" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="1" y="0" width="42" height="35">
+<path id="Vector 369" d="M31.6087 0.75H12.6881C10.9988 0.75 9.40045 1.51556 8.34162 2.83186L2.98136 9.49559C1.26365 11.631 1.35157 14.6979 3.1888 16.7314L18.0061 33.1315C20.233 35.5963 24.1072 35.5806 26.3142 33.0979L40.9214 16.6652C42.7061 14.6575 42.8063 11.663 41.1599 9.54046L36.0163 2.90928C34.9597 1.5471 33.3327 0.75 31.6087 0.75Z" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_0_201)">
+<path id="Triangle" d="M22.0329 37.7496L44.0659 13.3225H0L22.0329 37.7496Z" fill-rule="evenodd" clip-rule="evenodd" fill="#FF56D4"/>
+<path id="Combined Shape" d="M34.3389 0.75H9.76242L0 13.3228H44.0659L34.3389 0.75Z" fill="#FF56D4"/>
+<path id="Path 25" d="M10.1143 13.3231H33.592L22.0337 37.7502L10.1143 13.3231Z" fill-rule="evenodd" clip-rule="evenodd" fill="#F238C3"/>
+<path id="Path 27" d="M33.5924 13.3231H44.067L21.8535 37.7502L33.5924 13.3231Z" fill-rule="evenodd" clip-rule="evenodd" fill="#DE07A7"/>
+<path id="Path 28" d="M10.1143 13.3228L22.0337 0.75L33.592 13.3228H10.1143Z" fill-rule="evenodd" clip-rule="evenodd" fill="#FF5FD7"/>
+<path id="Path 24" d="M10.1135 13.3228L9.75228 0.75L0 13.3228H10.1135Z" fill-rule="evenodd" clip-rule="evenodd" fill="#FFCCF2"/>
+<path id="Path 24 Copy" d="M33.5917 13.3228L34.3364 0.75L44.0664 13.3228H33.5917Z" fill-rule="evenodd" clip-rule="evenodd" fill="#E807AF"/>
+<path id="Path 26" d="M10.1135 13.3231H0L22.0329 37.7502L10.1135 13.3231Z" fill-rule="evenodd" clip-rule="evenodd" fill="#FF57D4"/>
+<path id="Path 29" d="M9.75098 0.75L10.1122 13.3228L22.0316 0.75H9.75098Z" fill-rule="evenodd" clip-rule="evenodd" fill="#FFA3E8"/>
+<path id="Path 30" d="M22.0342 0.75L33.5924 13.3228L34.3371 0.75H22.0342Z" fill-rule="evenodd" clip-rule="evenodd" fill="#F238C3"/>
+</g>
+</g>
+<path id="Vector 369_2" d="M12.4112 0.75H31.892C33.4372 0.75 34.8957 1.46449 35.8428 2.6855L41.4543 9.91993C42.93 11.8225 42.8402 14.5067 41.2405 16.3063L25.8856 33.5801C23.9074 35.8055 20.4347 35.8195 18.4386 33.6101L2.85832 16.3656C1.2115 14.5428 1.13268 11.7938 2.67237 9.87971L8.51518 2.6161C9.46427 1.43621 10.8969 0.75 12.4112 0.75Z" stroke-width="1.5" stroke="#830062"/>
+</g>
+</svg>
