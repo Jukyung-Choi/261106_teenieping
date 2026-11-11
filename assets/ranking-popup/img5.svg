@@ -1,0 +1,23 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="10.8874" height="13.7024" viewBox="0 0 10.8874 13.7024" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="3" filter="url(#filter0_d_0_485)">
+<use xlink:href="#stroke0_0_485" fill="white" shape-rendering="crispEdges"/>
+<mask id="stroke1_0_485" maskUnits="userSpaceOnUse" x="0.614705" y="0.5" width="10" height="13" fill="black">
+<rect fill="white" x="0.614705" y="0.5" width="10" height="13"/>
+<use xlink:href="#stroke0_0_485"/>
+</mask>
+<path d="M8.81942 3.80192L7.16024 5.77499C8.52047 6.17858 9.38742 7.18006 9.38742 8.67482C9.38742 9.82578 9.01373 10.7077 8.2813 11.3056C7.54888 11.9035 6.62213 12.2024 5.50106 12.2024C3.66252 12.2024 2.21261 11.3504 1.6147 9.72114L4.24547 8.21144C4.45474 8.94387 4.87327 9.30261 5.50106 9.30261C6.03917 9.30261 6.39792 9.00366 6.39792 8.52534C6.39792 8.03207 6.09896 7.77796 5.50106 7.77796H4.85832L3.69241 6.04405L5.09748 4.39982H1.94355V1.5H8.81942V3.80192Z" stroke="#975438" stroke-opacity="0.5" shape-rendering="crispEdges" mask="url(#stroke1_0_485)"/>
+</g>
+<defs>
+<filter id="filter0_d_0_485" x="-5.96046e-08" y="0" width="10.8874" height="13.7024" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="0.5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.673791 0 0 0 0 0.386497 0 0 0 0 0.269311 0 0 0 0.63 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_485"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_485" result="shape"/>
+</filter>
+<path id="stroke0_0_485" d="M8.81942 3.80192L7.16024 5.77499C8.52046 6.17858 9.38742 7.18006 9.38742 8.67482C9.38742 9.82578 9.01373 10.7077 8.2813 11.3056C7.54888 11.9035 6.62213 12.2024 5.50106 12.2024C3.66252 12.2024 2.21261 11.3504 1.6147 9.72114L4.24547 8.21144C4.45474 8.94387 4.87327 9.30261 5.50106 9.30261C6.03917 9.30261 6.39792 9.00366 6.39792 8.52534C6.39792 8.03207 6.09896 7.77796 5.50106 7.77796H4.85832L3.69241 6.04405L5.09748 4.39982H1.94355V1.5H8.81942V3.80192Z"/>
+</defs>
+</svg>

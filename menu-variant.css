@@ -1,0 +1,152 @@
+/* Figma 1147:50190. Only this alternate HTML loads these bottom-menu overrides. */
+.variant-bottom-actions .menu-button {
+  position:absolute;top:740px;width:70px;height:72px;padding:0;border:0;
+  border-radius:0;background:transparent;box-shadow:none;filter:none;overflow:visible;
+  color:#5c0041;pointer-events:auto;
+}
+.variant-bottom-actions .menu-ranking { left:20px; }
+.variant-bottom-actions .menu-book { left:96px; }
+.variant-bottom-actions .menu-draw { left:172px; }
+.variant-bottom-actions img { position:absolute;display:block;pointer-events:none; }
+.variant-bottom-actions .variant-menu-card { left:-3.5px;top:-2.625px; }
+.variant-bottom-actions .variant-menu-label {
+  position:absolute;left:3px;top:47px;width:64px;height:auto;
+  padding:0;margin:0;color:#5c0041;font-size:13px;font-weight:700;
+  line-height:normal;text-align:center;white-space:nowrap;
+}
+.variant-bottom-actions .menu-ranking .variant-menu-icon { left:16.257px;top:9.3345px;width:37.826px;height:32.651px; }
+.variant-bottom-actions .menu-book .variant-menu-icon { left:16.75px;top:9.5px;width:37.34px;height:31.934px; }
+.variant-bottom-actions .menu-draw .variant-menu-icon { left:18.99px;top:5.94px;width:32.031px;height:35.322px; }
+.variant-bottom-actions .charge-button { left:267px;top:704px;width:106px;height:108px; }
+.variant-bottom-actions .charge-button .variant-menu-card { left:-4px;top:-3px; }
+.variant-bottom-actions .variant-charge-icon { left:0;top:.5966796875px;width:106px;height:69.310546875px; }
+.variant-bottom-actions .charge-button .variant-menu-label { left:0;top:67px;width:106px; }
+
+/* Figma 1162:53981: fixed top/footer and grouped scrolling collection. */
+.sheet-layer.is-dex-popup .sheet-dim { background:rgba(0,0,0,.5);animation:none; }
+.bottom-sheet.is-dex-popup { top:114px;left:27px;right:auto;bottom:auto;width:340px;height:602px;min-height:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;display:block;overflow:visible;animation:none;text-align:left; }
+.bottom-sheet.is-dex-popup > .sheet-handle,
+.bottom-sheet.is-dex-popup > .sheet-close,
+.bottom-sheet.is-dex-popup > .sheet-emoji,
+.bottom-sheet.is-dex-popup > .sheet-primary { display:none; }
+.bottom-sheet.is-dex-popup > h2 { position:absolute;z-index:2;top:40px;left:16px;width:308px;height:22px;margin:0;padding:0;color:#5c0041;font-size:18px;font-weight:600;line-height:22px;text-align:center; }
+.bottom-sheet.is-dex-popup .sheet-content.is-dex-content { position:absolute;inset:0;display:block;width:100%;height:100%;min-height:0;padding:0;overflow:visible;flex:none;text-align:left;line-height:normal; }
+.dex-popup-content { position:absolute;inset:0; }
+.dex-popup-content img { position:absolute;display:block;pointer-events:none; }
+.dex-popup-top { position:absolute;left:0;top:0;width:340px;height:70px;overflow:hidden; }
+.dex-popup-bg { left:0;top:1px; }
+.dex-popup-body { position:absolute;left:0;top:70px;width:340px;height:454px;background:white;border-left:3px solid #ffd0e8;border-right:3px solid #ffd0e8; }
+.dex-popup-title-hearts { left:16px;top:46px; }
+.dex-popup-scroll { position:absolute;left:3px;top:70px;width:334px;height:454px;padding:0 10px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:none;-webkit-overflow-scrolling:touch; }
+.dex-popup-scroll::-webkit-scrollbar { display:none; }
+.dex-popup-sections { display:flex;flex-direction:column;gap:14px;width:314px;padding-bottom:20px; }
+.dex-popup-section { display:flex;flex-direction:column;gap:7px;flex:none;width:314px; }
+.bottom-sheet.is-dex-popup .dex-popup-section-title { flex:none;width:314px;height:20px;padding:0;margin:0;color:#ff35b5;font-size:12px;font-weight:700;line-height:22px;text-align:center; }
+.dex-popup-grid { display:grid;grid-template-columns:repeat(3,102px);column-gap:4px;row-gap:7px;width:314px; }
+.dex-popup-card { position:relative;width:102px;height:136px;overflow:hidden;border-radius:15px;isolation:isolate; }
+.dex-popup-card-bg { top:0;left:0; }
+.dex-popup-character { left:11px;top:28px;width:80px;height:80px;object-fit:contain; }
+.dex-popup-name { position:absolute;left:11px;top:112px;width:80px;color:#5c0041;font-size:11px;font-weight:600;line-height:normal;text-align:center;white-space:nowrap; }
+.dex-popup-stars { position:absolute;left:51px;top:9px;height:17px;transform:translateX(-50%); }
+.dex-popup-stars.stars-3 { width:57px; }
+.dex-popup-stars.stars-2 { width:37px; }
+.dex-popup-stars.stars-1 { width:17px; }
+.dex-popup-stars img { left:-.2725px;top:-.573px; }
+.dex-popup-off,.dex-popup-off > span { position:absolute;inset:0;pointer-events:none; }
+.dex-popup-off > .off-white { background:white;opacity:.5; }
+.dex-popup-off > .off-gray { background:#808080;mix-blend-mode:saturation; }
+.dex-popup-off > .off-tint { background:#e4cddb;opacity:.27; }
+/* Match the Figma mask's bottom fade in local file previews as well. */
+.dex-popup-fade { position:absolute;left:3px;top:504px;width:334px;height:20px;pointer-events:none;background:linear-gradient(to bottom,#fff0,#fff); }
+.dex-popup-footer { position:absolute;left:0;top:524px;width:340px;height:78px;padding-top:10px;display:flex;justify-content:center;background:white;border:3px solid #ffd0e8;border-top:0;border-radius:0 0 26px 26px; }
+.dex-popup-confirm { position:relative;display:flex;align-items:center;justify-content:center;width:140px;height:40px;padding:0 30px 2px;border:0;border-radius:999px;background:#ff35b5;box-shadow:inset 0 -3.5px 0 rgba(209,0,132,.8);color:white;font-size:16px;font-weight:600;line-height:22px;cursor:pointer; }
+
+/* A brief touch response; the original gauge artwork and outline stay intact. */
+.gauge-touch-shine { position:absolute;left:0;top:0;z-index:3;width:52px;height:100%;opacity:0;transform:translateX(-100%);pointer-events:none;background:linear-gradient(110deg,transparent,rgba(255,255,255,.78),transparent); }
+
+/* Figma 1172:61590: crown header and centered full-charge popup. */
+.sheet-layer.is-charge-popup .sheet-dim { background:rgba(0,0,0,.5);animation:none; }
+.bottom-sheet.is-charge-popup { top:258px;left:27px;right:auto;bottom:auto;width:340px;height:336px;min-height:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;display:block;overflow:visible;animation:none;transform:none;text-align:center; }
+.bottom-sheet.is-charge-popup > .sheet-handle,
+.bottom-sheet.is-charge-popup > .sheet-emoji { display:none; }
+.bottom-sheet.is-charge-popup > h2 { position:absolute;display:block;z-index:2;top:40px;left:16px;width:308px;height:22px;margin:0;padding:0;color:#5c0041;font-size:18px;font-weight:600;line-height:22px;text-align:center; }
+.bottom-sheet.is-charge-popup > .sheet-close { display:block;position:absolute;left:300px;top:36px;right:auto;width:28px;height:28px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;z-index:3; }
+.bottom-sheet.is-charge-popup > .sheet-close img { display:block; }
+.bottom-sheet.is-charge-popup .sheet-content.is-charge-content { position:absolute;inset:0;display:block;width:100%;height:100%;min-height:0;margin:0;padding:0;overflow:visible;flex:none;line-height:normal; }
+.charge-popup-content { position:absolute;inset:0; }
+.charge-popup-top { position:absolute;left:0;top:0;width:340px;height:70px;overflow:hidden; }
+.charge-popup-bg { position:absolute;left:0;top:1px;display:block;pointer-events:none; }
+.charge-popup-body { position:absolute;left:0;top:70px;width:340px;height:198px;border-left:3px solid #ffd0e8;border-right:3px solid #ffd0e8;background:white; }
+.charge-popup-art { position:absolute;left:15.50390625px;top:78px;width:308.9921875px;height:77.248046875px;overflow:hidden; }
+.charge-popup-art img { position:absolute;left:69.2890625px;top:0;display:block;width:169.478515625px;height:77.248046875px; }
+.charge-popup-text { position:absolute;left:16px;top:174px;display:flex;flex-direction:column;align-items:center;gap:20px;width:308px;padding:0 24px 20px; }
+.charge-popup-copy { display:flex;flex-direction:column;align-items:center;width:260px; }
+.bottom-sheet.is-charge-popup .charge-popup-description { width:252px;margin:0;padding:0;color:#75757a;font-size:15px;font-weight:400;line-height:18px; }
+.bottom-sheet.is-charge-popup .charge-popup-description strong { color:inherit;font-weight:700; }
+.bottom-sheet.is-charge-popup .charge-popup-used { width:252px;height:18px;margin:0;padding:0;color:#ff35b5;font-size:15px;font-weight:600;line-height:18px; }
+.charge-popup-footer { position:absolute;left:0;top:268px;width:340px;height:68px;border:3px solid #ffd0e8;border-top:0;border-radius:0 0 26px 26px;background:white; }
+.bottom-sheet.is-charge-popup > .sheet-primary { position:absolute;left:82px;top:268px;display:flex;align-items:center;justify-content:center;width:176px;height:40px;margin:0;padding:0 30px 2px;border:0;border-radius:999px;background:#ff35b5;box-shadow:inset 0 -3.5px 0 rgba(209,0,132,.8);color:white;font-size:16px;font-weight:600;line-height:22px;white-space:nowrap;cursor:pointer; }
+.bottom-sheet.is-charge-popup > .sheet-primary:disabled { opacity:.5;cursor:default; }
+
+/* Figma 1140:41745: participation/SNS help popup. */
+.sheet-layer.is-help-popup .sheet-dim { background:rgba(0,0,0,.5);animation:none; }
+.bottom-sheet.is-help-popup { top:134px;left:27px;right:auto;bottom:auto;width:340px;height:583px;min-height:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;display:block;overflow:visible;animation:none;transform:none;text-align:left; }
+.bottom-sheet.is-help-popup > .sheet-handle,
+.bottom-sheet.is-help-popup > .sheet-close,
+.bottom-sheet.is-help-popup > .sheet-emoji,
+.bottom-sheet.is-help-popup > .sheet-primary { display:none; }
+.bottom-sheet.is-help-popup > h2 { position:absolute;z-index:2;top:41px;left:16px;width:308px;height:22px;margin:0;padding:0;color:#5c0041;font-size:18px;font-weight:600;line-height:22px;text-align:center; }
+.bottom-sheet.is-help-popup .sheet-content.is-help-content { position:absolute;inset:0;display:block;width:100%;height:100%;min-height:0;margin:0;padding:0;overflow:visible;flex:none;text-align:left;line-height:normal; }
+.help-popup-content { position:absolute;inset:0; }
+.help-popup-bg { position:absolute;left:0;top:0;display:block;pointer-events:none; }
+.help-popup-hearts { position:absolute;left:16px;top:47px;display:block;pointer-events:none; }
+.help-popup-tabs { position:absolute;left:16px;top:73px;display:flex;align-items:center;width:308px;height:40px;border-radius:16px;background:#f2e6f0; }
+.help-popup-tab { display:flex;align-items:center;justify-content:center;flex:none;width:151px;height:38px;padding:4px 10px;border:0;border-radius:6px;background:transparent;color:#c196b8;font-size:14px;font-weight:600;line-height:18px;white-space:nowrap;cursor:pointer; }
+.help-popup-tab.is-active { width:156px;height:40px;border-radius:16px;background:#ffb3e0;box-shadow:inset 0 -3.5px 1px rgba(255,143,210,.8);color:#5c0041; }
+.help-popup-scroll { position:absolute;left:16px;top:124px;display:flex;flex-direction:column;gap:6px;width:308px;height:334px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:none;-webkit-overflow-scrolling:touch; }
+.help-popup-scroll::-webkit-scrollbar { display:none; }
+.help-popup-row { display:flex;align-items:center;flex:none;width:308px;min-height:62px;padding:10px;border-radius:18px;background:#fff0f7; }
+.help-popup-row-inner { display:flex;align-items:flex-start; }
+.help-popup-number { flex:none;width:17px;padding-right:4px;color:#ff27af;font-size:11px;font-weight:700;line-height:16px;text-align:right; }
+.bottom-sheet.is-help-popup .help-popup-row p { width:267px;margin:0;padding:0;color:#5c0041;font-size:13px;font-weight:500;line-height:16px;overflow-wrap:break-word; }
+.bottom-sheet.is-help-popup .help-popup-caption { position:absolute;top:468px;left:16px;width:308px;margin:0;padding:0;color:#99999c;font-size:11px;font-weight:400;line-height:16px;text-align:center;white-space:nowrap; }
+.help-popup-confirm { position:absolute;top:512px;left:91px;display:flex;align-items:center;justify-content:center;width:158px;height:44px;padding:0 30px 2px;border:0;border-radius:999px;background:#ff35b5;box-shadow:inset 0 -3.5px 0 rgba(209,0,132,.8);color:white;font-size:16px;font-weight:600;line-height:22px;cursor:pointer; }
+
+/* Figma 1172:60696 and 646:38112: background picker and full map layers. */
+.world-background { position:absolute;inset:0;z-index:0;width:992px;height:1586px;overflow:hidden;pointer-events:none; }
+.world-background img { position:absolute;display:block;object-fit:cover;pointer-events:none; }
+.sheet-layer.is-background-popup .sheet-dim { background:rgba(0,0,0,.5);animation:none; }
+.bottom-sheet.is-background-popup { top:262px;left:27px;right:auto;bottom:auto;width:340px;height:328px;min-height:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;display:block;overflow:visible;animation:none;transform:none;text-align:left; }
+.bottom-sheet.is-background-popup > .sheet-handle,
+.bottom-sheet.is-background-popup > .sheet-close,
+.bottom-sheet.is-background-popup > .sheet-emoji,
+.bottom-sheet.is-background-popup > .sheet-primary { display:none; }
+.bottom-sheet.is-background-popup > h2 { position:absolute;z-index:2;top:40px;left:16px;width:308px;height:22px;margin:0;padding:0;color:#5c0041;font-size:18px;font-weight:600;line-height:22px;text-align:center; }
+.bottom-sheet.is-background-popup .sheet-content.is-background-content { position:absolute;inset:0;display:block;width:100%;height:100%;min-height:0;margin:0;padding:0;overflow:visible;flex:none;text-align:left;line-height:normal; }
+.bg-popup-content { position:absolute;inset:0; }
+.bg-popup-top { position:absolute;left:0;top:0;width:340px;height:70px;overflow:hidden; }
+.bg-popup-bg { position:absolute;left:0;top:1px;display:block;pointer-events:none; }
+.bg-popup-body { position:absolute;left:0;top:70px;width:340px;height:190px;border-left:3px solid #ffd0e8;border-right:3px solid #ffd0e8;background:white; }
+.bg-popup-hearts { position:absolute;left:16px;top:46px;display:block;pointer-events:none; }
+.bottom-sheet.is-background-popup .bg-popup-description { position:absolute;left:16px;top:70px;width:308px;margin:0;padding:0;color:#75757a;font-size:12px;font-weight:400;line-height:22px;text-align:center; }
+.bg-popup-scroll { position:absolute;left:16px;top:104px;width:308px;height:140px;overflow-x:auto;overflow-y:hidden;touch-action:pan-y pinch-zoom;overscroll-behavior:contain;scrollbar-width:none;cursor:grab;user-select:none;-webkit-user-select:none; }
+.bg-popup-scroll::-webkit-scrollbar { display:none; }
+.bg-popup-options { display:flex;align-items:flex-start;gap:8px;width:max-content;padding:1px 5px 11px; }
+.bg-choice { position:relative;flex:none;width:104px;height:128px;margin:0;padding:0;border:0;border-radius:0;background:transparent;cursor:pointer; }
+.bg-choice img { position:absolute;display:block;pointer-events:none; }
+.bg-choice-border { left:-1px;top:-1px; }
+.bg-choice-crop { position:absolute;left:4px;top:4px;width:96px;height:120px;overflow:hidden;border-radius:14px;pointer-events:none; }
+.bg-choice-base { left:0;top:0; }
+.bg-choice-scene { position:absolute;left:-12px;top:-36px;width:120px;height:191.85483871px;overflow:hidden; }
+.bg-choice-scene img { object-fit:cover; }
+.bg-choice-selected { position:absolute;left:-1px;top:-1px;width:106px;height:130px;pointer-events:none; }
+.bg-choice-selected[hidden] { display:none; }
+.bg-choice-outline { left:0;top:0; }
+.bg-choice-check { position:absolute;left:71px;top:95px;width:24px;height:24px;border-radius:999px;background:#ff35b5; }
+.bg-choice-check img { left:6px;top:7px; }
+.bg-popup-fade { position:absolute;left:302px;top:104px;width:22px;height:140px;background:linear-gradient(to right,#fff0,white);pointer-events:none; }
+.bg-popup-footer { position:absolute;left:0;top:260px;width:340px;height:68px;border:3px solid #ffd0e8;border-top:0;border-radius:0 0 26px 26px;background:white; }
+.bg-popup-confirm { position:absolute;top:0;left:97px;display:flex;align-items:center;justify-content:center;width:140px;height:40px;padding:0 30px 2px;border:0;border-radius:999px;background:#ff35b5;box-shadow:inset 0 -3.5px 0 rgba(209,0,132,.8);color:white;font-size:16px;font-weight:600;line-height:22px;cursor:pointer; }
+
+.bg-popup-scroll.is-dragging { cursor:grabbing; }
+.bg-popup-options { will-change:transform; }
