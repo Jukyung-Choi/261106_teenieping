@@ -7,7 +7,7 @@
     <title>티니핑 세상</title>
     <link rel="stylesheet" href="styles.css?v=figma-664-41273" />
   <link rel="stylesheet" href="redesign.css?v=ranking-rewards-no-score-1" />
-    <link rel="stylesheet" href="menu-variant.css?v=charge-popup-1172-1" />
+    <link rel="stylesheet" href="menu-variant.css?v=empty-owned-popup-2" />
   </head>
   <body>
     <main class="webview-stage" aria-label="티니핑 세상 미니게임">
@@ -77,7 +77,7 @@
 
               <div class="demo-summary" aria-live="polite">
                 <span><small>전체 게이지</small><strong id="demoGaugeSummary">100%</strong></span>
-                <span><small>보유 티니핑</small><strong id="demoCountSummary">5 / 30</strong></span>
+                <span><small>보유 티니핑</small><strong id="demoCountSummary">10 / 30</strong></span>
               </div>
               <p class="demo-pause-note"><span aria-hidden="true">Ⅱ</span> 패널을 연 동안 XP 자동 감소가 일시정지됩니다.</p>
 
@@ -111,11 +111,11 @@
                   </div>
                   <div class="demo-stepper" aria-label="보유 티니핑 마릿수 조절">
                     <button type="button" data-demo-count-delta="-1" aria-label="한 마리 줄이기">−</button>
-                    <output id="demoCountOutput" for="demoCountRange">5마리</output>
+                    <output id="demoCountOutput" for="demoCountRange">10마리</output>
                     <button type="button" data-demo-count-delta="1" aria-label="한 마리 늘리기">＋</button>
                   </div>
                 </div>
-                <input class="demo-range demo-count-range" id="demoCountRange" type="range" min="0" max="30" step="1" value="5" aria-labelledby="demoCountLabel" />
+                <input class="demo-range demo-count-range" id="demoCountRange" type="range" min="0" max="30" step="1" value="10" aria-labelledby="demoCountLabel" />
                 <div class="demo-presets" aria-label="보유 마릿수 빠른 설정">
                   <button type="button" data-demo-count="0">0마리</button>
                   <button type="button" data-demo-count="1">1마리</button>
@@ -126,7 +126,7 @@
                   <button type="button" data-demo-count="25">25마리</button>
                   <button type="button" data-demo-count="30">30마리</button>
                 </div>
-                <p class="demo-hint">서로 다른 티니핑 30종을 표시합니다.</p>
+                <p class="demo-hint">한 마리 늘리기를 누르면 패널이 닫히고 소환 연출을 확인할 수 있어요.</p>
               </section>
 
               <section class="demo-control-group demo-visibility-control" aria-labelledby="demoRankDisplayLabel">
@@ -156,6 +156,6 @@
       </div>
     </main>
     <script src="policy-engine.js?v=ranking-rewards-no-score-1"></script>
-    <script src="menu-variant.js?v=charge-popup-1172-1"></script>
+    <script src="menu-variant.js?v=empty-owned-popup-2"></script>
   </body>
 </html>

@@ -220,8 +220,8 @@ const BASE_PINGS = [
     "image": "assets/teeniepings-webp/달콤핑.webp",
     "color": "#ff8277",
     "xp": 100,
-    "artW": 100,
-    "artH": 100,
+    "artW": 120,
+    "artH": 120,
     "heart": "imgVector9",
     "shine": "imgEllipse4763",
     "eyeL": [
@@ -620,8 +620,8 @@ const BASE_PINGS = [
     "image": "assets/teeniepings-webp/새콤핑.webp",
     "color": "#ff4abd",
     "xp": 100,
-    "artW": 100,
-    "artH": 100,
+    "artW": 120,
+    "artH": 120,
     "heart": "imgVector4",
     "shine": "imgEllipse4759",
     "eyeL": [
@@ -867,11 +867,29 @@ const BASE_PINGS = [
 ];
 
 const MAX_DEMO_PINGS = 30;
-const DEFAULT_OWNED_PING_COUNT = 30;
-const PINGS = BASE_PINGS.map(ping => ({
-  ...ping,
-  xp: 42.968 / 74 * 100,
-}));
+const DEFAULT_OWNED_PING_COUNT = 10;
+// Figma 1172:60054: five exact fill/heart tones, assigned from each character's key color.
+const PING_GAUGE_COLORS = Object.freeze({
+  pink:'#ff4abd',blue:'#87d7ff',green:'#93ec81',yellow:'#ffb53f',red:'#fe6264',
+});
+const PING_GAUGE_GROUPS = Object.freeze({
+  pink:['하츄핑','오로라핑','고마핑','깡총핑','라라핑','말랑핑','뽀뽀핑','체리핑'],
+  blue:['빛나핑','라임핑','바로핑','샤샤핑','왕자핑','포실핑'],
+  green:['차차핑','뽀송핑','새콤핑','요거핑','초롱핑'],
+  yellow:['나그네핑','나눔핑','딩동핑','레몬핑','반짝핑','샌드핑','아자핑'],
+  red:['달콤핑','또너핑','뿌뿌핑','해핑'],
+});
+const pingGaugeToneByName = new Map(Object.entries(PING_GAUGE_GROUPS)
+  .flatMap(([tone,names])=>names.map(name=>[name,tone])));
+const PINGS = BASE_PINGS.map(ping => {
+  const gaugeTone=pingGaugeToneByName.get(ping.name);
+  return {
+    ...ping,
+    gaugeTone,
+    color:PING_GAUGE_COLORS[gaugeTone],
+    xp:42.968 / 74 * 100,
+  };
+});
 
 let pingActors = [];
 let animationFrame = 0;
@@ -986,6 +1004,7 @@ const DEX = [
 let soul = 75;
 let gems = 1200;
 let activeSheet = null;
+let emptyOwnedPromptShown = false;
 let activeHelpTab = "how";
 let activeRankingTab = "ranking";
 let rankingScroll = {ranking:0,rewards:0};
@@ -1120,41 +1139,18 @@ function centerWorldView() {
   worldScroll.scrollTop = (WORLD_HEIGHT - worldScroll.clientHeight) / 2;
 }
 
-function createRandomPositions(count) {
-  if (!count) return [];
-  const left=worldScroll.scrollLeft,top=worldScroll.scrollTop;
-  const isSmall=count<=8;
-  const columns=isSmall?Math.min(3,count):5,rows=Math.ceil(count/columns);
-  const bounds=isSmall
-    ? {x:left+20,y:top+180,w:DESIGN_WIDTH-40,h:490}
-    : {x:20,y:WORLD_TOP+20,w:WORLD_WIDTH-40,h:WORLD_HEIGHT-WORLD_TOP-WORLD_BOTTOM_SAFE-40};
-  const fixedAreas=[[0,0,393,158],[0,702,393,150],[14,559,61,149],[295,164,88,28]];
-  const hitsHud=(x,y)=>fixedAreas.some(([hx,hy,hw,hh])=>
-    x+PING_WIDTH>left+hx&&x<left+hx+hw&&y+152>top+hy&&y<top+hy+hh);
-  if (count===1) {
-    const onlyPing=ownedPings()[0];
-    return [[left+(worldScroll.clientWidth-PING_WIDTH)/2,
-      top+worldScroll.clientHeight/2-32-(onlyPing?.artH || 100)/2]];
-  }
+// Spawn throughout the world; camera position and viewport center are not spawn criteria.
+function createRandomPositions(count, occupied = []) {
   const positions=[];
+  const minX=20,maxX=WORLD_WIDTH-PING_WIDTH-20;
+  const minY=WORLD_TOP+20,maxY=WORLD_HEIGHT-WORLD_BOTTOM_SAFE-152;
   for(let index=0;index<count;index++) {
-    const col=index%columns,row=Math.floor(index/columns);
     let candidate;
-    for(let attempt=0;attempt<140;attempt++) {
-      const cellW=bounds.w/columns,cellH=bounds.h/rows;
-      let x,y;
-      if(attempt<40) {
-        x=bounds.x+col*cellW+(cellW-PING_WIDTH)/2+(Math.random()-.5)*Math.min(70,cellW*.45);
-        y=bounds.y+row*cellH+Math.max(0,(cellH-152)/2)+(Math.random()-.5)*Math.min(70,cellH*.4);
-      } else {
-        x=bounds.x+Math.random()*Math.max(0,bounds.w-PING_WIDTH);
-        y=bounds.y+Math.random()*Math.max(0,bounds.h-152);
-      }
-      x=Math.max(16,Math.min(WORLD_WIDTH-PING_WIDTH-16,x));
-      y=Math.max(WORLD_TOP,Math.min(WORLD_HEIGHT-WORLD_BOTTOM_SAFE-152,y));
+    for(let attempt=0;attempt<40;attempt++) {
+      const x=minX+Math.random()*(maxX-minX);
+      const y=minY+Math.random()*(maxY-minY);
       candidate=[x,y];
-      if(hitsHud(x,y)) continue;
-      if(positions.some(([px,py])=>Math.abs(px-x)<82&&Math.abs(py-y)<30))continue;
+      if(occupied.concat(positions).some(([px,py])=>Math.abs(px-x)<82&&Math.abs(py-y)<30)) continue;
       break;
     }
     positions.push(candidate);
@@ -1180,7 +1176,53 @@ function chooseWanderTarget(actor) {
   actor.targetTimer = 2400 + Math.random() * 3000;
 }
 
-function renderPingWorld({ centerIds = [] } = {}) {
+// Single acquisitions pan to their random destination, then reveal the new character.
+let summonFocus=null;
+const SUMMON_FOCUS_DURATION=400;
+function revealFocusedSummon(actor) {
+  actor.waitingForCamera=false;
+  actor.spawnDelay=0;
+  actor.element.style.visibility=actor.label.style.visibility='';
+  if(!reducedMotion) actor.element.classList.add('is-spawning');
+}
+function cancelSummonFocus(finish=false) {
+  if(!summonFocus) return;
+  const focus=summonFocus;
+  summonFocus=null;
+  if(finish) {
+    worldScroll.scrollLeft=focus.targetX;
+    worldScroll.scrollTop=focus.targetY;
+  }
+  revealFocusedSummon(focus.actor);
+}
+function beginSummonFocus(actor) {
+  cancelSummonFocus();
+  const targetX=Math.max(0,Math.min(WORLD_WIDTH-worldScroll.clientWidth,
+    actor.x+PING_WIDTH/2-worldScroll.clientWidth/2));
+  const targetY=Math.max(0,Math.min(activeWorldHeight-worldScroll.clientHeight,
+    actor.y+32+actor.data.artH/2-worldScroll.clientHeight/2));
+  actor.waitingForCamera=true;
+  actor.spawnDelay=0;
+  actor.element.classList.remove('is-spawning');
+  actor.element.style.visibility=actor.label.style.visibility='hidden';
+  summonFocus={actor,startX:worldScroll.scrollLeft,startY:worldScroll.scrollTop,targetX,targetY,startedAt:null};
+  if(reducedMotion || Math.hypot(targetX-worldScroll.scrollLeft,targetY-worldScroll.scrollTop)<2) cancelSummonFocus(true);
+}
+function updateSummonFocus(timestamp) {
+  if(!summonFocus) return;
+  const focus=summonFocus;
+  if(focus.startedAt===null) focus.startedAt=timestamp;
+  const progress=Math.min(1,(timestamp-focus.startedAt)/SUMMON_FOCUS_DURATION);
+  const eased=1-Math.pow(1-progress,3);
+  worldScroll.scrollLeft=focus.startX+(focus.targetX-focus.startX)*eased;
+  worldScroll.scrollTop=focus.startY+(focus.targetY-focus.startY)*eased;
+  if(progress===1) cancelSummonFocus(true);
+}
+// Direct navigation takes priority over an automatic acquisition pan.
+worldScroll.addEventListener('pointerdown',()=>cancelSummonFocus());
+
+function renderPingWorld({ spawnIds = [], focusSpawnId = null } = {}) {
+  cancelSummonFocus();
   cancelAnimationFrame(animationFrame);
   animationFrame = 0;
   lastAnimationTime = 0;
@@ -1189,7 +1231,13 @@ function renderPingWorld({ centerIds = [] } = {}) {
   captureWorldState();
   refreshPolicy();
   const ownedPings = PINGS.filter(p=>!!policyGame.state.species[p.id]);
-  const positions = createRandomPositions(ownedPings.length);
+  const previousIds=new Set(pingActors.map(actor=>actor.data.id));
+  const ownedIds=new Set(ownedPings.map(ping=>ping.id));
+  const summonIds=[...new Set([...spawnIds,...ownedPings.filter(ping=>!previousIds.has(ping.id)).map(ping=>ping.id)])];
+  const summonSet=new Set(summonIds);
+  const occupied=pingActors.filter(actor=>ownedIds.has(actor.data.id)&&!summonSet.has(actor.data.id)).map(actor=>[actor.x,actor.y]);
+  const positions=createRandomPositions(summonIds.length,occupied);
+  const spawnPositions=new Map(summonIds.map((id,index)=>[id,positions[index]]));
   activeWorldHeight = WORLD_HEIGHT;
   pingWorld.style.width = `${WORLD_WIDTH}px`;
   pingWorld.style.height = `${activeWorldHeight}px`;
@@ -1198,48 +1246,44 @@ function renderPingWorld({ centerIds = [] } = {}) {
   pingWorld.dataset.collisionCount = "0";
   pingWorld.innerHTML = ownedPings.length ? ownedPings.map((ping, index) => `
     <button
-      class="teenieping"
+      class="teenieping${ping.grade==='레전드' ? ' is-legend' : ''}"
       type="button"
       data-ping="${ping.id}"
+      data-gauge-tone="${ping.gaugeTone}"
       style="touch-action:pan-x pan-y pinch-zoom;--ping-color:${ping.color};--art-size:${ping.artW}px;--ping-image:url('${ping.image}');--xp:${ping.xp}%;--ping-saturation:100%;--art-w:${ping.artW}px;--art-h:${ping.artH}px;--bob-delay:${-index * 0.31}s;--bob-duration:${2.35 + (index % 4) * 0.24}s;--bob-distance:${3.2 + (index % 3) * 0.55}px;--hop-delay:${-index * 0.83}s;--hop-duration:${5.2 + (index % 5) * 0.38}s;--eye-lx:${ping.eyeL[0]}%;--eye-ly:${ping.eyeL[1]}%;--eye-lw:${ping.eyeL[2]}%;--eye-lh:${ping.eyeL[3]}%;--eye-rx:${ping.eyeR[0]}%;--eye-ry:${ping.eyeR[1]}%;--eye-rw:${ping.eyeR[2]}%;--eye-rh:${ping.eyeR[3]}%;--lid-color:${ping.lid};--blink-delay:${-index * 0.47}s;--blink-duration:${3.8 + (index % 5) * 0.43}s"
       aria-label="${ping.name} XP ${ping.xp}%. 터치해서 최대 15 XP 회복하기"
     >
       <span class="ping-visual">
         <span class="ping-info">
           <span class="ping-name">${ping.name}</span>
-          <span class="ping-progress"><span class="ping-xp-track"><span class="ping-xp-fill"></span></span><span class="ping-heart" aria-hidden="true"><img src="assets/redesign/${ping.heart}.svg" alt="" />${ping.id.startsWith('auroraping') ? '<img class="heart-overlay" src="assets/redesign/imgVector8.svg" alt="" />' : ''}<span class="heart-shine"><img src="assets/redesign/${ping.shine}.svg" alt="" /></span></span></span>
+          <span class="ping-progress"><span class="ping-xp-track"><span class="ping-xp-fill"></span></span><span class="ping-heart" aria-hidden="true"><img src="assets/gauge-colors-v3/heart-${ping.gaugeTone}.svg" alt="" /><span class="heart-shine"><img src="assets/gauge-colors-v3/heart-shine.svg" alt="" /></span></span></span>
         </span>
         <span class="ping-art-wrap">
           <span class="ping-bob-layer">
+            ${ping.grade==='레전드' ? '<span class="legend-radiance" aria-hidden="true"></span>' : ''}
             <img class="ping-art" src="${pingWorldArt(ping)}" alt="" draggable="false" />
+            ${ping.grade==='레전드' ? `<span class="legend-body-sheen" aria-hidden="true" style="--legend-sheen-delay:${ping.name==='오로라핑'?0:ping.name==='달콤핑'?-2.2:-4.4}s"></span><span class="legend-aura-sparkles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>` : ''}
           </span>
         </span>
       </span>
     </button>
-  `).join("") : `
-    <div class="empty-world" role="status">
-      <span aria-hidden="true">✨</span>
-      <strong>아직 보유한 티니핑이 없어요</strong>
-      <small>하단 뽑기에서 티니핑을 획득해보세요.</small>
-    </div>
-  `;
+  `).join("") : "";
 
   paintWorldBackground();
 
   pingActors = ownedPings.map((data, index) => {
     const stored = policyGame.state.positions[data.id];
-    // A single summon always starts in view, even if it has an old saved position.
-    const spawnInCenter=ownedPings.length===1 || centerIds.includes(data.id);
-    const [x, y] = spawnInCenter
-      ? [worldScroll.scrollLeft+(worldScroll.clientWidth-PING_WIDTH)/2,
-        worldScroll.scrollTop+worldScroll.clientHeight/2-32-data.artH/2]
+    const isSummoning=summonSet.has(data.id);
+    const [x, y] = isSummoning
+      ? spawnPositions.get(data.id)
       : stored && Number.isFinite(stored.x) && Number.isFinite(stored.y)
       ? [Math.max(16,Math.min(WORLD_WIDTH-PING_WIDTH-16,stored.x)),Math.max(WORLD_TOP,Math.min(WORLD_HEIGHT-WORLD_BOTTOM_SAFE-PING_HEIGHT,stored.y))]
-      : positions[index];
+      : createRandomPositions(1,occupied)[0];
     const direction = index % 2 === 0 ? 1 : -1;
     const actor = {
       index,
       data,
+      spawnDelay:Math.max(0,summonIds.indexOf(data.id))*25,
       element: pingWorld.querySelector(`[data-ping="${data.id}"]`),
       x,
       y,
@@ -1251,13 +1295,13 @@ function renderPingWorld({ centerIds = [] } = {}) {
       targetTimer: 0,
       vx: direction * (0.008 + (index % 3) * 0.002) * WANDER_SPEED_MULTIPLIER,
       vy: (index % 3 - 1) * 0.0025 * WANDER_SPEED_MULTIPLIER,
-      bouncePhase: spawnInCenter ? 0 : seededUnit(index, 11) * Math.PI * 2,
+      bouncePhase: seededUnit(index, 11) * Math.PI * 2,
       bounceSpeed: (Math.PI * 2) / (2200 + (index % 4) * 280),
       bounceAmplitude: 5 + (index % 3) * 1.2,
       collisionBoost: 0,
       pulseTimer: 0,
     };
-    chooseWanderTarget(actor);
+    if (isSummoning && actor.spawnDelay<=0 && !reducedMotion) actor.element.classList.add('is-spawning');
     return actor;
   });
 
@@ -1274,12 +1318,24 @@ function renderPingWorld({ centerIds = [] } = {}) {
     actor.label.style.pointerEvents='none';
     actor.label.appendChild(info);
     pingWorld.appendChild(actor.label);
+    actor.element.style.visibility=actor.label.style.visibility=actor.spawnDelay>0?'hidden':'';
+    chooseWanderTarget(actor);
     updatePingElement(actor);
     positionActor(actor);
   });
   updateSoulFromPings();
+  syncEmptyOwnedPopup();
+  if(focusSpawnId && summonIds.length===1 && summonSet.has(focusSpawnId)) {
+    const actor=pingActors.find(actor=>actor.data.id===focusSpawnId);
+    if(actor) beginSummonFocus(actor);
+  }
   animationFrame = requestAnimationFrame(animatePingWorld);
 }
+
+// Release the entrance class so feeding/charging animations keep their normal priority.
+pingWorld.addEventListener('animationend',event=>{
+  if(event.animationName==='ping-summon-pop') event.target.closest('.teenieping')?.classList.remove('is-spawning');
+});
 
 function positionActor(actor) {
   const lowXpBounceScale = isExhausted(actor.data) ? 0 : actor.data.xp <= 50 ? 0.35 : 1;
@@ -1294,17 +1350,18 @@ function positionActor(actor) {
   }
 }
 
-// Enlarge only the invisible collision boxes; keep the Figma artwork sizes.
-const PING_COLLIDER_SCALE = 1.2;
-const PING_COLLIDER_ALLOWED_OVERLAP = 0.10;
-const PING_COLLISION_REBOUND_SPEED = 0.045;
-const PING_COLLISION_REBOUND_MS = 350;
-const PING_COLLISION_COOLDOWN_MS = 220;
+// Smaller colliders and generous overlap let crowded groups swim past each other.
+const PING_COLLIDER_SCALE = 0.90;
+const PING_COLLIDER_ALLOWED_OVERLAP = 0.20;
+const PING_COLLISION_REBOUND_SPEED = 0.016;
+const PING_COLLISION_REBOUND_MS = 180;
+const PING_COLLISION_COOLDOWN_MS = 420;
 function resolvePingCollisions() {
   // Recheck nearby pairs after separation so crowded groups settle together.
-  for (let pass=0;pass<3;pass++)
+  for (let pass=0;pass<2;pass++)
   for (let i=0;i<pingActors.length;i++) for (let j=i+1;j<pingActors.length;j++) {
     const a=pingActors[i], b=pingActors[j];
+    if (a.spawnDelay>0 || b.spawnDelay>0 || a.waitingForCamera || b.waitingForCamera) continue;
     const aw=a.data.artW*PING_COLLIDER_SCALE, ah=a.data.artH*PING_COLLIDER_SCALE;
     const bw=b.data.artW*PING_COLLIDER_SCALE, bh=b.data.artH*PING_COLLIDER_SCALE;
     const ax=a.x+(PING_WIDTH-aw)/2, bx=b.x+(PING_WIDTH-bw)/2;
@@ -1318,7 +1375,7 @@ function resolvePingCollisions() {
     const correctionY=overlapY-allowed/overlapX+.01;
     const direction=(correctionX<correctionY ? bx-ax : by-ay)>=0 ? 1 : -1;
     const axis=correctionX<correctionY?'x':'y';
-    const correction=correctionX<correctionY?correctionX:correctionY;
+    const correction=(correctionX<correctionY?correctionX:correctionY)*.6;
     const fixedA=isExhausted(a.data);
     const fixedB=isExhausted(b.data);
     if (fixedA && fixedB) continue;
@@ -1332,11 +1389,12 @@ function resolvePingCollisions() {
       collisionCooldowns.set(contactKey,now);
       for (const [actor,fixed,outward] of [[a,fixedA,-direction],[b,fixedB,direction]]) {
         if (fixed) continue;
-        actor[axis==='x'?'vx':'vy']=outward*Math.min(COLLISION_MAX_SPEED,Math.max(PING_COLLISION_REBOUND_SPEED,Math.abs(actor[axis==='x'?'vx':'vy'])));
-        actor.collisionBoost=PING_COLLISION_REBOUND_MS;
-        actor.targetX=actor.x+(axis==='x'?outward*80:0);
-        actor.targetY=actor.y+(axis==='y'?outward*80:0);
-        actor.targetTimer=PING_COLLISION_REBOUND_MS;
+        const velocity=axis==='x'?'vx':'vy';
+        // Rebound only when heading into contact; retain tangent velocity and wander target.
+        if(actor[velocity]*outward<0) {
+          actor[velocity]=outward*Math.min(.025,Math.max(PING_COLLISION_REBOUND_SPEED,Math.abs(actor[velocity])*.4));
+          actor.collisionBoost=PING_COLLISION_REBOUND_MS;
+        }
       }
     }
     collisionCount++;
@@ -1364,8 +1422,17 @@ function animatePingWorld(timestamp) {
   const elapsed = lastAnimationTime ? Math.min(32, timestamp - lastAnimationTime) : 16;
   lastAnimationTime = timestamp;
 
+  updateSummonFocus(timestamp);
   refreshPolicy();
   pingActors.forEach((actor) => {
+    if(actor.waitingForCamera) return;
+    if (actor.spawnDelay>0) {
+      actor.spawnDelay-=elapsed;
+      if(actor.spawnDelay>0) return;
+      actor.element.style.visibility=actor.label.style.visibility='';
+      // Start the same opaque pop used by immediate summons, at the actual reveal.
+      if(!reducedMotion) actor.element.classList.add('is-spawning');
+    }
     const isLowXp = isExhausted(actor.data);
     const motionElapsed = elapsed*(actor.data.xp<=50?.35:1);
 
@@ -1627,10 +1694,20 @@ function renderDex() {
     const cards=entries.map(item=>{
       const character=characters.get(item.name);
       const owned=ownedIds.has(character.id);
-      const background=stars===3?(owned?'card-owned':'card-unowned'):stars===2?'card-royal':'card-common';
-      return `<div class="dex-popup-card ${owned?'':'is-unowned'}" aria-label="${item.name}, ${grade}, ${owned?'보유':'미획득'}">
-        <img class="dex-popup-card-bg" src="${base}${background}.svg" alt="" />
-        <span class="dex-popup-stars stars-${stars}" aria-label="${stars}성"><img src="${base}stars-${stars}.svg" alt="" /></span>
+      const cardAssets='assets/dex-card-v3/';
+      const cardNode=stars===3?'1210:42708':stars===2?'1210:42744':'1210:42767';
+      const background=stars===3
+        ? `<span class="dex-popup-card-bg dex-legend-bg" aria-hidden="true">
+            <img class="dex-legend-outer" src="${cardAssets}legend-outer.svg" alt="" />
+            <img class="dex-legend-inner" src="${cardAssets}legend-inner.svg" alt="" />
+            <img class="dex-legend-bottom-detail" src="${cardAssets}legend-bottom-detail.svg" alt="" />
+            <img class="dex-legend-top-detail" src="${cardAssets}legend-top-detail.svg" alt="" />
+            <img class="dex-legend-starglow" src="${cardAssets}legend-starglow.svg" alt="" />
+          </span>`
+        : `<img class="dex-popup-card-bg" src="${cardAssets}${stars===2?'card-royal':'card-common'}.svg" alt="" />`;
+      return `<div class="dex-popup-card ${owned?'':'is-unowned'}" data-node-id="${cardNode}" aria-label="${item.name}, ${grade}, ${owned?'보유':'미획득'}">
+        ${background}
+        <span class="dex-popup-stars stars-${stars}" aria-label="${stars}성"><img src="${cardAssets}stars-${stars}.svg" alt="" /></span>
         <img class="dex-popup-character" src="${owned ? character.image : `assets/teeniepings-still/${character.name}.png`}" alt="${item.name}" width="80" height="80" draggable="false" />
         <span class="dex-popup-name">${item.name}</span>
         ${owned?'':'<span class="dex-popup-off" aria-hidden="true"><span class="off-white"></span><span class="off-gray"></span><span class="off-tint"></span></span>'}
@@ -1662,6 +1739,32 @@ function syncDexPopup() {
 function remainingCooldownText() {
   const quote = policyGame.quote(policyNow());
   return quote.freeLeft ? `오늘 무료 충전 ${quote.freeLeft}회 남음` : '오늘 무료 충전 3회를 모두 사용했어요';
+}
+
+function renderEmptyOwned() {
+  const base='assets/empty-owned-popup/';
+  return `<div class="empty-owned-content" data-node-id="1243:53868">
+    <div class="empty-owned-top" aria-hidden="true"><img class="empty-owned-bg" src="${base}background.svg" alt="" /></div>
+    <div class="empty-owned-body" aria-hidden="true"></div>
+    <div class="empty-owned-art" aria-hidden="true">
+      <img class="empty-owned-glow" src="${base}character-glow-v2.svg" alt="" />
+      <img class="empty-owned-character" src="${base}hachuping.png" alt="" draggable="false" />
+    </div>
+    <p class="empty-owned-description" id="emptyOwnedDescription">컬렉템으로 이동해서<br>첫 번째 티니핑을 획득해보세요!</p>
+    <div class="empty-owned-footer" aria-hidden="true"></div>
+  </div>`;
+}
+
+function syncEmptyOwnedPopup() {
+  if(policyGame.ownedIds().length>0) {
+    emptyOwnedPromptShown=false;
+    if(activeSheet==='empty-owned') closeSheet();
+    return;
+  }
+  // Show once on entry/transition to zero; closing it must not create a modal loop.
+  if(emptyOwnedPromptShown) return;
+  emptyOwnedPromptShown=true;
+  openSheet('empty-owned');
 }
 
 function renderCharge() {
@@ -1708,6 +1811,7 @@ function openSheet(type) {
     ranking: ["🏆", "랭킹"],
     collection: ["🔎", "도감"],
     charge: ["⚡", "한번에 충전하기"],
+    'empty-owned': ["", "획득한 티니핑이 없어요!"],
   }[type];
   if (!meta) return;
 
@@ -1718,6 +1822,8 @@ function openSheet(type) {
   bottomSheet.classList.toggle('is-ranking-popup',type==='ranking');
   sheetLayer.classList.toggle('is-dex-popup',type==='collection');
   bottomSheet.classList.toggle('is-dex-popup',type==='collection');
+  sheetLayer.classList.toggle('is-empty-owned-popup',type==='empty-owned');
+  bottomSheet.classList.toggle('is-empty-owned-popup',type==='empty-owned');
   sheetLayer.classList.toggle('is-charge-popup',type==='charge');
   bottomSheet.classList.toggle('is-charge-popup',type==='charge');
   sheetLayer.classList.toggle('is-help-popup',type==='help');
@@ -1726,18 +1832,21 @@ function openSheet(type) {
   bottomSheet.classList.toggle('is-background-popup',type==='background');
   if(type==='background')pendingBackgroundId=activeBackgroundId;
   if (type==='help') activeHelpTab='how';
-  document.querySelector('.sheet-close').innerHTML=type==='charge'?'<img src="assets/charge-popup-v2/close.svg" alt="" />':'✕';
+  document.querySelector('.sheet-close').innerHTML=type==='charge'?'<img src="assets/charge-popup-v2/close.svg" alt="" />':type==='empty-owned'?'<img src="assets/empty-owned-popup/close.svg" alt="" />':'✕';
+  if(type==='empty-owned') bottomSheet.setAttribute('aria-describedby','emptyOwnedDescription');
+  else bottomSheet.removeAttribute('aria-describedby');
   if (type === "ranking") { activeRankingTab = "ranking"; rankingScroll = {ranking:0,rewards:0}; }
   sheetEmoji.textContent = meta[0];
   sheetTitle.textContent = meta[1];
-  bottomSheet.classList.toggle("is-rich", type !== "charge");
+  bottomSheet.classList.toggle("is-rich", type !== "charge" && type !== "empty-owned");
   sheetContent.classList.toggle("is-ranking-content", type === "ranking");
   sheetContent.classList.toggle("is-soul-content", type === "soul");
   sheetContent.classList.toggle("is-dex-content", type === "collection");
   sheetContent.classList.toggle("is-charge-content", type === "charge");
+  sheetContent.classList.toggle("is-empty-owned-content", type === "empty-owned");
   sheetContent.classList.toggle("is-help-content", type === "help");
   sheetContent.classList.toggle("is-background-content", type === "background");
-  sheetPrimary.hidden = type !== "charge";
+  sheetPrimary.hidden = type !== "charge" && type !== "empty-owned";
 
   if (type === "soul") sheetContent.innerHTML = renderSoulRewards();
   if (type === "help") sheetContent.innerHTML = renderHelp();
@@ -1748,6 +1857,11 @@ function openSheet(type) {
     sheetContent.innerHTML = renderCharge();
     syncChargePopup();
     primaryHandler = chargeAll;
+  } else if(type==='empty-owned') {
+    sheetContent.innerHTML=renderEmptyOwned();
+    sheetPrimary.textContent='컬렉템으로 가기';
+    sheetPrimary.disabled=false;
+    primaryHandler=()=>{ closeSheet();bridgeAction('draw'); };
   } else {
     primaryHandler = closeSheet;
   }
@@ -1830,9 +1944,15 @@ function setAllPingXp(value) {
 function setOwnedPingCount(value) {
   const count = Math.round(clampDemoValue(value,0,PINGS.length));
   captureWorldState();
-  policyGame.setOwned(PINGS.slice(0,count).map(p=>p.id),policyNow());
+  const previousIds=new Set(policyGame.ownedIds());
+  const nextIds=PINGS.slice(0,count).map(p=>p.id);
+  policyGame.setOwned(nextIds,policyNow());
   refreshPolicy();
-  renderPingWorld();
+  const addedIds=nextIds.filter(id=>!previousIds.has(id));
+  // Expose single-summon focusing instead of playing it behind the demo dialog.
+  if((addedIds.length===1 || count===0) && !demoLayer.hidden) closeDemoPanel();
+  if(count===0) emptyOwnedPromptShown=false;
+  renderPingWorld({spawnIds:addedIds,focusSpawnId:addedIds.length===1?addedIds[0]:null});
   syncDemoPanel();
   savePolicy();
 }
@@ -1855,16 +1975,18 @@ function closeDemoPanel() {
 }
 
 function resetDemoPanel() {
-  policyGame.setOwned(PINGS.map(p=>p.id),policyNow());
+  const previousIds=new Set(policyGame.ownedIds());
+  const defaultIds=PINGS.slice(0,DEFAULT_OWNED_PING_COUNT).map(p=>p.id);
+  policyGame.setOwned(defaultIds,policyNow());
   policyGame.setRatio(42.968/74*100,policyNow());
   refreshPolicy();
   showRankSummary = false;
   centerWorldView();
-  renderPingWorld();
+  renderPingWorld({spawnIds:defaultIds.filter(id=>!previousIds.has(id))});
   updateRankSummary();
   syncDemoPanel();
   savePolicy();
-  showToast('기본 30종과 XP 상태를 복원했어요');
+  showToast(`기본 ${DEFAULT_OWNED_PING_COUNT}종과 XP 상태를 복원했어요`);
 }
 
 function bridgeAction(type) {
@@ -2180,6 +2302,7 @@ window.addEventListener("resize", resizeScreen);
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
+    cancelSummonFocus(true);
     refreshPolicy(); savePolicy();
     cancelAnimationFrame(animationFrame);
     animationFrame = 0;
@@ -2224,7 +2347,7 @@ window.addEventListener('teenieping:acquired',event=>{
   captureWorldState();
   const result = policyGame.acquire(id,policyNow());
   refreshPolicy();
-  if (result.added) renderPingWorld({centerIds:[id]});
+  if (result.added) renderPingWorld({spawnIds:[id],focusSpawnId:id});
   savePolicy();
 });
 
