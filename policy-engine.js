@@ -19,7 +19,7 @@
       this.timeZone = timeZone;
       this.pausedAt = null;
       this.state = { version:1, species:{}, lastRankAt:now, lastAt:now,
-        rankingScore:0, peakSoul:0, gems:1200, dailyDay:dayKey(now,timeZone),
+        rankingScore:0, peakSoul:0, cumulativeSoul:0, gems:1200, dailyDay:dayKey(now,timeZone),
         freeUsed:0, claimed:[], positions:{}, view:null };
       if (saved && saved.version === 1 && Number.isFinite(saved.lastAt) && saved.lastAt <= now + 60000) {
         this.state.lastRankAt = Number.isFinite(saved.lastRankAt) ? Math.min(now, saved.lastRankAt) : now;
@@ -40,6 +40,11 @@
           ).map(lot => ({ amount:Math.min(item.maxXp * .7,lot.amount), at:lot.at }));
           this.state.species[id] = { acquiredAt:Math.min(now,entry.acquiredAt), lots };
         }
+        // Preserve old progress once. Subsequent loads must use only the saved
+        // cumulative value, including zero; ownership/demo changes earn no Soul.
+        this.state.cumulativeSoul = Number.isFinite(saved.cumulativeSoul) && saved.cumulativeSoul >= 0
+          ? saved.cumulativeSoul
+          : round(Math.max(this.state.peakSoul,this.total(now)));
       } else {
         for (const id of new Set(initialIds)) this._add(id,now,initialRatio);
       }
@@ -62,6 +67,7 @@
       return Math.min(item.maxXp,item.maxXp*BASE_RATIO + care);
     }
     total(now) { return this.ownedIds().reduce((sum,id) => sum + this.current(id,now),0); }
+    soulTotal() { return this.state.cumulativeSoul; }
     capacity() { return this.ownedIds().reduce((sum,id) => sum + this.catalog.get(id).maxXp,0); }
     maxTotal() { return [...this.catalog.values()].reduce((sum,item) => sum + item.maxXp,0); }
     advance(now) {
@@ -102,7 +108,10 @@
       const item = this.catalog.get(id), entry = this.state.species[id];
       if (!item || !entry) return 0;
       const added = Math.min(15,Math.max(0,item.maxXp-this.current(id,now)));
-      if (added > EPS) entry.lots.push({ amount:added,at:this.at(now) });
+      if (added > EPS) {
+        entry.lots.push({ amount:added,at:this.at(now) });
+        this.state.cumulativeSoul = round(this.state.cumulativeSoul + added);
+      }
       this.state.peakSoul = Math.max(this.state.peakSoul,this.total(now));
       return added > EPS ? added : 0;
     }
@@ -117,6 +126,7 @@
       if (expectedCost !== undefined && expectedCost !== quote.cost) return { ok:false,reason:'changed' };
       if (this.state.gems < quote.cost) return { ok:false,reason:'gems' };
       for (const target of quote.targets) this.state.species[target.id].lots.push({ amount:target.missing,at:this.at(now) });
+      this.state.cumulativeSoul = round(this.state.cumulativeSoul + quote.xp);
       if (quote.cost === 0) this.state.freeUsed += 1;
       else this.state.gems -= quote.cost;
       this.state.peakSoul = Math.max(this.state.peakSoul,this.total(now));

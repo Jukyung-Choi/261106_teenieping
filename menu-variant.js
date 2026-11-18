@@ -19,6 +19,7 @@ const worldScroll = document.querySelector("#worldScroll");
 const demoLayer = document.querySelector("#demoLayer");
 const demoXpRange = document.querySelector("#demoXpRange");
 const demoXpNumber = document.querySelector("#demoXpNumber");
+const demoSoulNumber = document.querySelector('#demoSoulNumber');
 const demoCountRange = document.querySelector("#demoCountRange");
 const demoCountOutput = document.querySelector("#demoCountOutput");
 const demoGaugeSummary = document.querySelector("#demoGaugeSummary");
@@ -27,6 +28,7 @@ const rankSummary = document.querySelector("#rankSummary");
 const rankScoreValue = document.querySelector("#rankScoreValue");
 const rankPositionValue = document.querySelector("#rankPositionValue");
 const demoRankVisibility = document.querySelector("#demoRankVisibility");
+const demoRewardCoachVisibility = document.querySelector('#demoRewardCoachVisibility');
 
 const PING_WIDTH = 100;
 const PING_HEIGHT = 127;
@@ -1014,6 +1016,12 @@ let toastTimer;
 let chargeWaveTimer;
 const followed = new Set();
 const claimedRewards = new Set();
+const soulRewardDot = document.getElementById('soulRewardDot');
+const soulRewardCoach = document.getElementById('soulRewardCoach');
+const soulRewardAnnouncement = document.getElementById('soulRewardAnnouncement');
+const announcedSoulRewards = new Set();
+let soulRewardCoachTimer;
+let forceSoulRewardCoach = false;
 const collisionCooldowns = new Map();
 
 // Policy values are shared by the main screen, collection and confirmation sheet.
@@ -1066,14 +1074,18 @@ refreshPolicy();
 
 function updateSoulFromPings() {
   refreshPolicy();
-  const total = policyGame.total(policyNow());
-  soul = policyGame.capacity() ? Math.round(total/policyGame.capacity()*100) : 0;
-  const fillWidth = Math.min(240,total/policyGame.maxTotal()*240);
+  const careTotal = policyGame.total(policyNow());
+  const total = policyGame.soulTotal();
+  // DEMO percentage controls character care, independently of earned Soul.
+  soul = policyGame.capacity() ? Math.round(careTotal/policyGame.capacity()*100) : 0;
+  const rewardGoal = Math.max(...MILESTONES.map(item => item.need));
+  const fillWidth = Math.min(240,total/rewardGoal*240);
   gaugeFill.style.width = `${fillWidth}px`;
-  gaugeValue.textContent = Math.round(total).toLocaleString();
+  gaugeValue.textContent = Math.floor(total + 1e-7).toLocaleString();
   gaugeFill.querySelector('img').style.transform = `scaleX(${fillWidth/169})`;
   gaugeFill.querySelector('img').style.transformOrigin = 'left center';
-  document.querySelector('.soul-card').setAttribute('aria-label',`나의 소울 게이지 ${Math.round(total)} XP, 최대 ${policyGame.maxTotal()} XP`);
+  document.querySelector('.soul-card').setAttribute('aria-label',`나의 소울 게이지 ${Math.floor(total + 1e-7)} XP`);
+  syncSoulRewardNotice();
   rankScoreValue.textContent = Math.round(policyGame.state.rankingScore).toLocaleString();
   if (!demoLayer.hidden) syncDemoPanel();
   syncSoulPopup();
@@ -1091,6 +1103,7 @@ function updateRankSummary() {
     "aria-label",
     `나의 랭킹점수 ${Math.round(policyGame.state.rankingScore).toLocaleString()}점, 현재 순위 ${PLAYER_RANK.toLocaleString()}위`,
   );
+  soulRewardCoach.classList.toggle('is-rank-visible', showRankSummary);
 }
 
 function isExhausted(ping) { return ping.xp <= 30 + 1e-6; }
@@ -1545,7 +1558,41 @@ function showToast(message) {
 
 function soulXp() {
   refreshPolicy();
-  return Math.round(policyGame.total(policyNow()));
+  return Math.floor(policyGame.soulTotal() + 1e-7);
+}
+
+function hideSoulRewardCoach() {
+  clearTimeout(soulRewardCoachTimer);
+  soulRewardCoach.hidden = true;
+}
+
+function syncSoulRewardNotice() {
+  const xp = policyGame.soulTotal();
+  const available = MILESTONES.filter(item => xp >= item.need && !claimedRewards.has(item.level));
+  const hasReward = available.length > 0;
+  soulRewardDot.hidden = !hasReward;
+  const card = document.querySelector('.soul-card');
+  // updateSoulFromPings replaces the numeric label before this call.
+  const baseLabel = card.getAttribute('aria-label').replace(/, 받을 수 있는 보상 \d+개$/, '');
+  card.setAttribute('aria-label', baseLabel + (hasReward ? `, 받을 수 있는 보상 ${available.length}개` : ''));
+  if (forceSoulRewardCoach && sheetLayer.hidden && demoLayer.hidden && !document.hidden) {
+    clearTimeout(soulRewardCoachTimer);
+    if (soulRewardCoach.hidden) soulRewardAnnouncement.textContent = '데모: 소울 보상 말풍선 미리보기입니다.';
+    soulRewardCoach.hidden = false;
+    return;
+  }
+  if (!hasReward || !sheetLayer.hidden || !demoLayer.hidden || document.hidden) {
+    hideSoulRewardCoach();
+    // Opening the reward list already exposes every available reward.
+    if (activeSheet === 'soul') available.forEach(item => announcedSoulRewards.add(item.level));
+    return;
+  }
+  if (!available.some(item => !announcedSoulRewards.has(item.level))) return;
+  available.forEach(item => announcedSoulRewards.add(item.level));
+  clearTimeout(soulRewardCoachTimer);
+  soulRewardCoach.hidden = false;
+  soulRewardAnnouncement.textContent = `받을 수 있는 소울 보상이 ${available.length}개 있어요. 소울 게이지를 눌러 확인해 보세요.`;
+  soulRewardCoachTimer = setTimeout(hideSoulRewardCoach, 5000);
 }
 
 function soulRewardArt(item) {
@@ -1556,7 +1603,7 @@ function soulRewardArt(item) {
 }
 
 function renderSoulRewards() {
-  const currentXp=policyGame.total(policyNow());
+  const currentXp=policyGame.soulTotal();
   const rows=MILESTONES.map(item=>{
     const claimed=claimedRewards.has(item.level);
     const state=claimed?'claimed':currentXp>=item.need?'available':'locked';
@@ -1569,7 +1616,7 @@ function renderSoulRewards() {
   return `<div class="soul-popup-content">
     <img class="soul-popup-bg" src="assets/soul-popup/imgUnion1.svg" alt="" aria-hidden="true" />
     <img class="soul-popup-title-hearts" src="assets/soul-popup/imgUnion2.svg" alt="" aria-hidden="true" />
-    <p class="soul-popup-current"><span>나의 소울게이지</span> <strong class="soul-popup-value">${Math.round(currentXp).toLocaleString()}</strong></p>
+    <p class="soul-popup-current"><span>나의 소울게이지</span> <strong class="soul-popup-value">${Math.floor(currentXp + 1e-7).toLocaleString()}</strong></p>
     <div class="soul-popup-list" tabindex="0" role="region" aria-label="소울게이지 단계별 보상 목록">${rows}</div>
     <p class="soul-popup-caption">소울게이지를 더 모아서 다음 보상을 받으세요!</p>
     <button class="soul-popup-confirm" type="button" data-action="close-sheet">확인</button>
@@ -1578,9 +1625,9 @@ function renderSoulRewards() {
 
 function syncSoulPopup() {
   if(activeSheet!=='soul' || sheetLayer.hidden) return;
-  const xp=policyGame.total(policyNow());
+  const xp=policyGame.soulTotal();
   const value=sheetContent.querySelector('.soul-popup-value');
-  if(value) value.textContent=Math.round(xp).toLocaleString();
+  if(value) value.textContent=Math.floor(xp + 1e-7).toLocaleString();
   for(const row of sheetContent.querySelectorAll('[data-reward-level]')) {
     const item=MILESTONES.find(item=>item.level===Number(row.dataset.rewardLevel));
     const claimed=claimedRewards.has(item.level),available=xp>=item.need&&!claimed;
@@ -1597,7 +1644,8 @@ function renderHelp() {
     '같은 티니핑을 다시 뽑으면 마일리지가 돼요.<br>마일리지는 추가 뽑기에 쓸 수 있어요.',
     '터치 한 번에 최대 15 XP가 회복돼요.<br>XP가 30%면 눈을 감고 쉬어요.',
     '회복한 XP는 2시간에 걸쳐 줄어들어요.<br>기본 XP 30%는 유지돼요.',
-    '보유 티니핑의 XP 합이 소울게이지예요.<br>10분마다 랭킹점수에 더해져요.',
+    '터치·한번에 충전하기로 회복한 XP가<br>소울게이지에 누적돼요. 줄어들지 않아요.',
+    '랭킹점수는 티니핑의 현재 XP 합을<br>10분마다 더해 계산해요.',
   ];
   const sns=[
     '나의 티니핑 세상을 캡처해서 #티니핑세상 #ZEPETO 해시태그와 함께 피드 또는 SNS에 올려주세요.',
@@ -1795,6 +1843,7 @@ function lockWorldInteraction() {
   const locked = !sheetLayer.hidden || !demoLayer.hidden;
   worldScroll.inert = locked;
   worldScroll.style.overflow = locked ? 'hidden' : '';
+  syncSoulRewardNotice();
 }
 
 function openSheet(type) {
@@ -1915,6 +1964,11 @@ function clampDemoValue(value, min, max) {
 }
 
 function syncDemoPanel() {
+  const cumulativeSoul = Math.floor(policyGame.soulTotal() + 1e-7);
+  if (document.activeElement !== demoSoulNumber) demoSoulNumber.value = String(cumulativeSoul);
+  document.querySelectorAll('[data-demo-soul]').forEach(button => {
+    button.classList.toggle('is-active', Number(button.dataset.demoSoul) === cumulativeSoul);
+  });
   demoXpRange.value = String(soul);
   if (document.activeElement !== demoXpNumber) demoXpNumber.value = String(soul);
   demoCountRange.value = String(ownedPingCount);
@@ -1922,6 +1976,8 @@ function syncDemoPanel() {
   demoGaugeSummary.textContent = `${soul}%`;
   demoCountSummary.textContent = `${ownedPingCount} / ${PINGS.length}`;
   demoRankVisibility.checked = showRankSummary;
+  demoRewardCoachVisibility.checked = forceSoulRewardCoach;
+  demoRewardCoachVisibility.closest('.demo-switch').querySelector('em').textContent = forceSoulRewardCoach ? '켜짐' : '꺼짐';
   demoRankVisibility.closest(".demo-switch").querySelector("em").textContent = showRankSummary ? "표시" : "숨김";
 
   document.querySelectorAll("[data-demo-xp]").forEach((button) => {
@@ -1930,6 +1986,16 @@ function syncDemoPanel() {
   document.querySelectorAll("[data-demo-count]").forEach((button) => {
     button.classList.toggle("is-active", Number(button.dataset.demoCount) === ownedPingCount);
   });
+}
+
+function setDemoSoul(value) {
+  if (value === '' || !Number.isFinite(Number(value))) return;
+  policyGame.state.cumulativeSoul = Math.floor(clampDemoValue(value,0,999999999));
+  announcedSoulRewards.clear();
+  hideSoulRewardCoach();
+  updateSoulFromPings();
+  syncDemoPanel();
+  savePolicy();
 }
 
 function setAllPingXp(value) {
@@ -1981,6 +2047,8 @@ function resetDemoPanel() {
   policyGame.setRatio(42.968/74*100,policyNow());
   refreshPolicy();
   showRankSummary = false;
+  forceSoulRewardCoach = false;
+  hideSoulRewardCoach();
   centerWorldView();
   renderPingWorld({spawnIds:defaultIds.filter(id=>!previousIds.has(id))});
   updateRankSummary();
@@ -2036,25 +2104,27 @@ function chargeAll() {
   savePolicy();
   closeSheet();
   playChargeWave();
-  showToast(`${result.count}마리의 XP를 충전했어요`);
+  showToast(`${result.count}마리 충전 · 소울 +${Math.floor(result.xp + 1e-7).toLocaleString()}`);
 }
 
 function claimReward(level) {
   const numericLevel = Number(level);
   const reward = MILESTONES.find((item) => item.level === numericLevel);
-  if (!reward || policyGame.total(policyNow()) < reward.need || claimedRewards.has(numericLevel)) return;
+  if (!reward || policyGame.soulTotal() < reward.need || claimedRewards.has(numericLevel)) return;
   claimedRewards.add(numericLevel);
+  syncSoulRewardNotice();
   savePolicy();
   rerenderActiveSheet();
   showToast(`${level}단계 수령 요청을 기록했어요 (미리보기)`);
 }
 
 function claimAllRewards() {
-  const currentXp = policyGame.total(policyNow());
+  const currentXp = policyGame.soulTotal();
   if (!MILESTONES.some(item=>currentXp>=item.need&&!claimedRewards.has(item.level))) return;
   MILESTONES.forEach((item) => {
     if (currentXp >= item.need) claimedRewards.add(item.level);
   });
+  syncSoulRewardNotice();
   rerenderActiveSheet();
   savePolicy();
   showToast("보상 수령 요청을 기록했어요 (미리보기)");
@@ -2281,6 +2351,14 @@ sheetContent.addEventListener('pointercancel',finishBackgroundSwipe);
 sheetContent.addEventListener('lostpointercapture',finishBackgroundSwipe);
 
 sheetPrimary.addEventListener("click", () => primaryHandler());
+demoSoulNumber.addEventListener('input', () => setDemoSoul(demoSoulNumber.value));
+demoSoulNumber.addEventListener('change', () => {
+  setDemoSoul(demoSoulNumber.value);
+  demoSoulNumber.value = String(Math.floor(policyGame.soulTotal() + 1e-7));
+});
+document.querySelectorAll('[data-demo-soul]').forEach(button => {
+  button.addEventListener('click', () => setDemoSoul(button.dataset.demoSoul));
+});
 demoXpRange.addEventListener("input", () => setAllPingXp(demoXpRange.value));
 demoXpNumber.addEventListener("input", () => {
   if (demoXpNumber.value === "") return;
@@ -2292,6 +2370,12 @@ demoRankVisibility.addEventListener("change", () => {
   showRankSummary = demoRankVisibility.checked;
   updateRankSummary();
   syncDemoPanel();
+});
+demoRewardCoachVisibility.addEventListener('change', () => {
+  forceSoulRewardCoach = demoRewardCoachVisibility.checked;
+  hideSoulRewardCoach();
+  syncDemoPanel();
+  syncSoulRewardNotice();
 });
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;

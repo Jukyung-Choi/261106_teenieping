@@ -308,3 +308,36 @@
   background:#ff35b5;box-shadow:inset 0 -3.5px 0 rgba(209,0,132,.8);
   color:white;font-size:16px;font-weight:600;line-height:22px;white-space:nowrap;cursor:pointer;
 }
+
+/* Soul reward coach: transient guidance with a persistent unclaimed indicator. */
+.soul-card .soul-reward-dot {
+  position:absolute;z-index:5;right:7px;top:45px;width:11px;height:11px;
+  border:2px solid #fff;border-radius:50%;background:#f4399f;
+  box-shadow:0 1px 5px rgba(171,30,112,.3);pointer-events:none;
+}
+.soul-reward-dot[hidden],.soul-reward-coach[hidden] { display:none; }
+.soul-reward-coach {
+  position:absolute;z-index:6;left:65px;top:158px;width:248px;height:60px;
+  border:1px solid #f3bfdc;border-radius:17px;background:#fff9fd;
+  box-shadow:0 5px 16px rgba(117,31,88,.15);color:#6b2255;
+  animation:soul-reward-coach-in 180ms ease-out;
+}
+.soul-reward-coach::before {
+  content:'';position:absolute;left:126px;top:-6px;width:10px;height:10px;
+  background:#fff9fd;border-top:1px solid #f3bfdc;border-left:1px solid #f3bfdc;transform:rotate(45deg);
+}
+.soul-reward-coach.is-rank-visible { top:185px; }
+.soul-reward-coach-link {
+  position:absolute;inset:0;width:100%;padding:0 12px;
+  display:flex;gap:8px;align-items:center;border:0;background:transparent;color:inherit;
+  font:inherit;text-align:left;cursor:pointer;border-radius:17px;
+}
+.soul-reward-coach-gift { font-size:24px;line-height:1; }
+.soul-reward-coach-link strong { display:block;color:#b62c83;font-size:13px;font-weight:800;line-height:19px;white-space:nowrap; }
+.soul-reward-coach-link small { display:block;color:#895975;font-size:10px;line-height:16px;white-space:nowrap; }
+.soul-reward-coach button:focus-visible { outline:2px solid #c3358c;outline-offset:2px; }
+.demo-soul-number-wrap { margin:8px 0 12px;justify-content:flex-end; }
+.demo-soul-number-wrap input { width:100%;min-width:0; }
+.demo-soul-number-wrap:focus-within { outline:2px solid #ff8fc6;outline-offset:2px; }
+@keyframes soul-reward-coach-in { from { opacity:0;transform:translateY(-4px); } to { opacity:1;transform:translateY(0); } }
+@media (prefers-reduced-motion:reduce) { .soul-reward-coach { animation:none; } }

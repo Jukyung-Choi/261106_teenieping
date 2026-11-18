@@ -7,7 +7,7 @@
     <title>티니핑 세상</title>
     <link rel="stylesheet" href="styles.css?v=figma-664-41273" />
   <link rel="stylesheet" href="redesign.css?v=ranking-rewards-no-score-1" />
-    <link rel="stylesheet" href="menu-variant.css?v=empty-owned-popup-2" />
+    <link rel="stylesheet" href="menu-variant.css?v=demo-soul-2" />
   </head>
   <body>
     <main class="webview-stage" aria-label="티니핑 세상 미니게임">
@@ -26,7 +26,16 @@
   <strong>나의 소울 게이지</strong>
   <span class="gauge-track"><span class="gauge-fill" id="gaugeFill"><img class="" style="" src="assets/redesign/soul-gauge-fill.svg" alt="" draggable="false" /></span><span class="gauge-value" id="gaugeValue">999999</span><span class="gauge-outline" aria-hidden="true"></span><span class="gauge-touch-shine" aria-hidden="true"></span></span>
   <span class="rank-summary" id="rankSummary" hidden><span>랭킹점수 <strong id="rankScoreValue"></strong>점</span><i aria-hidden="true"></i><span><strong id="rankPositionValue"></strong>위</span></span>
+  <span class="soul-reward-dot" id="soulRewardDot" hidden aria-hidden="true"></span>
 </button>
+
+          <div class="soul-reward-coach" id="soulRewardCoach" hidden>
+            <button class="soul-reward-coach-link" type="button" data-action="soul" aria-label="받을 수 있는 소울 보상 확인하기">
+              <span class="soul-reward-coach-gift" aria-hidden="true">🎁</span>
+              <span><strong>보상을 받을 수 있어요!</strong><small>눌러서 보상을 확인해 보세요</small></span>
+            </button>
+          </div>
+          <span class="sr-only" id="soulRewardAnnouncement" role="status" aria-live="polite"></span>
 
           <button class="round-control help-control" type="button" data-action="help" aria-label="참여방법"><img class="" style="" src="assets/redesign/imgBtnBack1.svg" alt="" draggable="false" /></button>
 
@@ -144,6 +153,35 @@
                 <p class="demo-hint">상단 소울게이지 아래의 랭킹점수와 순위 노출 여부를 변경합니다.</p>
               </section>
 
+              <section class="demo-control-group demo-visibility-control" aria-labelledby="demoRewardCoachLabel">
+                <div class="demo-control-head">
+                  <div><span class="demo-step">04</span><strong id="demoRewardCoachLabel">보상 말풍선 미리보기</strong></div>
+                  <label class="demo-switch">
+                    <input id="demoRewardCoachVisibility" type="checkbox" aria-labelledby="demoRewardCoachLabel" />
+                    <span aria-hidden="true"></span><em>꺼짐</em>
+                  </label>
+                </div>
+                <p class="demo-hint">켜고 ‘적용 완료’를 누르면 보상 달성 여부와 관계없이 표시합니다. 이 옵션을 끌 때까지 유지돼요.</p>
+              </section>
+
+              <section class="demo-control-group demo-soul-control" aria-labelledby="demoSoulLabel">
+                <div class="demo-control-head">
+                  <div><span class="demo-step">05</span><strong id="demoSoulLabel">나의 소울 게이지</strong></div>
+                </div>
+                <label class="demo-number-wrap demo-soul-number-wrap">
+                  <span class="sr-only">나의 소울 게이지 직접 입력</span>
+                  <input id="demoSoulNumber" type="number" min="0" max="999999999" step="1" inputmode="numeric" value="0" />
+                  <span>XP</span>
+                </label>
+                <div class="demo-presets" aria-label="소울 게이지 빠른 설정">
+                  <button type="button" data-demo-soul="0">0</button>
+                  <button type="button" data-demo-soul="1000">1,000</button>
+                  <button type="button" data-demo-soul="2000">2,000</button>
+                  <button type="button" data-demo-soul="5000">5,000</button>
+                </div>
+                <p class="demo-hint">직접 입력하거나 목표 수치를 선택하세요. 티니핑별 게이지와 기존 보상 수령 기록은 유지돼요.</p>
+              </section>
+
               <div class="demo-footer">
                 <button class="demo-reset" type="button" data-action="reset-demo">초기 상태로</button>
                 <button class="demo-done" type="button" data-action="close-demo">적용 완료</button>
@@ -155,7 +193,7 @@
         </section>
       </div>
     </main>
-    <script src="policy-engine.js?v=ranking-rewards-no-score-1"></script>
-    <script src="menu-variant.js?v=empty-owned-popup-2"></script>
+    <script src="policy-engine.js?v=demo-soul-2"></script>
+    <script src="menu-variant.js?v=demo-soul-2"></script>
   </body>
 </html>
