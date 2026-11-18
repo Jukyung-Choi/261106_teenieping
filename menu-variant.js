@@ -6,6 +6,12 @@ const WORLD_HEIGHT = 1586;
 const screenViewport = document.querySelector("#screenViewport");
 const gameScreen = document.querySelector("#gameScreen");
 const sheetLayer = document.querySelector("#sheetLayer");
+const rewardReceivedLayer = document.getElementById('rewardReceivedLayer');
+const rewardReceivedThumb = document.getElementById('rewardReceivedThumb');
+const rewardReceivedText = document.getElementById('rewardReceivedText');
+const rewardReceivedConfirm = document.getElementById('rewardReceivedConfirm');
+let rewardReceivedAnimations = [];
+let rewardReceivedInert = [];
 const bottomSheet = document.querySelector(".bottom-sheet");
 const sheetTitle = document.querySelector("#sheetTitle");
 const sheetEmoji = document.querySelector("#sheetEmoji");
@@ -20,6 +26,22 @@ const demoLayer = document.querySelector("#demoLayer");
 const demoXpRange = document.querySelector("#demoXpRange");
 const demoXpNumber = document.querySelector("#demoXpNumber");
 const demoSoulNumber = document.querySelector('#demoSoulNumber');
+const demoColorPreview = document.getElementById('demoColorPreview');
+const COLOR_PREVIEW_STORAGE = 'teenieping-color-preview-s25-level0-1-240-v1';
+let colorPreviewEnabled = true;
+try {
+  const savedColorPreview = localStorage.getItem(COLOR_PREVIEW_STORAGE);
+  if (savedColorPreview !== null) colorPreviewEnabled = savedColorPreview === 'true';
+} catch { /* Color comparison works without storage. */ }
+
+function pingColorSource(source) {
+  if (!colorPreviewEnabled) return source;
+  return source
+    .replace('assets/teeniepings-webp/', 'assets/color-preview-s25/animated/')
+    .replace('assets/teeniepings-closed/', 'assets/color-preview-s25/closed/')
+    .replace('assets/teeniepings-still/', 'assets/color-preview-s25/still/')
+    .replace(/\.png$/, '.webp');
+}
 const demoCountRange = document.querySelector("#demoCountRange");
 const demoCountOutput = document.querySelector("#demoCountOutput");
 const demoGaugeSummary = document.querySelector("#demoGaugeSummary");
@@ -1082,8 +1104,6 @@ function updateSoulFromPings() {
   const fillWidth = Math.min(240,total/rewardGoal*240);
   gaugeFill.style.width = `${fillWidth}px`;
   gaugeValue.textContent = Math.floor(total + 1e-7).toLocaleString();
-  gaugeFill.querySelector('img').style.transform = `scaleX(${fillWidth/169})`;
-  gaugeFill.querySelector('img').style.transformOrigin = 'left center';
   document.querySelector('.soul-card').setAttribute('aria-label',`나의 소울 게이지 ${Math.floor(total + 1e-7)} XP`);
   syncSoulRewardNotice();
   rankScoreValue.textContent = Math.round(policyGame.state.rankingScore).toLocaleString();
@@ -1109,7 +1129,7 @@ function updateRankSummary() {
 function isExhausted(ping) { return ping.xp <= 30 + 1e-6; }
 
 function pingWorldArt(ping) {
-  return isExhausted(ping) ? `assets/teeniepings-closed/${ping.name}.png` : ping.image;
+  return pingColorSource(isExhausted(ping) ? `assets/teeniepings-closed/${ping.name}.png` : ping.image);
 }
 
 function updatePingElement(actor) {
@@ -1602,6 +1622,52 @@ function soulRewardArt(item) {
   return `<img class="soul-popup-item" src="${base}${item.art}.png" alt="" />`;
 }
 
+function rewardObjectParticle(name) {
+  const last = name.charCodeAt(name.length - 1);
+  return last >= 0xac00 && last <= 0xd7a3 && (last - 0xac00) % 28 === 0 ? '를' : '을';
+}
+
+function showRewardReceived(reward) {
+  closeRewardReceived(false);
+  rewardReceivedThumb.innerHTML = `<span class="reward-received-art">${soulRewardArt(reward)}</span>`;
+  rewardReceivedText.textContent = `${reward.name}${rewardObjectParticle(reward.name)} 받았어요!`;
+  rewardReceivedLayer.dataset.rewardLevel = String(reward.level);
+  rewardReceivedLayer.hidden = false;
+  // Keep the completed reward list visible underneath, without letting it receive input.
+  rewardReceivedInert = [...gameScreen.children]
+    .filter(element => element !== rewardReceivedLayer && !element.inert);
+  rewardReceivedInert.forEach(element => { element.inert = true; });
+  hideSoulRewardCoach();
+  const confetti = rewardReceivedLayer.querySelector('.reward-received-confetti');
+  confetti.style.opacity = reducedMotion ? '.7' : '';
+  if (!reducedMotion) {
+    rewardReceivedAnimations = [confetti.animate([
+      {transform:'translateY(120px) scale(.08)',opacity:0,offset:0},
+      {transform:'translateY(0) scale(1)',opacity:1,offset:.12},
+      {transform:'translateY(10px) scale(1.04)',opacity:1,offset:.3},
+      {transform:'translateY(70px) scale(1.1)',opacity:.85,offset:.75},
+      {transform:'translateY(130px) scale(1.12)',opacity:0,offset:1},
+    ],{duration:1500,easing:'linear',fill:'forwards'}),rewardReceivedThumb.animate([
+      {transform:'scale(.88)'},{transform:'scale(1.03)',offset:.65},{transform:'scale(1)'},
+    ],{duration:220,easing:'ease-out'})];
+  }
+  rewardReceivedConfirm.focus({preventScroll:true});
+}
+
+function closeRewardReceived(restoreFocus=true) {
+  const wasOpen = !rewardReceivedLayer.hidden;
+  rewardReceivedAnimations.forEach(animation => animation.cancel());
+  rewardReceivedAnimations = [];
+  rewardReceivedLayer.hidden = true;
+  rewardReceivedInert.forEach(element => { element.inert = false; });
+  rewardReceivedInert = [];
+  if (wasOpen && restoreFocus && !sheetLayer.hidden && activeSheet === 'soul') {
+    sheetContent.querySelector('.soul-popup-confirm')?.focus({preventScroll:true});
+  }
+}
+
+rewardReceivedConfirm.addEventListener('click', () => closeRewardReceived());
+
 function renderSoulRewards() {
   const currentXp=policyGame.soulTotal();
   const rows=MILESTONES.map(item=>{
@@ -1756,14 +1822,14 @@ function renderDex() {
       return `<div class="dex-popup-card ${owned?'':'is-unowned'}" data-node-id="${cardNode}" aria-label="${item.name}, ${grade}, ${owned?'보유':'미획득'}">
         ${background}
         <span class="dex-popup-stars stars-${stars}" aria-label="${stars}성"><img src="${cardAssets}stars-${stars}.svg" alt="" /></span>
-        <img class="dex-popup-character" src="${owned ? character.image : `assets/teeniepings-still/${character.name}.png`}" alt="${item.name}" width="80" height="80" draggable="false" />
+        <img class="dex-popup-character" src="${pingColorSource(owned ? character.image : `assets/teeniepings-still/${character.name}.png`)}" alt="${item.name}" width="80" height="80" draggable="false" />
         <span class="dex-popup-name">${item.name}</span>
         ${owned?'':'<span class="dex-popup-off" aria-hidden="true"><span class="off-white"></span><span class="off-gray"></span><span class="off-tint"></span></span>'}
       </div>`;
     }).join('');
     return `<section class="dex-popup-section" aria-label="${grade} ${ownedCount}/${entries.length}"><h3 class="dex-popup-section-title">${grade} ${ownedCount}/${entries.length}</h3><div class="dex-popup-grid">${cards}</div></section>`;
   }).join('');
-  return `<div class="dex-popup-content" data-node-id="1162:53981" data-owned-ids="${[...ownedIds].sort().join(' ')}">
+  return `<div class="dex-popup-content" data-node-id="1162:53981" data-owned-ids="${[...ownedIds].sort().join(' ')}" data-color-preview="${colorPreviewEnabled}">
     <div class="dex-popup-top" aria-hidden="true"><img class="dex-popup-bg" src="${base}popup-bg.svg" alt="" /></div>
     <div class="dex-popup-body" aria-hidden="true"></div>
     <img class="dex-popup-title-hearts" src="${base}title-hearts.svg" alt="" aria-hidden="true" />
@@ -1778,7 +1844,7 @@ function syncDexPopup() {
   const content=sheetContent.querySelector('.dex-popup-content');
   if (!content) return;
   const ownedIds=policyGame.ownedIds().sort().join(' ');
-  if (content.dataset.ownedIds===ownedIds) return;
+  if (content.dataset.ownedIds===ownedIds && content.dataset.colorPreview===String(colorPreviewEnabled)) return;
   const scrollTop=content.querySelector('.dex-popup-scroll').scrollTop;
   sheetContent.innerHTML=renderDex();
   sheetContent.querySelector('.dex-popup-scroll').scrollTop=scrollTop;
@@ -1949,6 +2015,7 @@ function rerenderActiveSheet() {
 }
 
 function closeSheet() {
+  closeRewardReceived(false);
   stopBackgroundMotion();
   if(backgroundSwipe) {
     const swipe=backgroundSwipe;backgroundSwipe=null;
@@ -1964,6 +2031,11 @@ function clampDemoValue(value, min, max) {
 }
 
 function syncDemoPanel() {
+  demoColorPreview.checked = colorPreviewEnabled;
+  demoColorPreview.closest('.demo-switch').querySelector('em').textContent = colorPreviewEnabled ? '보정' : '원본';
+  document.getElementById('demoColorStatus').textContent = colorPreviewEnabled
+    ? '보정본 미리보기 · 끄면 원본과 비교할 수 있어요.'
+    : '원본 미리보기 · 켜면 채도 +25 / 레벨 0, 1.00, 240을 적용해요.';
   const cumulativeSoul = Math.floor(policyGame.soulTotal() + 1e-7);
   if (document.activeElement !== demoSoulNumber) demoSoulNumber.value = String(cumulativeSoul);
   document.querySelectorAll('[data-demo-soul]').forEach(button => {
@@ -2108,6 +2180,7 @@ function chargeAll() {
 }
 
 function claimReward(level) {
+  if (!rewardReceivedLayer.hidden || activeSheet !== 'soul' || sheetLayer.hidden) return;
   const numericLevel = Number(level);
   const reward = MILESTONES.find((item) => item.level === numericLevel);
   if (!reward || policyGame.soulTotal() < reward.need || claimedRewards.has(numericLevel)) return;
@@ -2115,7 +2188,7 @@ function claimReward(level) {
   syncSoulRewardNotice();
   savePolicy();
   rerenderActiveSheet();
-  showToast(`${level}단계 수령 요청을 기록했어요 (미리보기)`);
+  showRewardReceived(reward);
 }
 
 function claimAllRewards() {
@@ -2131,6 +2204,7 @@ function claimAllRewards() {
 }
 
 function goBack() {
+  if (!rewardReceivedLayer.hidden) { closeRewardReceived(); return; }
   if (!demoLayer.hidden) { closeDemoPanel(); return; }
   if (!sheetLayer.hidden) { closeSheet(); return; }
   if (window.webkit?.messageHandlers?.teenieping) {
@@ -2351,6 +2425,13 @@ sheetContent.addEventListener('pointercancel',finishBackgroundSwipe);
 sheetContent.addEventListener('lostpointercapture',finishBackgroundSwipe);
 
 sheetPrimary.addEventListener("click", () => primaryHandler());
+demoColorPreview.addEventListener('change', () => {
+  colorPreviewEnabled = demoColorPreview.checked;
+  pingActors.forEach(updatePingElement);
+  syncDexPopup();
+  syncDemoPanel();
+  try { localStorage.setItem(COLOR_PREVIEW_STORAGE,String(colorPreviewEnabled)); } catch { /* Preview only. */ }
+});
 demoSoulNumber.addEventListener('input', () => setDemoSoul(demoSoulNumber.value));
 demoSoulNumber.addEventListener('change', () => {
   setDemoSoul(demoSoulNumber.value);
@@ -2379,7 +2460,8 @@ demoRewardCoachVisibility.addEventListener('change', () => {
 });
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  if (!demoLayer.hidden) closeDemoPanel();
+  if (!rewardReceivedLayer.hidden) closeRewardReceived();
+  else if (!demoLayer.hidden) closeDemoPanel();
   else if (!sheetLayer.hidden) closeSheet();
 });
 window.addEventListener("resize", resizeScreen);

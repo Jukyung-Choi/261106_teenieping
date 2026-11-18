@@ -7,7 +7,7 @@
     <title>티니핑 세상</title>
     <link rel="stylesheet" href="styles.css?v=figma-664-41273" />
   <link rel="stylesheet" href="redesign.css?v=ranking-rewards-no-score-1" />
-    <link rel="stylesheet" href="menu-variant.css?v=demo-soul-2" />
+    <link rel="stylesheet" href="menu-variant.css?v=color-preview-s25-1" />
   </head>
   <body>
     <main class="webview-stage" aria-label="티니핑 세상 미니게임">
@@ -21,18 +21,18 @@
           <button class="round-control back-control" type="button" data-action="back" aria-label="뒤로 가기"><img class="" style="" src="assets/redesign/imgBtnBack.svg" alt="" draggable="false" /></button>
 
           <button class="soul-card" type="button" data-action="soul" aria-label="나의 소울 게이지">
-  <img class="soul-bg" src="assets/redesign/soul-bg-4x.png" alt="" draggable="false" />
-  <span class="soul-emblem" aria-hidden="true"><img class="emblem-outline" style="" src="assets/redesign/imgVector3.svg" alt="" draggable="false" /><img class="emblem-art" style="" src="assets/redesign/imgImage1894.png" alt="" draggable="false" /></span>
+  <img class="soul-bg" src="assets/soul-hud-v2/soul-bg.svg" alt="" draggable="false" />
+  <span class="soul-emblem" aria-hidden="true"><img class="emblem-outline" style="" src="assets/soul-hud-v2/emblem-outline.svg" alt="" draggable="false" /><img class="emblem-art" style="" src="assets/soul-hud-v2/emblem.png" alt="" draggable="false" /></span>
   <strong>나의 소울 게이지</strong>
-  <span class="gauge-track"><span class="gauge-fill" id="gaugeFill"><img class="" style="" src="assets/redesign/soul-gauge-fill.svg" alt="" draggable="false" /></span><span class="gauge-value" id="gaugeValue">999999</span><span class="gauge-outline" aria-hidden="true"></span><span class="gauge-touch-shine" aria-hidden="true"></span></span>
+  <span class="gauge-track"><span class="gauge-fill" id="gaugeFill" aria-hidden="true"></span><span class="gauge-value" id="gaugeValue">999999</span><span class="gauge-outline" aria-hidden="true"></span><span class="gauge-touch-shine" aria-hidden="true"></span></span>
   <span class="rank-summary" id="rankSummary" hidden><span>랭킹점수 <strong id="rankScoreValue"></strong>점</span><i aria-hidden="true"></i><span><strong id="rankPositionValue"></strong>위</span></span>
-  <span class="soul-reward-dot" id="soulRewardDot" hidden aria-hidden="true"></span>
+  <span class="soul-reward-dot" id="soulRewardDot" hidden aria-hidden="true"><img src="assets/soul-hud-v2/reward-dot.svg" alt="" /></span>
 </button>
 
           <div class="soul-reward-coach" id="soulRewardCoach" hidden>
+            <img class="soul-reward-coach-tail" src="assets/soul-hud-v2/coach-tail.svg" alt="" aria-hidden="true" />
             <button class="soul-reward-coach-link" type="button" data-action="soul" aria-label="받을 수 있는 소울 보상 확인하기">
-              <span class="soul-reward-coach-gift" aria-hidden="true">🎁</span>
-              <span><strong>보상을 받을 수 있어요!</strong><small>눌러서 보상을 확인해 보세요</small></span>
+              <span>🎁 보상을 받을 수 있어요!</span>
             </button>
           </div>
           <span class="sr-only" id="soulRewardAnnouncement" role="status" aria-live="polite"></span>
@@ -72,6 +72,17 @@
               <button class="sheet-primary" type="button" id="sheetPrimary">확인</button>
             </section>
           </div>
+
+          <section class="reward-received-layer" id="rewardReceivedLayer" role="dialog" aria-modal="true" aria-labelledby="rewardReceivedText" hidden>
+            <div class="reward-received-dim" aria-hidden="true"></div>
+            <img class="reward-received-glow" src="assets/reward-received/starglow.svg" alt="" aria-hidden="true" />
+            <div class="reward-received-confetti" aria-hidden="true"><img src="assets/reward-received/confetti.svg" alt="" /></div>
+            <div class="reward-received-content">
+              <div class="reward-received-thumb" id="rewardReceivedThumb" aria-hidden="true"></div>
+              <p id="rewardReceivedText"></p>
+            </div>
+            <button class="reward-received-confirm" id="rewardReceivedConfirm" type="button" aria-label="보상 확인 후 단계별 보상으로 돌아가기">받기</button>
+          </section>
 
           <div class="demo-layer" id="demoLayer" hidden>
             <button class="demo-dim" type="button" data-action="close-demo" aria-label="데모 패널 닫기"></button>
@@ -182,6 +193,19 @@
                 <p class="demo-hint">직접 입력하거나 목표 수치를 선택하세요. 티니핑별 게이지와 기존 보상 수령 기록은 유지돼요.</p>
               </section>
 
+              <section class="demo-control-group demo-visibility-control" aria-labelledby="demoColorLabel">
+                <div class="demo-control-head">
+                  <div><span class="demo-step">06</span><strong id="demoColorLabel">티니핑 색상 보정</strong></div>
+                  <label class="demo-switch">
+                    <input id="demoColorPreview" type="checkbox" aria-labelledby="demoColorLabel" checked />
+                    <span aria-hidden="true"></span><em>보정</em>
+                  </label>
+                </div>
+                <p class="demo-color-values">채도 <strong>+25</strong> · 입력 레벨 <strong>0 / 1.00 / 240</strong></p>
+                <p class="demo-hint" id="demoColorStatus" aria-live="polite">보정본 미리보기 · 끄면 원본과 비교할 수 있어요.</p>
+                <p class="demo-hint">30종의 유영·눈 감은 상태·도감에 함께 적용합니다. 원본 파일은 변경하지 않아요.</p>
+              </section>
+
               <div class="demo-footer">
                 <button class="demo-reset" type="button" data-action="reset-demo">초기 상태로</button>
                 <button class="demo-done" type="button" data-action="close-demo">적용 완료</button>
@@ -193,7 +217,7 @@
         </section>
       </div>
     </main>
-    <script src="policy-engine.js?v=demo-soul-2"></script>
-    <script src="menu-variant.js?v=demo-soul-2"></script>
+    <script src="policy-engine.js?v=color-preview-s25-1"></script>
+    <script src="menu-variant.js?v=color-preview-s25-1"></script>
   </body>
 </html>
