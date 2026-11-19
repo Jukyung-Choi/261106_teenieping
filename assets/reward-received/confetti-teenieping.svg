@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="393.114" height="552.67" viewBox="0 0 393.114 552.67" fill="none">
+<defs>
+ <path id="heart" d="M0 7C-3 4-9 0-9-5C-9-11-2-13 0-7C2-13 9-11 9-5C9 0 3 4 0 7Z"/>
+ <path id="star" d="m0-11 3.3 7 7.7 1.2-5.5 5.4 1.3 7.7L0 6.7l-6.8 3.6 1.3-7.7L-11-2.8-3.3-4Z"/>
+ <path id="spark" d="M0-10C1.2-2.4 2.4-1.2 10 0 2.4 1.2 1.2 2.4 0 10-1.2 2.4-2.4 1.2-10 0-2.4-1.2-1.2-2.4 0-10Z"/>
+ <g id="gem"><path d="m-7-5 4-4h6l4 4L0 7Z"/><path d="m-7-5 7 1 7-1M-3-9 0-4 3-9M0-4v11" stroke="white" stroke-opacity=".65" stroke-width=".9" fill="none"/></g>
+</defs>
+<g transform="translate(342.85 276.00) rotate(-22.4) scale(0.63)" opacity="0.92"><use href="#heart" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(68.89 445.99) rotate(-23.0) scale(0.91)" opacity="0.98"><use href="#star" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(206.39 103.13) rotate(-2.3) scale(0.70)" opacity="0.95"><use href="#spark" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(291.57 457.96) rotate(-13.9) scale(0.64)" opacity="0.85"><use href="#gem" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(78.79 245.74) rotate(-30.8) scale(0.52)" opacity="0.87"><use href="#spark" fill="#a8f1e9" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(314.45 166.01) rotate(-25.6) scale(0.64)" opacity="0.74"><use href="#heart" fill="#ffffff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(162.23 459.41) rotate(-10.6) scale(0.61)" opacity="0.90"><use href="#star" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(139.62 117.53) rotate(1.8) scale(0.51)" opacity="0.86"><use href="#spark" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(352.26 359.30) rotate(29.6) scale(0.64)" opacity="0.86"><use href="#gem" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(50.53 363.66) rotate(-10.1) scale(0.53)" opacity="0.81"><use href="#spark" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(255.79 89.47) rotate(6.7) scale(0.65)" opacity="0.84"><use href="#heart" fill="#a8f1e9" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(237.59 469.53) rotate(-28.3) scale(0.56)" opacity="0.98"><use href="#star" fill="#ffffff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(74.87 173.54) rotate(-21.5) scale(0.57)" opacity="0.85"><use href="#spark" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(331.40 232.54) rotate(-23.8) scale(0.56)" opacity="0.74"><use href="#gem" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(116.14 441.83) rotate(-2.0) scale(0.56)" opacity="0.85"><use href="#spark" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(176.68 58.42) rotate(28.2) scale(0.73)" opacity="0.73"><use href="#heart" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(317.09 424.96) rotate(-6.2) scale(0.89)" opacity="0.84"><use href="#star" fill="#a8f1e9" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(60.05 284.22) rotate(25.9) scale(0.71)" opacity="0.96"><use href="#spark" fill="#ffffff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(300.83 123.70) rotate(3.9) scale(0.55)" opacity="0.77"><use href="#gem" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(188.33 518.57) rotate(-17.2) scale(0.63)" opacity="0.98"><use href="#spark" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(91.27 92.82) rotate(23.0) scale(0.94)" opacity="0.85"><use href="#heart" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(344.36 305.12) rotate(-7.7) scale(0.90)" opacity="0.85"><use href="#star" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(73.92 400.01) rotate(-31.1) scale(0.47)" opacity="0.86"><use href="#spark" fill="#a8f1e9" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(229.38 59.31) rotate(9.6) scale(0.83)" opacity="0.83"><use href="#gem" fill="#ffffff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(275.42 478.28) rotate(20.1) scale(0.52)" opacity="0.79"><use href="#spark" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(73.75 219.08) rotate(-31.8) scale(0.60)" opacity="0.81"><use href="#heart" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(325.58 188.59) rotate(18.3) scale(0.58)" opacity="0.97"><use href="#star" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(134.62 490.15) rotate(-17.1) scale(0.79)" opacity="0.75"><use href="#spark" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(155.81 112.95) rotate(3.8) scale(0.83)" opacity="0.73"><use href="#gem" fill="#a8f1e9" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(317.93 369.52) rotate(21.0) scale(0.54)" opacity="0.74"><use href="#spark" fill="#ffffff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(31.89 339.17) rotate(26.3) scale(0.80)" opacity="0.91"><use href="#heart" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(281.13 82.70) rotate(1.6) scale(0.93)" opacity="0.95"><use href="#star" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(220.82 486.67) rotate(-8.3) scale(0.72)" opacity="0.74"><use href="#spark" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(96.70 163.77) rotate(-22.8) scale(0.69)" opacity="0.85"><use href="#gem" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(360.47 256.08) rotate(19.6) scale(0.80)" opacity="0.86"><use href="#spark" fill="#a8f1e9" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(106.14 417.82) rotate(-13.1) scale(0.93)" opacity="0.80"><use href="#heart" fill="#ffffff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(196.67 69.69) rotate(-2.3) scale(0.89)" opacity="0.95"><use href="#star" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(285.00 419.19) rotate(-26.4) scale(0.85)" opacity="0.95"><use href="#spark" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(82.41 260.65) rotate(31.3) scale(0.92)" opacity="0.80"><use href="#gem" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(327.45 130.33) rotate(-15.0) scale(0.65)" opacity="0.81"><use href="#spark" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(172.87 461.71) rotate(-15.2) scale(0.86)" opacity="0.81"><use href="#heart" fill="#a8f1e9" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(108.08 72.10) rotate(-26.2) scale(0.56)" opacity="0.77"><use href="#star" fill="#ffffff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(337.20 332.46) rotate(30.0) scale(0.64)" opacity="0.82"><use href="#spark" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(69.56 370.75) rotate(9.2) scale(0.55)" opacity="0.76"><use href="#gem" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(250.56 61.10) rotate(2.7) scale(0.84)" opacity="0.99"><use href="#spark" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(249.25 466.87) rotate(20.3) scale(0.62)" opacity="0.89"><use href="#heart" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(50.05 175.07) rotate(-27.5) scale(0.94)" opacity="0.77"><use href="#star" fill="#a8f1e9" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(343.72 209.48) rotate(9.0) scale(0.45)" opacity="0.96"><use href="#spark" fill="#ffffff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(122.86 458.25) rotate(9.1) scale(0.56)" opacity="0.97"><use href="#gem" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(171.12 107.00) rotate(19.7) scale(0.56)" opacity="0.75"><use href="#spark" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(322.64 407.27) rotate(-21.3) scale(0.70)" opacity="0.86"><use href="#heart" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(32.36 305.81) rotate(-15.7) scale(0.65)" opacity="0.89"><use href="#star" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(283.61 125.70) rotate(6.3) scale(0.73)" opacity="0.86"><use href="#spark" fill="#a8f1e9" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(201.72 503.78) rotate(-3.8) scale(0.74)" opacity="0.94"><use href="#gem" fill="#ffffff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(90.95 120.45) rotate(24.7) scale(0.52)" opacity="0.82"><use href="#spark" fill="#ff84c7" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+<g transform="translate(360.44 288.23) rotate(31.0) scale(0.61)" opacity="0.98"><use href="#heart" fill="#ffc2e5" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(72.32 425.23) rotate(15.8) scale(0.72)" opacity="0.83"><use href="#star" fill="#c1a2ff" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+<path d="M-3-5 0-7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(219.70 27.73) rotate(22.8) scale(0.80)" opacity="0.91"><use href="#spark" fill="#ffe9a0" stroke="white" stroke-opacity=".55" stroke-width=".65" stroke-linejoin="round"/>
+</g>
+</svg>

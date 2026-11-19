@@ -27,20 +27,102 @@ const demoXpRange = document.querySelector("#demoXpRange");
 const demoXpNumber = document.querySelector("#demoXpNumber");
 const demoSoulNumber = document.querySelector('#demoSoulNumber');
 const demoColorPreview = document.getElementById('demoColorPreview');
-const COLOR_PREVIEW_STORAGE = 'teenieping-color-preview-s25-level0-1-240-v1';
+const COLOR_PREVIEW_STORAGE = 'teenieping-live-color-v2';
+const colorControlNames = {saturation:'Saturation',black:'Black',gamma:'Gamma',white:'White'};
 let colorPreviewEnabled = true;
+let colorSettings = {...TeeniepingColor.DEFAULTS};
+let colorCharacterId = 'auroraping';
+let colorSaveTimer;
+let colorStorageAvailable = true;
 try {
-  const savedColorPreview = localStorage.getItem(COLOR_PREVIEW_STORAGE);
-  if (savedColorPreview !== null) colorPreviewEnabled = savedColorPreview === 'true';
-} catch { /* Color comparison works without storage. */ }
+  const savedColor = JSON.parse(localStorage.getItem(COLOR_PREVIEW_STORAGE));
+  if (savedColor?.version === 2 && savedColor.algorithm === TeeniepingColor.ALGORITHM) {
+    colorSettings = TeeniepingColor.normalize(savedColor.settings);
+    colorPreviewEnabled = savedColor.enabled !== false;
+    if (typeof savedColor.character === 'string') colorCharacterId = savedColor.character;
+  } else {
+    const oldChoice = localStorage.getItem('teenieping-color-preview-s25-level0-1-240-v1');
+    if (oldChoice !== null) colorPreviewEnabled = oldChoice === 'true';
+  }
+} catch { /* Preview remains usable without storage. */ }
 
-function pingColorSource(source) {
-  if (!colorPreviewEnabled) return source;
-  return source
-    .replace('assets/teeniepings-webp/', 'assets/color-preview-s25/animated/')
-    .replace('assets/teeniepings-closed/', 'assets/color-preview-s25/closed/')
-    .replace('assets/teeniepings-still/', 'assets/color-preview-s25/still/')
-    .replace(/\.png$/, '.webp');
+// Always filter originals: the previous fixed +25 preview copies must not be filtered again.
+function pingColorSource(source) { return source; }
+
+function colorSettingsPayload() {
+  return {version:2,algorithm:TeeniepingColor.ALGORITHM,enabled:colorPreviewEnabled,
+    settings:{...colorSettings},character:colorCharacterId};
+}
+function saveColorSettings() {
+  clearTimeout(colorSaveTimer);
+  try { localStorage.setItem(COLOR_PREVIEW_STORAGE,JSON.stringify(colorSettingsPayload())); }
+  catch { colorStorageAvailable = false; }
+}
+function syncColorControls() {
+  demoColorPreview.checked = colorPreviewEnabled;
+  demoColorPreview.closest('.demo-switch').querySelector('em').textContent = colorPreviewEnabled ? '보정' : '원본';
+  for (const [field,suffix] of Object.entries(colorControlNames)) {
+    const range = document.getElementById('demoColor'+suffix);
+    const number = document.getElementById('demoColor'+suffix+'Number');
+    range.value = String(colorSettings[field]);
+    if (document.activeElement !== number) number.value = field==='gamma' ? colorSettings[field].toFixed(2) : String(colorSettings[field]);
+  }
+  for (const suffix of ['Black','BlackNumber']) document.getElementById('demoColor'+suffix).max = String(colorSettings.white-1);
+  for (const suffix of ['White','WhiteNumber']) document.getElementById('demoColor'+suffix).min = String(colorSettings.black+1);
+  const value = `채도 ${colorSettings.saturation>=0?'+':''}${colorSettings.saturation} · 레벨 ${colorSettings.black} / ${colorSettings.gamma.toFixed(2)} / ${colorSettings.white}`;
+  const values = document.getElementById('demoColorValues');
+  if (values.textContent !== value) values.textContent = value;
+  const message = (colorPreviewEnabled ? '전체 티니핑에 실시간 보정 중입니다.' : '전체 화면은 원본 비교 중입니다.')
+    + (colorStorageAvailable ? ' 설정은 이 브라우저에 저장됩니다.' : ' 브라우저 저장을 사용할 수 없어 설정 파일로 보관해 주세요.');
+  const status = document.getElementById('demoColorStatus');
+  if(status.textContent!==message) status.textContent=message;
+}
+function applyColorSettings(save=true) {
+  const {factor,table} = TeeniepingColor.recipe(colorSettings);
+  document.getElementById('pingColorSaturation').setAttribute('values',String(factor));
+  const lut = table.join(' ');
+  for(const channel of ['R','G','B']) document.getElementById('pingColor'+channel).setAttribute('tableValues',lut);
+  document.documentElement.style.setProperty('--ping-color-filter',colorPreviewEnabled?'url("#pingColorAdjustment")':'none');
+  syncColorControls();
+  if(save) { clearTimeout(colorSaveTimer); colorSaveTimer=setTimeout(saveColorSettings,200); }
+}
+function setColorField(field,value) {
+  if(value==='' || !Number.isFinite(Number(value))) return;
+  let next=Number(value);
+  if(field==='black') next=Math.min(next,colorSettings.white-1);
+  if(field==='white') next=Math.max(next,colorSettings.black+1);
+  colorSettings=TeeniepingColor.normalize({...colorSettings,[field]:next});
+  applyColorSettings();
+}
+function selectColorCharacter(id) {
+  const ping=PINGS.find(item=>item.id===id)||PINGS.find(item=>item.id==='auroraping')||PINGS[0];
+  colorCharacterId=ping.id;
+  document.getElementById('demoColorCharacter').value=ping.id;
+  for(const name of ['Before','After']) {
+    const image=document.getElementById('demoColor'+name);
+    image.src=ping.image;
+    image.alt=ping.name+(name==='Before'?' 원본':' 보정');
+  }
+}
+function initializeColorPreview() {
+  const select=document.getElementById('demoColorCharacter');
+  select.replaceChildren(...PINGS.map(ping=>{
+    const option=document.createElement('option');option.value=ping.id;option.textContent=ping.name;return option;
+  }));
+  selectColorCharacter(colorCharacterId);
+  applyColorSettings(false);
+}
+function downloadColorSettings() {
+  saveColorSettings();
+  const payload=colorSettingsPayload();
+  const blob=new Blob([JSON.stringify(payload,null,2)+'\n'],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url;
+  link.download=`teenieping-color-s${colorSettings.saturation}-b${colorSettings.black}-g${colorSettings.gamma.toFixed(2)}-w${colorSettings.white}.json`;
+  document.body.appendChild(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showToast('보정 설정 파일을 저장했어요');
 }
 const demoCountRange = document.querySelector("#demoCountRange");
 const demoCountOutput = document.querySelector("#demoCountOutput");
@@ -1638,16 +1720,8 @@ function showRewardReceived(reward) {
     .filter(element => element !== rewardReceivedLayer && !element.inert);
   rewardReceivedInert.forEach(element => { element.inert = true; });
   hideSoulRewardCoach();
-  const confetti = rewardReceivedLayer.querySelector('.reward-received-confetti');
-  confetti.style.opacity = reducedMotion ? '.7' : '';
   if (!reducedMotion) {
-    rewardReceivedAnimations = [confetti.animate([
-      {transform:'translateY(120px) scale(.08)',opacity:0,offset:0},
-      {transform:'translateY(0) scale(1)',opacity:1,offset:.12},
-      {transform:'translateY(10px) scale(1.04)',opacity:1,offset:.3},
-      {transform:'translateY(70px) scale(1.1)',opacity:.85,offset:.75},
-      {transform:'translateY(130px) scale(1.12)',opacity:0,offset:1},
-    ],{duration:1500,easing:'linear',fill:'forwards'}),rewardReceivedThumb.animate([
+    rewardReceivedAnimations = [rewardReceivedThumb.animate([
       {transform:'scale(.88)'},{transform:'scale(1.03)',offset:.65},{transform:'scale(1)'},
     ],{duration:220,easing:'ease-out'})];
   }
@@ -1829,7 +1903,7 @@ function renderDex() {
     }).join('');
     return `<section class="dex-popup-section" aria-label="${grade} ${ownedCount}/${entries.length}"><h3 class="dex-popup-section-title">${grade} ${ownedCount}/${entries.length}</h3><div class="dex-popup-grid">${cards}</div></section>`;
   }).join('');
-  return `<div class="dex-popup-content" data-node-id="1162:53981" data-owned-ids="${[...ownedIds].sort().join(' ')}" data-color-preview="${colorPreviewEnabled}">
+  return `<div class="dex-popup-content" data-node-id="1162:53981" data-owned-ids="${[...ownedIds].sort().join(' ')}">
     <div class="dex-popup-top" aria-hidden="true"><img class="dex-popup-bg" src="${base}popup-bg.svg" alt="" /></div>
     <div class="dex-popup-body" aria-hidden="true"></div>
     <img class="dex-popup-title-hearts" src="${base}title-hearts.svg" alt="" aria-hidden="true" />
@@ -1844,7 +1918,7 @@ function syncDexPopup() {
   const content=sheetContent.querySelector('.dex-popup-content');
   if (!content) return;
   const ownedIds=policyGame.ownedIds().sort().join(' ');
-  if (content.dataset.ownedIds===ownedIds && content.dataset.colorPreview===String(colorPreviewEnabled)) return;
+  if (content.dataset.ownedIds===ownedIds) return;
   const scrollTop=content.querySelector('.dex-popup-scroll').scrollTop;
   sheetContent.innerHTML=renderDex();
   sheetContent.querySelector('.dex-popup-scroll').scrollTop=scrollTop;
@@ -2031,11 +2105,7 @@ function clampDemoValue(value, min, max) {
 }
 
 function syncDemoPanel() {
-  demoColorPreview.checked = colorPreviewEnabled;
-  demoColorPreview.closest('.demo-switch').querySelector('em').textContent = colorPreviewEnabled ? '보정' : '원본';
-  document.getElementById('demoColorStatus').textContent = colorPreviewEnabled
-    ? '보정본 미리보기 · 끄면 원본과 비교할 수 있어요.'
-    : '원본 미리보기 · 켜면 채도 +25 / 레벨 0, 1.00, 240을 적용해요.';
+  syncColorControls();
   const cumulativeSoul = Math.floor(policyGame.soulTotal() + 1e-7);
   if (document.activeElement !== demoSoulNumber) demoSoulNumber.value = String(cumulativeSoul);
   document.querySelectorAll('[data-demo-soul]').forEach(button => {
@@ -2426,12 +2496,30 @@ sheetContent.addEventListener('lostpointercapture',finishBackgroundSwipe);
 
 sheetPrimary.addEventListener("click", () => primaryHandler());
 demoColorPreview.addEventListener('change', () => {
-  colorPreviewEnabled = demoColorPreview.checked;
-  pingActors.forEach(updatePingElement);
-  syncDexPopup();
-  syncDemoPanel();
-  try { localStorage.setItem(COLOR_PREVIEW_STORAGE,String(colorPreviewEnabled)); } catch { /* Preview only. */ }
+  colorPreviewEnabled=demoColorPreview.checked;
+  applyColorSettings();
 });
+for(const [field,suffix] of Object.entries(colorControlNames)) {
+  const range=document.getElementById('demoColor'+suffix);
+  const number=document.getElementById('demoColor'+suffix+'Number');
+  range.addEventListener('input',()=>setColorField(field,range.value));
+  number.addEventListener('input',()=>setColorField(field,number.value));
+  number.addEventListener('change',()=>{
+    setColorField(field,number.value);
+    number.value=field==='gamma'?colorSettings[field].toFixed(2):String(colorSettings[field]);
+  });
+}
+document.getElementById('demoColorCharacter').addEventListener('change',event=>{
+  selectColorCharacter(event.target.value);saveColorSettings();
+});
+document.getElementById('demoColorRequested').addEventListener('click',()=>{
+  colorSettings={...TeeniepingColor.DEFAULTS};colorPreviewEnabled=true;applyColorSettings();
+});
+document.getElementById('demoColorNeutral').addEventListener('click',()=>{
+  colorSettings={saturation:0,black:0,gamma:1,white:255};colorPreviewEnabled=true;applyColorSettings();
+});
+document.getElementById('demoColorExport').addEventListener('click',downloadColorSettings);
+window.addEventListener('pagehide',saveColorSettings);
 demoSoulNumber.addEventListener('input', () => setDemoSoul(demoSoulNumber.value));
 demoSoulNumber.addEventListener('change', () => {
   setDemoSoul(demoSoulNumber.value);
@@ -2481,6 +2569,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+initializeColorPreview();
 restoreWorldView();
 renderPingWorld();
 updateRankSummary();

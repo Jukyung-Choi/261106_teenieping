@@ -350,8 +350,21 @@
 .reward-received-layer { position:absolute;inset:0;z-index:40;overflow:hidden; }
 .reward-received-dim { position:absolute;inset:0;background:rgba(0,0,0,.9); }
 .reward-received-glow { position:absolute;left:-17.84px;top:171.03px;display:block;pointer-events:none;animation:reward-received-glow-turn 24s linear infinite; }
-.reward-received-confetti { position:absolute;left:-4.2px;top:94.4px;width:393.114px;height:552.67px;opacity:0;pointer-events:none;transform-origin:50% 53%; }
-.reward-received-confetti img { display:block;transform:scaleY(-1); }
+/* Pink/cyan star field inspired by the supplied galaxy reference. */
+.reward-received-galaxy { position:absolute;inset:0;overflow:hidden;pointer-events:none; }
+.reward-galaxy-haze { position:absolute;inset:-8%;background:radial-gradient(ellipse at 20% 72%,rgba(214,48,217,.29),transparent 29%),radial-gradient(ellipse at 80% 26%,rgba(168,39,189,.25),transparent 30%),radial-gradient(ellipse at 54% 51%,rgba(158,44,188,.12),transparent 38%);transform:rotate(-15deg);animation:reward-galaxy-breathe 8s ease-in-out infinite alternate; }
+.reward-galaxy-particle { position:absolute;left:var(--x);top:var(--y);font:var(--size)/1 sans-serif;color:var(--color);text-shadow:0 0 2px #fff,0 0 6px var(--color),0 0 13px var(--color);animation:reward-star-twinkle var(--duration) ease-in-out var(--delay) infinite, reward-star-drift var(--drift) ease-in-out var(--delay) infinite alternate;will-change:opacity,transform; }
+.reward-galaxy-particle:not(.is-dust) { font-size:calc(var(--size) * 1.22); }
+.reward-galaxy-particle.is-dust { width:var(--size);height:var(--size);border-radius:50%;background:var(--color);box-shadow:0 0 4px var(--color); }
+@keyframes reward-star-twinkle { 0%,100% { opacity:.48; } 45% { opacity:1; } 70% { opacity:.78; } }
+@keyframes reward-star-drift { from { transform:translate(-3px,7px) rotate(-8deg); } to { transform:translate(5px,-10px) rotate(10deg); } }
+@keyframes reward-galaxy-breathe { from { opacity:.55;transform:rotate(-15deg) scale(.96); } to { opacity:1;transform:rotate(-11deg) scale(1.06); } }
+@media (prefers-reduced-motion:reduce) { .reward-galaxy-particle,.reward-galaxy-haze { animation:none;will-change:auto; }.reward-galaxy-particle { opacity:.65; } }
+/* A single radial star burst on each reward receipt, then the field keeps twinkling. */
+.reward-star-burst { position:absolute;left:50%;top:385px;pointer-events:none; }
+.reward-star-burst span { position:absolute;left:0;top:0;color:var(--color);font:var(--size)/1 sans-serif;text-shadow:0 0 2px white,0 0 7px var(--color),0 0 16px var(--color);opacity:0;animation:reward-star-pop 900ms cubic-bezier(.16,.7,.28,1) var(--delay) both; }
+@keyframes reward-star-pop { 0% { opacity:0;transform:translate(-50%,-50%) scale(.15); } 12% { opacity:1; } 60% { opacity:1; } 100% { opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--turn)) scale(.65); } }
+@media (prefers-reduced-motion:reduce) { .reward-star-burst { display:none; } }
 .reward-received-content { position:absolute;top:320px;left:calc(50% + .5px);width:176px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:16px; }
 .reward-received-thumb { position:relative;flex:none;width:130px;height:130px;background:#fff;border-radius:36.4px;overflow:hidden; }
 .reward-received-art { position:absolute;left:0;top:0;display:block;width:50px;height:50px;transform:scale(2.6);transform-origin:0 0; }
@@ -363,3 +376,28 @@
 
 .demo-color-values { margin:10px 0 0;color:#e7d6e2;font-size:12px;line-height:18px; }
 .demo-color-values strong { color:#ff8fc6;font-weight:700; }
+
+/* Live color preview: only character artwork is corrected, before legend shadows. */
+.color-filter-definitions { position:absolute;overflow:hidden;pointer-events:none; }
+.teenieping .ping-art,.dex-popup-character { filter:var(--ping-color-filter,none); }
+.teenieping.is-legend .ping-art {
+  filter:var(--ping-color-filter,none) drop-shadow(1px 0 0 white) drop-shadow(-1px 0 0 white)
+    drop-shadow(0 1px 0 white) drop-shadow(0 -1px 0 white)
+    drop-shadow(0 0 3px white) drop-shadow(0 0 9px rgb(var(--legend-glow) / .95));
+}
+.demo-color-comparison { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px; }
+.demo-color-comparison figure { margin:0;display:flex;flex-direction:column;align-items:center;background:#3b2c38;border-radius:12px;padding:8px;color:#f7eaf3;font-size:13px; }
+.demo-color-comparison img { display:block;width:96px;height:96px;object-fit:contain; }
+#demoColorBefore { filter:none; }
+#demoColorAfter { filter:url('#pingColorAdjustment'); }
+.demo-color-picker { display:flex;flex-direction:column;gap:6px;margin:12px 0;color:#e7d6e2;font-size:13px; }
+.demo-color-picker select { width:100%;min-height:40px;border:1px solid #76596e;border-radius:10px;background:#30212b;color:#fff;padding:8px;font:inherit; }
+.demo-color-controls { display:grid;gap:12px; }
+.demo-color-control { display:grid;grid-template-columns:minmax(0,1fr) 76px;gap:5px 10px;align-items:center; }
+.demo-color-control label { font-size:13px;color:#f5e6ef; }
+.demo-color-control input[type=number] { width:100%;min-width:0;height:36px;border:1px solid #76596e;border-radius:8px;background:#241a22;color:#fff;font-family:inherit;font-size:16px;font-weight:600;line-height:normal;text-align:right;padding:4px 6px; }
+.demo-color-control input[type=range] { grid-column:1/-1;width:100%;height:26px;margin:0;accent-color:#ff8fc6; }
+.demo-color-actions { display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 6px; }
+.demo-color-actions button { flex:1 1 100px;min-height:40px;padding:8px;border:1px solid #76596e;border-radius:10px;background:#49313f;color:#fff;font-family:inherit;font-size:14px;font-weight:600;line-height:18px;cursor:pointer; }
+.demo-color-actions button:last-child { background:#cc3287;border-color:#cc3287; }
+.demo-color-control input:focus-visible,.demo-color-picker select:focus-visible,.demo-color-actions button:focus-visible { outline:2px solid #ff8fc6;outline-offset:2px; }

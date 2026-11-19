@@ -7,9 +7,20 @@
     <title>티니핑 세상</title>
     <link rel="stylesheet" href="styles.css?v=figma-664-41273" />
   <link rel="stylesheet" href="redesign.css?v=ranking-rewards-no-score-1" />
-    <link rel="stylesheet" href="menu-variant.css?v=color-preview-s25-1" />
+    <link rel="stylesheet" href="menu-variant.css?v=galaxy-burst-1" />
   </head>
   <body>
+    <svg class="color-filter-definitions" aria-hidden="true" width="0" height="0" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="pingColorAdjustment" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feColorMatrix id="pingColorSaturation" type="saturate" values="1.25" result="saturated" />
+        <feComponentTransfer in="saturated">
+          <feFuncR id="pingColorR" type="table" tableValues="0 1" />
+          <feFuncG id="pingColorG" type="table" tableValues="0 1" />
+          <feFuncB id="pingColorB" type="table" tableValues="0 1" />
+          <feFuncA type="identity" />
+        </feComponentTransfer>
+      </filter></defs>
+    </svg>
     <main class="webview-stage" aria-label="티니핑 세상 미니게임">
       <div class="screen-viewport" id="screenViewport">
         <section class="game-screen" id="gameScreen" data-node-id="1140:48602">
@@ -76,7 +87,154 @@
           <section class="reward-received-layer" id="rewardReceivedLayer" role="dialog" aria-modal="true" aria-labelledby="rewardReceivedText" hidden>
             <div class="reward-received-dim" aria-hidden="true"></div>
             <img class="reward-received-glow" src="assets/reward-received/starglow.svg" alt="" aria-hidden="true" />
-            <div class="reward-received-confetti" aria-hidden="true"><img src="assets/reward-received/confetti.svg" alt="" /></div>
+            <div class="reward-received-galaxy" aria-hidden="true"><div class="reward-galaxy-haze"></div>
+<span class="reward-galaxy-particle" style="--x:30.65%;--y:15.20%;--size:9.8px;--color:#ff84e8;--duration:4.37s;--delay:-1.62s;--drift:12.99s">★</span>
+<span class="reward-galaxy-particle" style="--x:67.17%;--y:2.71%;--size:13.5px;--color:#ffaae9;--duration:3.18s;--delay:-4.61s;--drift:7.42s">★</span>
+<span class="reward-galaxy-particle" style="--x:60.28%;--y:20.25%;--size:15.7px;--color:#70e6ff;--duration:4.78s;--delay:-5.84s;--drift:12.92s">★</span>
+<span class="reward-galaxy-particle" style="--x:19.31%;--y:51.83%;--size:8.5px;--color:#b9f4ff;--duration:3.45s;--delay:-3.75s;--drift:8.45s">★</span>
+<span class="reward-galaxy-particle" style="--x:85.41%;--y:57.08%;--size:12.1px;--color:#ff84e8;--duration:3.80s;--delay:-1.79s;--drift:12.86s">★</span>
+<span class="reward-galaxy-particle" style="--x:75.65%;--y:57.99%;--size:8.8px;--color:#ffaae9;--duration:4.50s;--delay:-0.16s;--drift:8.84s">★</span>
+<span class="reward-galaxy-particle" style="--x:91.26%;--y:72.11%;--size:14.4px;--color:#70e6ff;--duration:4.37s;--delay:-5.30s;--drift:8.18s">★</span>
+<span class="reward-galaxy-particle" style="--x:83.76%;--y:28.21%;--size:15.1px;--color:#b9f4ff;--duration:4.70s;--delay:-2.26s;--drift:11.40s">★</span>
+<span class="reward-galaxy-particle" style="--x:86.62%;--y:91.17%;--size:10.7px;--color:#ff84e8;--duration:3.41s;--delay:-3.18s;--drift:11.16s">★</span>
+<span class="reward-galaxy-particle" style="--x:49.08%;--y:11.25%;--size:15.5px;--color:#ffaae9;--duration:5.05s;--delay:-6.42s;--drift:7.36s">★</span>
+<span class="reward-galaxy-particle" style="--x:63.34%;--y:97.60%;--size:9.9px;--color:#70e6ff;--duration:2.93s;--delay:-4.17s;--drift:8.68s">★</span>
+<span class="reward-galaxy-particle" style="--x:81.58%;--y:19.57%;--size:16.1px;--color:#b9f4ff;--duration:3.94s;--delay:-6.58s;--drift:7.20s">★</span>
+<span class="reward-galaxy-particle" style="--x:28.66%;--y:90.49%;--size:7.3px;--color:#ff84e8;--duration:4.01s;--delay:-6.20s;--drift:8.80s">★</span>
+<span class="reward-galaxy-particle" style="--x:95.48%;--y:19.83%;--size:16.1px;--color:#ffaae9;--duration:2.49s;--delay:-2.34s;--drift:9.94s">★</span>
+<span class="reward-galaxy-particle" style="--x:49.17%;--y:8.34%;--size:16.6px;--color:#70e6ff;--duration:4.85s;--delay:-2.71s;--drift:9.74s">★</span>
+<span class="reward-galaxy-particle" style="--x:78.09%;--y:81.56%;--size:12.7px;--color:#b9f4ff;--duration:2.70s;--delay:-2.29s;--drift:9.75s">★</span>
+<span class="reward-galaxy-particle" style="--x:8.56%;--y:97.00%;--size:9.3px;--color:#ff84e8;--duration:3.19s;--delay:-1.03s;--drift:11.77s">★</span>
+<span class="reward-galaxy-particle" style="--x:64.52%;--y:4.61%;--size:13.8px;--color:#ffaae9;--duration:4.86s;--delay:-5.63s;--drift:12.13s">★</span>
+<span class="reward-galaxy-particle" style="--x:10.15%;--y:90.90%;--size:13.8px;--color:#70e6ff;--duration:5.01s;--delay:-2.77s;--drift:11.20s">★</span>
+<span class="reward-galaxy-particle" style="--x:83.46%;--y:11.60%;--size:7.4px;--color:#b9f4ff;--duration:2.64s;--delay:-3.01s;--drift:12.34s">★</span>
+<span class="reward-galaxy-particle" style="--x:52.52%;--y:35.19%;--size:13.0px;--color:#ff84e8;--duration:4.89s;--delay:-6.25s;--drift:11.93s">★</span>
+<span class="reward-galaxy-particle" style="--x:78.65%;--y:57.55%;--size:14.4px;--color:#ffaae9;--duration:3.91s;--delay:-5.37s;--drift:7.05s">★</span>
+<span class="reward-galaxy-particle" style="--x:23.79%;--y:40.50%;--size:15.7px;--color:#70e6ff;--duration:5.06s;--delay:-4.52s;--drift:8.49s">★</span>
+<span class="reward-galaxy-particle" style="--x:63.12%;--y:29.09%;--size:9.4px;--color:#b9f4ff;--duration:3.22s;--delay:-3.38s;--drift:10.38s">★</span>
+<span class="reward-galaxy-particle" style="--x:13.97%;--y:89.62%;--size:12.5px;--color:#ff84e8;--duration:2.38s;--delay:-0.37s;--drift:12.80s">★</span>
+<span class="reward-galaxy-particle" style="--x:17.29%;--y:48.12%;--size:16.2px;--color:#ffaae9;--duration:3.30s;--delay:-0.61s;--drift:12.82s">★</span>
+<span class="reward-galaxy-particle" style="--x:83.35%;--y:50.35%;--size:16.6px;--color:#70e6ff;--duration:4.99s;--delay:-4.23s;--drift:10.21s">★</span>
+<span class="reward-galaxy-particle" style="--x:42.01%;--y:35.47%;--size:15.4px;--color:#b9f4ff;--duration:5.01s;--delay:-2.18s;--drift:10.41s">★</span>
+<span class="reward-galaxy-particle" style="--x:57.72%;--y:87.05%;--size:9.9px;--color:#ff84e8;--duration:4.35s;--delay:-2.72s;--drift:11.48s">★</span>
+<span class="reward-galaxy-particle" style="--x:44.76%;--y:23.76%;--size:16.0px;--color:#ffaae9;--duration:2.60s;--delay:-3.26s;--drift:10.28s">★</span>
+<span class="reward-galaxy-particle" style="--x:74.52%;--y:93.06%;--size:9.2px;--color:#70e6ff;--duration:4.84s;--delay:-5.31s;--drift:11.30s">★</span>
+<span class="reward-galaxy-particle" style="--x:69.01%;--y:8.17%;--size:15.3px;--color:#b9f4ff;--duration:5.18s;--delay:-6.57s;--drift:8.12s">★</span>
+<span class="reward-galaxy-particle" style="--x:12.98%;--y:47.78%;--size:11.6px;--color:#ff84e8;--duration:5.11s;--delay:-1.81s;--drift:12.53s">★</span>
+<span class="reward-galaxy-particle" style="--x:89.64%;--y:54.62%;--size:9.5px;--color:#ffaae9;--duration:2.91s;--delay:-3.04s;--drift:12.84s">★</span>
+<span class="reward-galaxy-particle" style="--x:27.68%;--y:93.96%;--size:7.2px;--color:#70e6ff;--duration:4.66s;--delay:-3.86s;--drift:9.60s">★</span>
+<span class="reward-galaxy-particle" style="--x:34.99%;--y:4.98%;--size:7.4px;--color:#b9f4ff;--duration:3.72s;--delay:-0.25s;--drift:7.91s">★</span>
+<span class="reward-galaxy-particle" style="--x:63.45%;--y:97.85%;--size:10.7px;--color:#ff84e8;--duration:4.67s;--delay:-5.48s;--drift:12.78s">★</span>
+<span class="reward-galaxy-particle" style="--x:62.76%;--y:23.04%;--size:11.7px;--color:#ffaae9;--duration:4.05s;--delay:-5.31s;--drift:7.33s">★</span>
+<span class="reward-galaxy-particle" style="--x:27.06%;--y:53.81%;--size:8.6px;--color:#70e6ff;--duration:4.91s;--delay:-4.66s;--drift:9.40s">★</span>
+<span class="reward-galaxy-particle" style="--x:10.13%;--y:73.98%;--size:15.1px;--color:#b9f4ff;--duration:3.51s;--delay:-3.39s;--drift:9.58s">★</span>
+<span class="reward-galaxy-particle" style="--x:4.68%;--y:42.28%;--size:12.9px;--color:#ff84e8;--duration:2.99s;--delay:-4.35s;--drift:7.49s">★</span>
+<span class="reward-galaxy-particle" style="--x:2.65%;--y:17.22%;--size:8.2px;--color:#ffaae9;--duration:3.04s;--delay:-3.27s;--drift:8.37s">★</span>
+<span class="reward-galaxy-particle" style="--x:77.16%;--y:7.25%;--size:11.1px;--color:#70e6ff;--duration:2.60s;--delay:-3.14s;--drift:9.59s">★</span>
+<span class="reward-galaxy-particle" style="--x:74.74%;--y:45.50%;--size:7.7px;--color:#b9f4ff;--duration:2.69s;--delay:-2.29s;--drift:7.90s">★</span>
+<span class="reward-galaxy-particle" style="--x:79.41%;--y:66.83%;--size:11.7px;--color:#ff84e8;--duration:4.12s;--delay:-2.46s;--drift:10.23s">★</span>
+<span class="reward-galaxy-particle" style="--x:94.00%;--y:79.39%;--size:12.6px;--color:#ffaae9;--duration:2.45s;--delay:-6.58s;--drift:7.60s">★</span>
+<span class="reward-galaxy-particle" style="--x:87.14%;--y:79.82%;--size:11.6px;--color:#70e6ff;--duration:3.06s;--delay:-3.20s;--drift:7.67s">★</span>
+<span class="reward-galaxy-particle" style="--x:60.24%;--y:61.81%;--size:13.4px;--color:#b9f4ff;--duration:3.77s;--delay:-4.07s;--drift:8.92s">★</span>
+<span class="reward-galaxy-particle is-dust" style="--x:39.32%;--y:15.49%;--size:1.5px;--color:#ff84e8;--duration:3.95s;--delay:-4.75s;--drift:10.77s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:30.08%;--y:32.15%;--size:2.1px;--color:#ffaae9;--duration:4.53s;--delay:-6.10s;--drift:10.11s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:32.86%;--y:33.25%;--size:2.5px;--color:#70e6ff;--duration:3.12s;--delay:-6.04s;--drift:12.44s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:41.61%;--y:29.53%;--size:1.9px;--color:#b9f4ff;--duration:3.88s;--delay:-6.51s;--drift:10.20s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:91.39%;--y:55.04%;--size:1.2px;--color:#ff84e8;--duration:3.55s;--delay:-6.10s;--drift:12.25s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:47.92%;--y:82.43%;--size:2.5px;--color:#ffaae9;--duration:3.69s;--delay:-4.08s;--drift:10.05s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:44.26%;--y:5.35%;--size:1.3px;--color:#70e6ff;--duration:2.92s;--delay:-1.84s;--drift:11.91s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:59.44%;--y:66.17%;--size:2.3px;--color:#b9f4ff;--duration:3.71s;--delay:-3.52s;--drift:11.13s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:8.15%;--y:37.20%;--size:1.7px;--color:#ff84e8;--duration:3.15s;--delay:-5.59s;--drift:7.59s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:6.03%;--y:22.71%;--size:1.9px;--color:#ffaae9;--duration:2.77s;--delay:-6.01s;--drift:7.68s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:3.98%;--y:87.30%;--size:1.8px;--color:#70e6ff;--duration:4.71s;--delay:-4.22s;--drift:12.74s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:25.23%;--y:37.09%;--size:2.4px;--color:#b9f4ff;--duration:4.86s;--delay:-0.90s;--drift:7.89s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:95.61%;--y:32.76%;--size:1.5px;--color:#ff84e8;--duration:3.67s;--delay:-6.14s;--drift:11.89s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:88.54%;--y:39.15%;--size:1.3px;--color:#ffaae9;--duration:3.66s;--delay:-3.49s;--drift:11.60s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:89.74%;--y:97.07%;--size:1.2px;--color:#70e6ff;--duration:3.76s;--delay:-5.92s;--drift:11.69s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:24.76%;--y:82.56%;--size:1.2px;--color:#b9f4ff;--duration:4.72s;--delay:-1.40s;--drift:7.12s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:42.50%;--y:64.13%;--size:1.5px;--color:#ff84e8;--duration:3.40s;--delay:-4.48s;--drift:11.67s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:89.87%;--y:3.64%;--size:2.2px;--color:#ffaae9;--duration:2.75s;--delay:-4.91s;--drift:10.07s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:91.79%;--y:47.26%;--size:1.5px;--color:#70e6ff;--duration:3.38s;--delay:-0.12s;--drift:12.03s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:94.42%;--y:25.55%;--size:1.2px;--color:#b9f4ff;--duration:4.55s;--delay:-2.37s;--drift:12.52s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:73.98%;--y:1.24%;--size:2.0px;--color:#ff84e8;--duration:4.16s;--delay:-4.33s;--drift:10.19s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:75.54%;--y:53.61%;--size:1.7px;--color:#ffaae9;--duration:3.84s;--delay:-4.92s;--drift:9.38s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:97.75%;--y:94.24%;--size:1.2px;--color:#70e6ff;--duration:4.66s;--delay:-6.60s;--drift:11.37s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:15.89%;--y:47.59%;--size:1.2px;--color:#b9f4ff;--duration:3.25s;--delay:-4.14s;--drift:12.91s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:15.44%;--y:71.42%;--size:1.7px;--color:#ff84e8;--duration:4.86s;--delay:-1.39s;--drift:11.66s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:16.89%;--y:16.53%;--size:1.7px;--color:#ffaae9;--duration:3.20s;--delay:-2.32s;--drift:12.83s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:20.12%;--y:4.69%;--size:1.9px;--color:#70e6ff;--duration:2.70s;--delay:-3.34s;--drift:12.70s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:49.18%;--y:87.58%;--size:1.5px;--color:#b9f4ff;--duration:3.07s;--delay:-2.50s;--drift:9.07s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:7.70%;--y:30.31%;--size:2.5px;--color:#ff84e8;--duration:3.68s;--delay:-3.12s;--drift:11.09s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:22.41%;--y:19.33%;--size:1.7px;--color:#ffaae9;--duration:3.72s;--delay:-4.49s;--drift:9.37s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:94.16%;--y:98.03%;--size:1.2px;--color:#70e6ff;--duration:3.64s;--delay:-2.02s;--drift:11.34s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:86.60%;--y:41.90%;--size:2.4px;--color:#b9f4ff;--duration:4.19s;--delay:-5.93s;--drift:7.71s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:57.73%;--y:2.37%;--size:2.5px;--color:#ff84e8;--duration:3.64s;--delay:-5.15s;--drift:8.85s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:61.97%;--y:13.26%;--size:1.6px;--color:#ffaae9;--duration:3.76s;--delay:-2.49s;--drift:8.79s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:25.21%;--y:98.84%;--size:1.9px;--color:#70e6ff;--duration:4.59s;--delay:-0.60s;--drift:7.41s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:47.44%;--y:65.69%;--size:1.1px;--color:#b9f4ff;--duration:4.38s;--delay:-6.49s;--drift:10.97s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:87.28%;--y:33.10%;--size:1.8px;--color:#ff84e8;--duration:5.20s;--delay:-5.57s;--drift:12.31s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:79.46%;--y:78.52%;--size:2.1px;--color:#ffaae9;--duration:5.15s;--delay:-6.18s;--drift:11.69s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:42.43%;--y:71.10%;--size:1.3px;--color:#70e6ff;--duration:4.57s;--delay:-1.40s;--drift:10.68s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:70.44%;--y:20.69%;--size:1.3px;--color:#b9f4ff;--duration:3.86s;--delay:-4.46s;--drift:12.53s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:53.89%;--y:12.02%;--size:1.6px;--color:#ff84e8;--duration:4.73s;--delay:-2.63s;--drift:7.29s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:59.56%;--y:60.47%;--size:1.1px;--color:#ffaae9;--duration:4.81s;--delay:-4.95s;--drift:11.27s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:3.66%;--y:57.40%;--size:2.0px;--color:#70e6ff;--duration:3.58s;--delay:-5.45s;--drift:11.09s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:39.59%;--y:17.72%;--size:2.0px;--color:#b9f4ff;--duration:3.23s;--delay:-3.08s;--drift:8.47s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:75.60%;--y:83.87%;--size:1.3px;--color:#ff84e8;--duration:4.70s;--delay:-0.78s;--drift:8.68s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:12.29%;--y:44.73%;--size:1.1px;--color:#ffaae9;--duration:2.49s;--delay:-2.40s;--drift:12.18s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:5.87%;--y:14.50%;--size:2.1px;--color:#70e6ff;--duration:4.71s;--delay:-6.79s;--drift:8.59s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:31.38%;--y:26.65%;--size:1.5px;--color:#b9f4ff;--duration:3.32s;--delay:-0.49s;--drift:12.47s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:97.18%;--y:44.72%;--size:1.5px;--color:#ff84e8;--duration:4.91s;--delay:-6.74s;--drift:9.11s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:92.88%;--y:48.15%;--size:1.8px;--color:#ffaae9;--duration:2.98s;--delay:-0.77s;--drift:7.27s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:23.32%;--y:48.78%;--size:2.1px;--color:#70e6ff;--duration:4.52s;--delay:-3.73s;--drift:9.20s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:96.18%;--y:95.84%;--size:1.6px;--color:#b9f4ff;--duration:3.41s;--delay:-1.31s;--drift:8.76s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:61.88%;--y:84.60%;--size:2.5px;--color:#ff84e8;--duration:3.77s;--delay:-2.95s;--drift:11.41s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:81.64%;--y:6.81%;--size:1.6px;--color:#ffaae9;--duration:3.35s;--delay:-3.46s;--drift:10.73s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:43.41%;--y:25.89%;--size:1.4px;--color:#70e6ff;--duration:4.48s;--delay:-3.33s;--drift:10.91s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:23.21%;--y:15.15%;--size:2.1px;--color:#b9f4ff;--duration:2.71s;--delay:-6.22s;--drift:9.83s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:55.15%;--y:94.14%;--size:1.7px;--color:#ff84e8;--duration:4.27s;--delay:-4.10s;--drift:12.80s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:68.76%;--y:82.46%;--size:1.2px;--color:#ffaae9;--duration:2.48s;--delay:-1.04s;--drift:8.16s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:38.45%;--y:13.66%;--size:1.8px;--color:#70e6ff;--duration:4.70s;--delay:-3.17s;--drift:10.20s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:64.66%;--y:76.92%;--size:2.3px;--color:#b9f4ff;--duration:4.76s;--delay:-5.78s;--drift:10.15s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:39.82%;--y:95.60%;--size:2.1px;--color:#ff84e8;--duration:4.86s;--delay:-6.13s;--drift:8.88s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:59.37%;--y:67.30%;--size:2.0px;--color:#ffaae9;--duration:4.10s;--delay:-5.98s;--drift:8.81s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:24.58%;--y:9.17%;--size:2.4px;--color:#70e6ff;--duration:3.08s;--delay:-3.29s;--drift:11.18s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:23.28%;--y:51.50%;--size:2.4px;--color:#b9f4ff;--duration:2.38s;--delay:-2.02s;--drift:9.33s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:75.26%;--y:95.42%;--size:1.9px;--color:#ff84e8;--duration:3.32s;--delay:-4.38s;--drift:12.30s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:91.45%;--y:84.09%;--size:2.4px;--color:#ffaae9;--duration:4.83s;--delay:-0.32s;--drift:8.46s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:83.80%;--y:41.09%;--size:1.0px;--color:#70e6ff;--duration:4.38s;--delay:-1.98s;--drift:11.72s"></span>
+<span class="reward-galaxy-particle is-dust" style="--x:10.52%;--y:28.60%;--size:1.5px;--color:#b9f4ff;--duration:3.58s;--delay:-2.27s;--drift:11.78s"></span>
+</div>
+            <div class="reward-star-burst" aria-hidden="true">
+<span style="--dx:211.5px;--dy:18.0px;--turn:-14deg;--size:14.1px;--color:#ff83e4;--delay:0.06s">★</span>
+<span style="--dx:162.0px;--dy:36.2px;--turn:39deg;--size:16.2px;--color:#70ecff;--delay:0.01s">★</span>
+<span style="--dx:193.2px;--dy:104.2px;--turn:-12deg;--size:11.8px;--color:#ff83e4;--delay:0.00s">★</span>
+<span style="--dx:129.9px;--dy:137.9px;--turn:-30deg;--size:12.6px;--color:#70ecff;--delay:0.05s">★</span>
+<span style="--dx:134.8px;--dy:184.6px;--turn:-48deg;--size:11.1px;--color:#ff83e4;--delay:0.01s">★</span>
+<span style="--dx:75.9px;--dy:168.7px;--turn:-44deg;--size:19.7px;--color:#70ecff;--delay:0.02s">★</span>
+<span style="--dx:31.8px;--dy:177.8px;--turn:60deg;--size:13.7px;--color:#ff83e4;--delay:0.04s">★</span>
+<span style="--dx:-12.8px;--dy:233.5px;--turn:5deg;--size:11.9px;--color:#70ecff;--delay:0.04s">★</span>
+<span style="--dx:-32.2px;--dy:208.0px;--turn:15deg;--size:17.0px;--color:#ff83e4;--delay:0.04s">★</span>
+<span style="--dx:-68.9px;--dy:186.3px;--turn:60deg;--size:18.0px;--color:#70ecff;--delay:0.05s">★</span>
+<span style="--dx:-109.6px;--dy:179.7px;--turn:34deg;--size:20.9px;--color:#ff83e4;--delay:0.05s">★</span>
+<span style="--dx:-109.7px;--dy:109.6px;--turn:22deg;--size:16.5px;--color:#70ecff;--delay:0.04s">★</span>
+<span style="--dx:-196.2px;--dy:130.4px;--turn:-8deg;--size:12.6px;--color:#ff83e4;--delay:0.04s">★</span>
+<span style="--dx:-159.8px;--dy:52.0px;--turn:60deg;--size:17.1px;--color:#70ecff;--delay:0.02s">★</span>
+<span style="--dx:-136.3px;--dy:0.5px;--turn:39deg;--size:16.0px;--color:#ff83e4;--delay:0.06s">★</span>
+<span style="--dx:-145.6px;--dy:-29.8px;--turn:38deg;--size:12.4px;--color:#70ecff;--delay:0.06s">★</span>
+<span style="--dx:-175.1px;--dy:-102.8px;--turn:-3deg;--size:17.6px;--color:#ff83e4;--delay:0.06s">★</span>
+<span style="--dx:-169.8px;--dy:-161.6px;--turn:-17deg;--size:19.2px;--color:#70ecff;--delay:0.03s">★</span>
+<span style="--dx:-128.9px;--dy:-186.6px;--turn:-59deg;--size:11.3px;--color:#ff83e4;--delay:0.01s">★</span>
+<span style="--dx:-83.6px;--dy:-181.1px;--turn:-36deg;--size:19.2px;--color:#70ecff;--delay:0.05s">★</span>
+<span style="--dx:-36.9px;--dy:-262.5px;--turn:-51deg;--size:11.1px;--color:#ff83e4;--delay:0.05s">★</span>
+<span style="--dx:12.7px;--dy:-219.6px;--turn:-65deg;--size:16.2px;--color:#70ecff;--delay:0.06s">★</span>
+<span style="--dx:30.3px;--dy:-204.5px;--turn:-39deg;--size:19.3px;--color:#ff83e4;--delay:0.02s">★</span>
+<span style="--dx:56.0px;--dy:-149.3px;--turn:6deg;--size:19.2px;--color:#70ecff;--delay:0.04s">★</span>
+<span style="--dx:131.0px;--dy:-212.4px;--turn:47deg;--size:18.0px;--color:#ff83e4;--delay:0.02s">★</span>
+<span style="--dx:154.1px;--dy:-157.1px;--turn:-27deg;--size:20.0px;--color:#70ecff;--delay:0.02s">★</span>
+<span style="--dx:120.9px;--dy:-74.5px;--turn:-50deg;--size:20.7px;--color:#ff83e4;--delay:0.03s">★</span>
+<span style="--dx:151.7px;--dy:-58.2px;--turn:-20deg;--size:18.7px;--color:#70ecff;--delay:0.05s">★</span>
+</div>
             <div class="reward-received-content">
               <div class="reward-received-thumb" id="rewardReceivedThumb" aria-hidden="true"></div>
               <p id="rewardReceivedText"></p>
@@ -201,9 +359,21 @@
                     <span aria-hidden="true"></span><em>보정</em>
                   </label>
                 </div>
-                <p class="demo-color-values">채도 <strong>+25</strong> · 입력 레벨 <strong>0 / 1.00 / 240</strong></p>
-                <p class="demo-hint" id="demoColorStatus" aria-live="polite">보정본 미리보기 · 끄면 원본과 비교할 수 있어요.</p>
-                <p class="demo-hint">30종의 유영·눈 감은 상태·도감에 함께 적용합니다. 원본 파일은 변경하지 않아요.</p>
+                <div class="demo-color-comparison" aria-label="원본과 보정 색상 비교">
+                  <figure><img id="demoColorBefore" alt="원본 티니핑" width="96" height="96" /><figcaption>원본</figcaption></figure>
+                  <figure><img id="demoColorAfter" alt="보정 티니핑" width="96" height="96" /><figcaption>보정</figcaption></figure>
+                </div>
+                <label class="demo-color-picker">비교할 티니핑<select id="demoColorCharacter" aria-label="색상 비교 티니핑"></select></label>
+                <div class="demo-color-controls">
+                  <div class="demo-color-control"><label for="demoColorSaturation">채도</label><input id="demoColorSaturationNumber" aria-label="채도 직접 입력" type="number" min="-100" max="100" step="1" value="25" /><input id="demoColorSaturation" aria-label="채도" type="range" min="-100" max="100" step="1" value="25" /></div>
+                  <div class="demo-color-control"><label for="demoColorBlack">입력 레벨 · 검정</label><input id="demoColorBlackNumber" aria-label="입력 검정 레벨 직접 입력" type="number" min="0" max="239" step="1" value="0" /><input id="demoColorBlack" aria-label="입력 검정 레벨" type="range" min="0" max="239" step="1" value="0" /></div>
+                  <div class="demo-color-control"><label for="demoColorGamma">입력 레벨 · 감마</label><input id="demoColorGammaNumber" aria-label="입력 감마 직접 입력" type="number" min="0.1" max="3" step="0.01" value="1" /><input id="demoColorGamma" aria-label="입력 감마" type="range" min="0.1" max="3" step="0.01" value="1" /></div>
+                  <div class="demo-color-control"><label for="demoColorWhite">입력 레벨 · 흰색</label><input id="demoColorWhiteNumber" aria-label="입력 흰색 레벨 직접 입력" type="number" min="1" max="255" step="1" value="240" /><input id="demoColorWhite" aria-label="입력 흰색 레벨" type="range" min="1" max="255" step="1" value="240" /></div>
+                </div>
+                <p class="demo-color-values" id="demoColorValues"></p>
+                <div class="demo-color-actions"><button type="button" id="demoColorRequested">요청값 +25</button><button type="button" id="demoColorNeutral">보정값 초기화</button><button type="button" id="demoColorExport">설정 파일 저장</button></div>
+                <p class="demo-hint" id="demoColorStatus" aria-live="polite">슬라이더와 숫자로 조절하고 설정 파일을 저장하세요.</p>
+                <p class="demo-hint">30종의 유영·눈 감은 상태·도감에 함께 적용합니다. 원본 파일은 변경하지 않아요. 최종 파일은 저장한 설정으로 보정 후 확인해 주세요.</p>
               </section>
 
               <div class="demo-footer">
@@ -217,7 +387,8 @@
         </section>
       </div>
     </main>
-    <script src="policy-engine.js?v=color-preview-s25-1"></script>
-    <script src="menu-variant.js?v=color-preview-s25-1"></script>
+    <script src="policy-engine.js?v=live-color-1"></script>
+    <script src="color-adjustment.js?v=live-color-1"></script>
+    <script src="menu-variant.js?v=galaxy-stars-1"></script>
   </body>
 </html>
