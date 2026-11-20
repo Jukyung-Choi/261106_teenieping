@@ -7,11 +7,13 @@ const screenViewport = document.querySelector("#screenViewport");
 const gameScreen = document.querySelector("#gameScreen");
 const sheetLayer = document.querySelector("#sheetLayer");
 const rewardReceivedLayer = document.getElementById('rewardReceivedLayer');
+const rewardGalaxyAfterglow = rewardReceivedLayer.querySelector('.reward-galaxy-afterglow');
 const rewardReceivedThumb = document.getElementById('rewardReceivedThumb');
 const rewardReceivedText = document.getElementById('rewardReceivedText');
 const rewardReceivedConfirm = document.getElementById('rewardReceivedConfirm');
 let rewardReceivedAnimations = [];
 let rewardReceivedInert = [];
+let rewardPreviewTrigger = null;
 const bottomSheet = document.querySelector(".bottom-sheet");
 const sheetTitle = document.querySelector("#sheetTitle");
 const sheetEmoji = document.querySelector("#sheetEmoji");
@@ -1709,8 +1711,46 @@ function rewardObjectParticle(name) {
   return last >= 0xac00 && last <= 0xd7a3 && (last - 0xac00) % 28 === 0 ? '를' : '을';
 }
 
-function showRewardReceived(reward) {
+function setRewardConfettiOrigins() {
+  rewardReceivedLayer.querySelectorAll('.reward-received-galaxy > .reward-galaxy-particle').forEach(({style}) => {
+    const x = parseFloat(style.getPropertyValue('--x'));
+    const y = parseFloat(style.getPropertyValue('--y'));
+    const originX = x < 50 ? 28 : 72;
+    const originY = y < 50 ? 30 : 70;
+    style.setProperty('--launch-x', `${(originX - x) * DESIGN_WIDTH / 100}px`);
+    style.setProperty('--launch-y', `${(originY - y) * DESIGN_HEIGHT / 100}px`);
+    style.setProperty('--launch-turn', x < originX ? '65deg' : '-65deg');
+  });
+}
+
+function prepareRewardAfterglow() {
+  const particles = document.createDocumentFragment();
+  rewardReceivedLayer.querySelectorAll('.reward-received-galaxy > .reward-galaxy-particle').forEach((source, index) => {
+    const x = parseFloat(source.style.getPropertyValue('--x'));
+    const y = parseFloat(source.style.getPropertyValue('--y'));
+    const copies = index % 3 === 0 ? 2 : 1;
+    for (let copy = 0; copy < copies; copy++) {
+      const particle = source.cloneNode(true);
+      particle.style.setProperty('--x', `${Math.max(2, Math.min(97, x + Math.random() * 24 - 12))}%`);
+      particle.style.setProperty('--y', `${Math.max(2, Math.min(97, y + Math.random() * 22 - 11))}%`);
+      particle.style.setProperty('--reveal-delay', `${540 + Math.random() * 450}ms`);
+      particles.append(particle);
+    }
+  });
+  rewardGalaxyAfterglow.replaceChildren(particles);
+}
+
+function showRewardReceived(reward, previewTrigger = null) {
   closeRewardReceived(false);
+  rewardPreviewTrigger = previewTrigger;
+  rewardReceivedLayer.dataset.effectPreview = previewTrigger?.dataset.demoRewardEffect ?? '1';
+  if (previewTrigger) {
+    rewardReceivedConfirm.setAttribute('aria-label', '보상 확인 후 데모 패널로 돌아가기');
+  }
+  if (rewardReceivedLayer.dataset.effectPreview === '1') {
+    prepareRewardAfterglow();
+    if (!reducedMotion) setRewardConfettiOrigins();
+  }
   rewardReceivedThumb.innerHTML = `<span class="reward-received-art">${soulRewardArt(reward)}</span>`;
   rewardReceivedText.textContent = `${reward.name}${rewardObjectParticle(reward.name)} 받았어요!`;
   rewardReceivedLayer.dataset.rewardLevel = String(reward.level);
@@ -1730,11 +1770,23 @@ function showRewardReceived(reward) {
 
 function closeRewardReceived(restoreFocus=true) {
   const wasOpen = !rewardReceivedLayer.hidden;
+  const previewTrigger = rewardPreviewTrigger;
+  rewardPreviewTrigger = null;
   rewardReceivedAnimations.forEach(animation => animation.cancel());
   rewardReceivedAnimations = [];
   rewardReceivedLayer.hidden = true;
+  delete rewardReceivedLayer.dataset.effectPreview;
+  rewardGalaxyAfterglow.replaceChildren();
+  if (previewTrigger) {
+    rewardReceivedConfirm.setAttribute('aria-label', '보상 확인 후 단계별 보상으로 돌아가기');
+  }
   rewardReceivedInert.forEach(element => { element.inert = false; });
   rewardReceivedInert = [];
+  if (previewTrigger && restoreFocus) {
+    closeSheet();
+    previewTrigger.focus({preventScroll:true});
+    return;
+  }
   if (wasOpen && restoreFocus && !sheetLayer.hidden && activeSheet === 'soul') {
     sheetContent.querySelector('.soul-popup-confirm')?.focus({preventScroll:true});
   }
@@ -1986,8 +2038,8 @@ function lockWorldInteraction() {
   syncSoulRewardNotice();
 }
 
-function openSheet(type) {
-  if (!demoLayer.hidden) closeDemoPanel();
+function openSheet(type, { behindDemoPreview = false } = {}) {
+  if (!demoLayer.hidden && !behindDemoPreview) closeDemoPanel();
   if (type === "draw") {
     bridgeAction("draw");
     return;
@@ -2057,6 +2109,7 @@ function openSheet(type) {
 
   sheetLayer.hidden = false;
   lockWorldInteraction();
+  if (behindDemoPreview) return;
   requestAnimationFrame(() => {
     if(type==='background') {
       const index=BACKGROUND_OPTIONS.findIndex(bg=>bg.id===pendingBackgroundId);
@@ -2527,6 +2580,12 @@ demoSoulNumber.addEventListener('change', () => {
 });
 document.querySelectorAll('[data-demo-soul]').forEach(button => {
   button.addEventListener('click', () => setDemoSoul(button.dataset.demoSoul));
+});
+document.querySelectorAll('[data-demo-reward-effect]').forEach(button => {
+  button.addEventListener('click', () => {
+    openSheet('soul', { behindDemoPreview: true });
+    showRewardReceived(MILESTONES[1], button);
+  });
 });
 demoXpRange.addEventListener("input", () => setAllPingXp(demoXpRange.value));
 demoXpNumber.addEventListener("input", () => {

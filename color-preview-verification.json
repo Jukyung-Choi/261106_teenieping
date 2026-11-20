@@ -1,0 +1,812 @@
+[
+  {
+    "source": "assets/teeniepings-webp/고마핑.webp",
+    "preview": "animated/고마핑.webp",
+    "source_sha256": "c8aee9e631cbfa1d9bb9b1abb8654ecbaa6195cf5027358d6af7404ea49ef895",
+    "frames": 13,
+    "bytes": 161906,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/깡총핑.webp",
+    "preview": "animated/깡총핑.webp",
+    "source_sha256": "fbf3a994f24cb6b32be0fb58922627f726e1041825e3ac5289c1dabad82cba25",
+    "frames": 13,
+    "bytes": 128864,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/나그네핑.webp",
+    "preview": "animated/나그네핑.webp",
+    "source_sha256": "22c40620d26c50b9f196fd876aab5409239727bf6f3cd91e754e52b40254b67c",
+    "frames": 13,
+    "bytes": 138010,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/나눔핑.webp",
+    "preview": "animated/나눔핑.webp",
+    "source_sha256": "03e76caa8e961baaa3f345cf38e0dfb2f7f1833e4198db60fa13b45f44ec188f",
+    "frames": 13,
+    "bytes": 145354,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/달콤핑.webp",
+    "preview": "animated/달콤핑.webp",
+    "source_sha256": "64c7b7dbb6fbc520378a3aea5db7f05dd8925dee61c52dd846d8a9af977de2ae",
+    "frames": 13,
+    "bytes": 171754,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/딩동핑.webp",
+    "preview": "animated/딩동핑.webp",
+    "source_sha256": "6bbe64605011955fc75c361ecd7d78e97baa27c6b946a42f8de3c5f43d850327",
+    "frames": 13,
+    "bytes": 178186,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/또너핑.webp",
+    "preview": "animated/또너핑.webp",
+    "source_sha256": "00c0014e6d316f2df07f88813a102c1e4a5c83b85882e54edd7427ef5cbf87c2",
+    "frames": 14,
+    "bytes": 147274,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/라라핑.webp",
+    "preview": "animated/라라핑.webp",
+    "source_sha256": "692068927bdf9b174b7c4258668b570a45433c0b7509f00a76fcec716d02e654",
+    "frames": 13,
+    "bytes": 136108,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/라임핑.webp",
+    "preview": "animated/라임핑.webp",
+    "source_sha256": "5ea44ec3950c9519afe57af867fb97be432dde3fa654969a48d34f9fb5b8f071",
+    "frames": 14,
+    "bytes": 172798,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/레몬핑.webp",
+    "preview": "animated/레몬핑.webp",
+    "source_sha256": "c40bab4145a3816c6a866bab06780ec1b115dca28be752f5c27a6140c88a2e67",
+    "frames": 14,
+    "bytes": 154922,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/말랑핑.webp",
+    "preview": "animated/말랑핑.webp",
+    "source_sha256": "21aa03b27d8ac658ecad0eefabc0db5bb9bd722638c146260f7ec0b4a8ed8391",
+    "frames": 13,
+    "bytes": 204474,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/바로핑.webp",
+    "preview": "animated/바로핑.webp",
+    "source_sha256": "d2a40a46d68faaface8b11743e934c9a009f456f28eaab51c8d39d7428d15f29",
+    "frames": 13,
+    "bytes": 173500,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/반짝핑.webp",
+    "preview": "animated/반짝핑.webp",
+    "source_sha256": "1ec0cb4fd83b10a1f1068373fde67c691913cb9fa30c6b7191630c5122e02089",
+    "frames": 13,
+    "bytes": 174750,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/빛나핑.webp",
+    "preview": "animated/빛나핑.webp",
+    "source_sha256": "81f1f45e8a6eab4273bf826a2d648951fbb0cc8f80ede9c52193bf4c79dee4e4",
+    "frames": 13,
+    "bytes": 176460,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/뽀뽀핑.webp",
+    "preview": "animated/뽀뽀핑.webp",
+    "source_sha256": "8234eaddd9627f1fc208dbe83706520e60c3ff06bf1d418c2b8ec4150a789b8e",
+    "frames": 14,
+    "bytes": 150326,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/뽀송핑.webp",
+    "preview": "animated/뽀송핑.webp",
+    "source_sha256": "021ef76a1e19824d8e8b379db0f4194d3417fd073a44ba5aa90b2ec31ecf189d",
+    "frames": 14,
+    "bytes": 137772,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/뿌뿌핑.webp",
+    "preview": "animated/뿌뿌핑.webp",
+    "source_sha256": "5b1e343d2119646da6e9d4b8fad6942e905c069cfa6f8e3855ee023ed8f872a8",
+    "frames": 13,
+    "bytes": 164146,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/새콤핑.webp",
+    "preview": "animated/새콤핑.webp",
+    "source_sha256": "b2379f5e4f7f1f9244fb6e405a4f4e8df023d1dfc825ac9ee16ee75b61acc84e",
+    "frames": 13,
+    "bytes": 202458,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/샌드핑.webp",
+    "preview": "animated/샌드핑.webp",
+    "source_sha256": "a0da498079fa0a211748cbb9476eac32ffc02bb1b0a823e0bb122eced1c373fc",
+    "frames": 13,
+    "bytes": 191180,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/샤샤핑.webp",
+    "preview": "animated/샤샤핑.webp",
+    "source_sha256": "7fb3997c4e473eaec5da160b5892017865361a519ff71f7a9e7202f04d3faf3a",
+    "frames": 13,
+    "bytes": 174546,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/아자핑.webp",
+    "preview": "animated/아자핑.webp",
+    "source_sha256": "e6498fb5ed0c3e9b438836b9a01d1b351b76056899bdf6cbdeae114e9975d67d",
+    "frames": 13,
+    "bytes": 154264,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/오로라핑.webp",
+    "preview": "animated/오로라핑.webp",
+    "source_sha256": "2a7509345d15a99314a9b31b58c301ad19293dfaf1f3a00c90c5994dbef067b2",
+    "frames": 14,
+    "bytes": 184136,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/왕자핑.webp",
+    "preview": "animated/왕자핑.webp",
+    "source_sha256": "331d1ab38f1bc25332bbbdf02d491fb56f0df43cf66c50651f9515076a5c6b17",
+    "frames": 14,
+    "bytes": 154622,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/요거핑.webp",
+    "preview": "animated/요거핑.webp",
+    "source_sha256": "348b6721c9c4aa67271748522f7b7cc6cc87b275fc156ae480dc837f765652f3",
+    "frames": 13,
+    "bytes": 131704,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/차차핑.webp",
+    "preview": "animated/차차핑.webp",
+    "source_sha256": "9ec833c7b17f53910c5b719ccb7485d6368684015356868e61278f539998c4db",
+    "frames": 13,
+    "bytes": 175240,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/체리핑.webp",
+    "preview": "animated/체리핑.webp",
+    "source_sha256": "7d5145bf1e8c90ceda64db80e8923401eb065af84959a27420c410c327eec167",
+    "frames": 14,
+    "bytes": 165932,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/초롱핑.webp",
+    "preview": "animated/초롱핑.webp",
+    "source_sha256": "6f6eabadcb43c96a97bf58b62474d857c08e043eac882810893449789d0e021f",
+    "frames": 14,
+    "bytes": 173498,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/포실핑.webp",
+    "preview": "animated/포실핑.webp",
+    "source_sha256": "ddb1bfbbd2d698a21d902590e679b2318846476042edf0ce20ba100d69f3a494",
+    "frames": 13,
+    "bytes": 148468,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/하츄핑.webp",
+    "preview": "animated/하츄핑.webp",
+    "source_sha256": "19d7e9807a4480b80a132c427f39e7884a135669f3353d9ac6f70e9b3b1219b9",
+    "frames": 13,
+    "bytes": 161470,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-webp/해핑.webp",
+    "preview": "animated/해핑.webp",
+    "source_sha256": "cd969ca18990e6fbbafc7fb39999f88cd64f8ca21ff81937aad68a1ea2e16fb6",
+    "frames": 13,
+    "bytes": 172990,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/고마핑.png",
+    "preview": "closed/고마핑.webp",
+    "source_sha256": "3f834d5d470c587f5253b093eb8d15f5a5e9138fd3301bb06e75a9cab2c0d6ae",
+    "frames": 1,
+    "bytes": 15860,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/깡총핑.png",
+    "preview": "closed/깡총핑.webp",
+    "source_sha256": "64bee430895c8843bd5f9432f243c8d34bee37bdd092a958348f3197a494d539",
+    "frames": 1,
+    "bytes": 11088,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/나그네핑.png",
+    "preview": "closed/나그네핑.webp",
+    "source_sha256": "3c9d3b5a1b6cbc72c2a17f07759b5fd6a66aa8cfdefdbb467efe5b062424171e",
+    "frames": 1,
+    "bytes": 13002,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/나눔핑.png",
+    "preview": "closed/나눔핑.webp",
+    "source_sha256": "5f1cc19be10f44397b42cb7eeb7f125424af4ea3591f13696848ce40f1618f8c",
+    "frames": 1,
+    "bytes": 13512,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/달콤핑.png",
+    "preview": "closed/달콤핑.webp",
+    "source_sha256": "19701d726b7a6c6fea9d753b4df44f61bf9dcbd0a8d91662d6cbc2ea381680d4",
+    "frames": 1,
+    "bytes": 16904,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/딩동핑.png",
+    "preview": "closed/딩동핑.webp",
+    "source_sha256": "92125348492fa0f77659b8a910de2117ff878531e8362bf0666ec192f1b1de26",
+    "frames": 1,
+    "bytes": 18110,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/또너핑.png",
+    "preview": "closed/또너핑.webp",
+    "source_sha256": "c355496e215f985972d4170d98c0d8e6c8613cdc4477dbb0e9b5504535614976",
+    "frames": 1,
+    "bytes": 14300,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/라라핑.png",
+    "preview": "closed/라라핑.webp",
+    "source_sha256": "982f548f8df8f13c088795f6d29f352ead1539bf67f7aa746d0247136049c02d",
+    "frames": 1,
+    "bytes": 13444,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/라임핑.png",
+    "preview": "closed/라임핑.webp",
+    "source_sha256": "26a2d3cbb7a65d8c313951fb89788b8a456d760b1357a8000923d4554fb61a5e",
+    "frames": 1,
+    "bytes": 16904,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/레몬핑.png",
+    "preview": "closed/레몬핑.webp",
+    "source_sha256": "c61463b32dcfa9c38909972c9a91e0013c926c3041cd832bedc240d19b9682e5",
+    "frames": 1,
+    "bytes": 15154,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/말랑핑.png",
+    "preview": "closed/말랑핑.webp",
+    "source_sha256": "2ffbb33dee3cda6da5a36358037c54f01e293d7d5082ef7fbce523117825ee68",
+    "frames": 1,
+    "bytes": 22068,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/바로핑.png",
+    "preview": "closed/바로핑.webp",
+    "source_sha256": "e19113958d6af51b755ac0e6adbda204226de943bd5aa6e400e8f9403b0f2525",
+    "frames": 1,
+    "bytes": 19028,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/반짝핑.png",
+    "preview": "closed/반짝핑.webp",
+    "source_sha256": "87e6d8ea1f3fc1e29117920d669c684c8973d06476ad05dde9bd572459ac76e3",
+    "frames": 1,
+    "bytes": 16722,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/빛나핑.png",
+    "preview": "closed/빛나핑.webp",
+    "source_sha256": "b3a9d09c1d3bd2b15bbd4534f56c9742ddc6af5d7521bd698f0a94bb7727a339",
+    "frames": 1,
+    "bytes": 17176,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/뽀뽀핑.png",
+    "preview": "closed/뽀뽀핑.webp",
+    "source_sha256": "9d3f32b4657efb5676ed93aee29c69b074786a97b4980d84665d5f17557f9eb5",
+    "frames": 1,
+    "bytes": 13168,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/뽀송핑.png",
+    "preview": "closed/뽀송핑.webp",
+    "source_sha256": "10417a3a4094128402a19f195ea2b4c607831a7e60f4b1f45bc38063f252f80e",
+    "frames": 1,
+    "bytes": 13024,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/뿌뿌핑.png",
+    "preview": "closed/뿌뿌핑.webp",
+    "source_sha256": "7c29ca68b3f18353fe6c776189ee997e49b81d9801b3bf50b1e5e99ff122c32c",
+    "frames": 1,
+    "bytes": 11962,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/새콤핑.png",
+    "preview": "closed/새콤핑.webp",
+    "source_sha256": "11bfcbeff4bbde52d55539268d4f7baccb349aec0eddcbc04be32f45627f5999",
+    "frames": 1,
+    "bytes": 13274,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/샌드핑.png",
+    "preview": "closed/샌드핑.webp",
+    "source_sha256": "32f8c2a448ba2b3db34d88a159a7d6cbed1cfca70b45b9e2af571210b6dc1f86",
+    "frames": 1,
+    "bytes": 13040,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/샤샤핑.png",
+    "preview": "closed/샤샤핑.webp",
+    "source_sha256": "bb25c71a10da2cfd1874af9db5761a14758d34b078735d655ae70030412baad7",
+    "frames": 1,
+    "bytes": 12222,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/아자핑.png",
+    "preview": "closed/아자핑.webp",
+    "source_sha256": "912b07b853670236364c04901cbfa343481ab3ffc5ca38b4fe2f61fa92a1effd",
+    "frames": 1,
+    "bytes": 15328,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/오로라핑.png",
+    "preview": "closed/오로라핑.webp",
+    "source_sha256": "604509d6419828c7d7310c2c53794515a3ad164157c65907a1b28d531fea4503",
+    "frames": 1,
+    "bytes": 18496,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/왕자핑.png",
+    "preview": "closed/왕자핑.webp",
+    "source_sha256": "718a8c46c2876e2df6def49dd5e06102f612bebbedb6b996b415d877a0557da4",
+    "frames": 1,
+    "bytes": 14410,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/요거핑.png",
+    "preview": "closed/요거핑.webp",
+    "source_sha256": "f868cdec98dc451e5316d38b4a8cd4269b88bea0edc2ca45459532572ee8c4a8",
+    "frames": 1,
+    "bytes": 12304,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/차차핑.png",
+    "preview": "closed/차차핑.webp",
+    "source_sha256": "6973fd9d36d82e7d3ad26ee6d447c54b24a064fcd16250a78990a809add60f81",
+    "frames": 1,
+    "bytes": 18288,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/체리핑.png",
+    "preview": "closed/체리핑.webp",
+    "source_sha256": "16b5fbdf85ef9ad173bc9b30950ab52808bcaa6f7f95f53d95685385caa1c905",
+    "frames": 1,
+    "bytes": 15378,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/초롱핑.png",
+    "preview": "closed/초롱핑.webp",
+    "source_sha256": "b3838aeb66f59881035e29efacf69e5840b60a56b38b64d9144928e063ab2311",
+    "frames": 1,
+    "bytes": 16862,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/포실핑.png",
+    "preview": "closed/포실핑.webp",
+    "source_sha256": "2382ab9fc97237325c3817c04d94bc61cedb71ba1a6ef3eaaa79fd57ed627878",
+    "frames": 1,
+    "bytes": 14478,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/하츄핑.png",
+    "preview": "closed/하츄핑.webp",
+    "source_sha256": "6243380b25d952a70286a6f39d16950f3846a7910d027412864c60b9ba1b1494",
+    "frames": 1,
+    "bytes": 16732,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-closed/해핑.png",
+    "preview": "closed/해핑.webp",
+    "source_sha256": "587dbbb0bc2ba394d0b8c247ca966a87bbf8d9b2471fd65ac89997f76a82d122",
+    "frames": 1,
+    "bytes": 16024,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/고마핑.png",
+    "preview": "still/고마핑.webp",
+    "source_sha256": "00e3a94f0c70ea8f9d0c680b7d6a277d15b1eb42b2f3c5cd21233eb62551ea7d",
+    "frames": 1,
+    "bytes": 18364,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/깡총핑.png",
+    "preview": "still/깡총핑.webp",
+    "source_sha256": "ac434a659b9eeb7c2f478a2690bec182ceb7ccc73a17e27746386be04a257c91",
+    "frames": 1,
+    "bytes": 13194,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/나그네핑.png",
+    "preview": "still/나그네핑.webp",
+    "source_sha256": "851bcb301ed111c462699ce0c59785ef8ac9a3edc9ec81d2f3df2c49a05dc54c",
+    "frames": 1,
+    "bytes": 14112,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/나눔핑.png",
+    "preview": "still/나눔핑.webp",
+    "source_sha256": "24f93de80f1fe9902e828c591c3aaa44774059c8c2f984c4c269650b14e5cb5d",
+    "frames": 1,
+    "bytes": 14958,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/달콤핑.png",
+    "preview": "still/달콤핑.webp",
+    "source_sha256": "197f635495d0b664caddf88432fa74a92bafa9e5eaa958d101d048ac16814c04",
+    "frames": 1,
+    "bytes": 20716,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/딩동핑.png",
+    "preview": "still/딩동핑.webp",
+    "source_sha256": "612b477f9662cc4b23d15807d36fc21e4aa1e2d14dc77371427927e5b0821fd3",
+    "frames": 1,
+    "bytes": 19836,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/또너핑.png",
+    "preview": "still/또너핑.webp",
+    "source_sha256": "1b28d5a972fb59d3bf69e306444f797bafc08bc804c949ed6b747c3f327df866",
+    "frames": 1,
+    "bytes": 15858,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/라라핑.png",
+    "preview": "still/라라핑.webp",
+    "source_sha256": "4aaafbf4ebd92ca018ac3d1b770d382ca4ea35ceb6fd2b892b7db8c5b310c340",
+    "frames": 1,
+    "bytes": 15200,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/라임핑.png",
+    "preview": "still/라임핑.webp",
+    "source_sha256": "828cc9f885534d883fa4676def4f0c2ac7e3ff6864f80b5be3b3e0fd80746fb1",
+    "frames": 1,
+    "bytes": 19106,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/레몬핑.png",
+    "preview": "still/레몬핑.webp",
+    "source_sha256": "95887afce2662b58bb1dab339a7ce8276577f3646fad25d513b2320ff5198870",
+    "frames": 1,
+    "bytes": 17100,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/말랑핑.png",
+    "preview": "still/말랑핑.webp",
+    "source_sha256": "b481406474dd015de6dc38cef4f189fa0ba39e1d64f9c20bea6c34081dd10903",
+    "frames": 1,
+    "bytes": 23932,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/바로핑.png",
+    "preview": "still/바로핑.webp",
+    "source_sha256": "60f2e91609d322fb8adf552ec45f722c580b5900eb0f2d4b938616d7aae3fbef",
+    "frames": 1,
+    "bytes": 18162,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/반짝핑.png",
+    "preview": "still/반짝핑.webp",
+    "source_sha256": "ccda975cb21750f6fb5650a02d8c4385797357e81ccb46f41b076ed3759164ba",
+    "frames": 1,
+    "bytes": 19510,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/빛나핑.png",
+    "preview": "still/빛나핑.webp",
+    "source_sha256": "f2e371a232c9e79c973518a82b9da8eeaf6e31c8ecd9a913ca97a519692cdf84",
+    "frames": 1,
+    "bytes": 17776,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/뽀뽀핑.png",
+    "preview": "still/뽀뽀핑.webp",
+    "source_sha256": "fdb58fb25644d21a14bc4eb927183764c7c5ccf4b373e83eff4c7e1a4299a83b",
+    "frames": 1,
+    "bytes": 14206,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/뽀송핑.png",
+    "preview": "still/뽀송핑.webp",
+    "source_sha256": "80767fbe639bfd68f16fdc8c427d6dee1a878da51e5a5c45db4edf6f8a9c6707",
+    "frames": 1,
+    "bytes": 14822,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/뿌뿌핑.png",
+    "preview": "still/뿌뿌핑.webp",
+    "source_sha256": "a97850c724fafd1beeacec885be2cfb919931e4872d055e4d7f5b3396205dc2c",
+    "frames": 1,
+    "bytes": 13338,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/새콤핑.png",
+    "preview": "still/새콤핑.webp",
+    "source_sha256": "2024ad8290de6dbbd2cc0014acb0c4b0d6c06b70be832fbd991bbad9afa3c418",
+    "frames": 1,
+    "bytes": 16268,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/샌드핑.png",
+    "preview": "still/샌드핑.webp",
+    "source_sha256": "fb41e139e1986bbcbd4d81d835dd3d651924d015557bd06e8194cf22a46f6a87",
+    "frames": 1,
+    "bytes": 16258,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/샤샤핑.png",
+    "preview": "still/샤샤핑.webp",
+    "source_sha256": "37043508ca732cc3cf08a11f2eb295d6d28adb5b678a0c0b2588a4deb366e4d1",
+    "frames": 1,
+    "bytes": 13786,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/아자핑.png",
+    "preview": "still/아자핑.webp",
+    "source_sha256": "1c9c83efea1cb6c1e6d03b89445e9efeded6d3ef13a2f6f974dce6ca7c99284e",
+    "frames": 1,
+    "bytes": 16678,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/오로라핑.png",
+    "preview": "still/오로라핑.webp",
+    "source_sha256": "b88b96d3443d0f92321ae08a19510caf2d3e0b4caa830e325452659cead25a55",
+    "frames": 1,
+    "bytes": 19876,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/왕자핑.png",
+    "preview": "still/왕자핑.webp",
+    "source_sha256": "387cbd3667149ef08034ba1fc85ab37e437099ff9919adcb5845a72bb1aed2b9",
+    "frames": 1,
+    "bytes": 15368,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/요거핑.png",
+    "preview": "still/요거핑.webp",
+    "source_sha256": "9d33f6759e08f40643c069a94dca5d1df8f7f0fb47d369a2767b2604e225e475",
+    "frames": 1,
+    "bytes": 15348,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/차차핑.png",
+    "preview": "still/차차핑.webp",
+    "source_sha256": "9468ff995106b4643e91480694f69a12f82452ceb230fc4e533e0bdad4037fe9",
+    "frames": 1,
+    "bytes": 18760,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/체리핑.png",
+    "preview": "still/체리핑.webp",
+    "source_sha256": "c67d8d50272051cb52096a96403ec2a97bf421d067f62f473d2810df557a631e",
+    "frames": 1,
+    "bytes": 17248,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/초롱핑.png",
+    "preview": "still/초롱핑.webp",
+    "source_sha256": "048117d2d3541834171088e507d148cb5c2b9a0e81f1e0b886c35bf6fb5ae138",
+    "frames": 1,
+    "bytes": 18036,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/포실핑.png",
+    "preview": "still/포실핑.webp",
+    "source_sha256": "b5e3e58a15a6bec62b7f525e9a1223887fd7a13d6abc3d9b3983a2f7ebb0b210",
+    "frames": 1,
+    "bytes": 17066,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/하츄핑.png",
+    "preview": "still/하츄핑.webp",
+    "source_sha256": "928886bee3badddefea8c971f2b945d534474c9fc7e2abae00600870c522fe45",
+    "frames": 1,
+    "bytes": 18910,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  },
+  {
+    "source": "assets/teeniepings-still/해핑.png",
+    "preview": "still/해핑.webp",
+    "source_sha256": "b6ea8967a68e7d4bb7ae2fb76ff8bfc63a0429eb028fe4f6c37945ed93b77f5d",
+    "frames": 1,
+    "bytes": 16334,
+    "alpha_preserved": true,
+    "timing_preserved": true
+  }
+]

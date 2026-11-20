@@ -352,7 +352,19 @@
 .reward-received-glow { position:absolute;left:-17.84px;top:171.03px;display:block;pointer-events:none;animation:reward-received-glow-turn 24s linear infinite; }
 /* Pink/cyan star field inspired by the supplied galaxy reference. */
 .reward-received-galaxy { position:absolute;inset:0;overflow:hidden;pointer-events:none; }
-.reward-galaxy-haze { position:absolute;inset:-8%;background:radial-gradient(ellipse at 20% 72%,rgba(214,48,217,.29),transparent 29%),radial-gradient(ellipse at 80% 26%,rgba(168,39,189,.25),transparent 30%),radial-gradient(ellipse at 54% 51%,rgba(158,44,188,.12),transparent 38%);transform:rotate(-15deg);animation:reward-galaxy-breathe 8s ease-in-out infinite alternate; }
+.reward-galaxy-haze {
+  position:absolute;inset:-8%;
+  background:
+    radial-gradient(ellipse at 20% 72%,rgba(214,48,217,.29),transparent 29%),
+    radial-gradient(ellipse at 80% 26%,rgba(168,39,189,.25),transparent 30%),
+    radial-gradient(ellipse at 54% 51%,rgba(158,44,188,.12),transparent 38%);
+  mask-image:
+    linear-gradient(to right,transparent,#000 14%,#000 86%,transparent),
+    linear-gradient(to bottom,transparent,#000 12%,#000 88%,transparent);
+  mask-composite:intersect;
+  filter:blur(16px);
+  transform:rotate(-15deg);animation:reward-galaxy-breathe 8s ease-in-out infinite alternate;
+}
 .reward-galaxy-particle { position:absolute;left:var(--x);top:var(--y);font:var(--size)/1 sans-serif;color:var(--color);text-shadow:0 0 2px #fff,0 0 6px var(--color),0 0 13px var(--color);animation:reward-star-twinkle var(--duration) ease-in-out var(--delay) infinite, reward-star-drift var(--drift) ease-in-out var(--delay) infinite alternate;will-change:opacity,transform; }
 .reward-galaxy-particle:not(.is-dust) { font-size:calc(var(--size) * 1.22); }
 .reward-galaxy-particle.is-dust { width:var(--size);height:var(--size);border-radius:50%;background:var(--color);box-shadow:0 0 4px var(--color); }
@@ -360,11 +372,122 @@
 @keyframes reward-star-drift { from { transform:translate(-3px,7px) rotate(-8deg); } to { transform:translate(5px,-10px) rotate(10deg); } }
 @keyframes reward-galaxy-breathe { from { opacity:.55;transform:rotate(-15deg) scale(.96); } to { opacity:1;transform:rotate(-11deg) scale(1.06); } }
 @media (prefers-reduced-motion:reduce) { .reward-galaxy-particle,.reward-galaxy-haze { animation:none;will-change:auto; }.reward-galaxy-particle { opacity:.65; } }
-/* A single radial star burst on each reward receipt, then the field keeps twinkling. */
-.reward-star-burst { position:absolute;left:50%;top:385px;pointer-events:none; }
-.reward-star-burst span { position:absolute;left:0;top:0;color:var(--color);font:var(--size)/1 sans-serif;text-shadow:0 0 2px white,0 0 7px var(--color),0 0 16px var(--color);opacity:0;animation:reward-star-pop 900ms cubic-bezier(.16,.7,.28,1) var(--delay) both; }
-@keyframes reward-star-pop { 0% { opacity:0;transform:translate(-50%,-50%) scale(.15); } 12% { opacity:1; } 60% { opacity:1; } 100% { opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--turn)) scale(.65); } }
+/* One short burst around the reward icon. */
+.reward-star-burst { position:absolute;left:calc(50% + .5px);top:385px;pointer-events:none; }
+.reward-star-burst span {
+  position:absolute;left:var(--dx);top:var(--dy);width:var(--size);height:var(--size);
+  opacity:0;filter:drop-shadow(0 0 4px var(--color));
+  animation:reward-star-pop 680ms cubic-bezier(.18,.65,.3,1) var(--delay) both;
+}
+.reward-star-burst span::before {
+  content:"";display:block;width:100%;height:100%;
+  background:radial-gradient(circle,#fff 10%,var(--color) 70%);
+  clip-path:polygon(50% 0%,62% 37%,100% 50%,62% 63%,50% 100%,38% 63%,0% 50%,38% 37%);
+}
+.reward-star-burst .is-dust::before { background:var(--color);clip-path:circle(50%); }
+@keyframes reward-star-pop {
+  0% { opacity:0;transform:translate(-50%,-50%) translate(calc(var(--dx) * -.42),calc(var(--dy) * -.42)) scale(.3); }
+  28% { opacity:1; }
+  65% { opacity:.78; }
+  100% { opacity:0;transform:translate(-50%,-50%) translate(calc(var(--dx) * .32),calc(var(--dy) * .32)) rotate(var(--turn)) scale(.55); }
+}
 @media (prefers-reduced-motion:reduce) { .reward-star-burst { display:none; } }
+.reward-received-layer[data-effect-preview]:not([hidden]) ~ .demo-layer { visibility:hidden; }
+.demo-reward-tests { grid-template-columns:repeat(2,1fr); }
+.demo-reward-tests button { min-height:40px;font-size:14px; }
+
+.reward-galaxy-afterglow { position:absolute;inset:0; }
+.reward-galaxy-afterglow .reward-galaxy-particle:not(.is-dust) { font-size:var(--size); }
+
+/* Test 1 uses separate particles for the one-shot burst and the background. */
+[data-effect-preview="1"] .reward-star-burst { display:none; }
+@media (prefers-reduced-motion:reduce) {
+  [data-effect-preview="1"] .reward-received-galaxy > .reward-galaxy-particle { display:none; }
+}
+@media (prefers-reduced-motion:no-preference) {
+  [data-effect-preview="1"] .reward-received-galaxy::before {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(circle 46px at 28% 30%,#fff1fb 0%,#ff8ce080 23%,transparent 100%),
+      radial-gradient(circle 46px at 72% 30%,#e8fbff 0%,#72dcff80 23%,transparent 100%),
+      radial-gradient(circle 46px at 28% 70%,#e8fbff 0%,#72dcff80 23%,transparent 100%),
+      radial-gradient(circle 46px at 72% 70%,#fff1fb 0%,#ff8ce080 23%,transparent 100%);
+    animation:reward-confetti-flash 160ms ease-out both;
+  }
+  [data-effect-preview="1"] .reward-received-galaxy > .reward-galaxy-particle {
+    animation:
+      reward-star-twinkle var(--duration) ease-in-out var(--delay) infinite,
+      reward-star-drift var(--drift) ease-in-out var(--delay) infinite alternate,
+      reward-galaxy-confetti 700ms linear var(--pop-delay,0ms) both;
+  }
+  [data-effect-preview="1"] .reward-received-galaxy > .reward-galaxy-particle:nth-of-type(3n+1) { --pop-delay:4ms;--fall-distance:136px; }
+  [data-effect-preview="1"] .reward-received-galaxy > .reward-galaxy-particle:nth-of-type(3n+2) { --pop-delay:8ms;--fall-distance:180px; }
+  .reward-galaxy-afterglow .reward-galaxy-particle {
+    animation:
+      reward-star-twinkle var(--duration) ease-in-out var(--delay) infinite,
+      reward-star-drift var(--drift) ease-in-out var(--delay) infinite alternate,
+      reward-afterglow-appear 280ms ease-out var(--reveal-delay) backwards;
+  }
+}
+@keyframes reward-afterglow-appear { from { filter:opacity(0);scale:.7; } to { filter:opacity(1);scale:1; } }
+@keyframes reward-confetti-flash {
+  0% { opacity:.25; }
+  16% { opacity:.88; }
+  100% { opacity:0; }
+}
+@keyframes reward-galaxy-confetti {
+  0% {
+    translate:var(--launch-x) var(--launch-y);scale:.3;rotate:var(--launch-turn);
+    filter:brightness(1) opacity(.56);
+    animation-timing-function:cubic-bezier(.333,.58,.667,.82);
+  }
+  11% {
+    translate:calc(var(--launch-x) * .36) calc(var(--launch-y) * .36 - 24px);
+    scale:1.32;rotate:calc(var(--launch-turn) * .4);filter:brightness(1.5) opacity(1);
+    animation-timing-function:cubic-bezier(.333,.52,.667,.85);
+  }
+  40% {
+    translate:calc(var(--launch-x) * .09) calc(var(--launch-y) * .09 - 21px);
+    scale:1.08;rotate:calc(var(--launch-turn) * .12);filter:brightness(1.12) opacity(1);
+    animation-timing-function:cubic-bezier(.33,.18,.67,.58);
+  }
+  66% {
+    translate:calc(var(--launch-x) * .02) 34px;
+    scale:1.08;rotate:calc(var(--launch-turn) * -.14);filter:brightness(1) opacity(.76);visibility:visible;
+    animation-timing-function:cubic-bezier(.33,.23,.67,.61);
+  }
+  100% {
+    translate:0 var(--fall-distance,156px);
+    scale:1;rotate:calc(var(--launch-turn) * -.5);filter:brightness(1) opacity(0);visibility:hidden;
+  }
+}
+
+/* Test 2 layers pastel stars over the receipt using a transparent star field. */
+[data-effect-preview="2"] {
+  --pastel-star-shape:polygon(50% 0%,62% 34%,99% 37%,70% 60%,80% 97%,50% 76%,20% 97%,30% 60%,1% 37%,38% 34%);
+}
+[data-effect-preview="2"] .reward-galaxy-haze { display:none; }
+[data-effect-preview="2"] :is(.reward-galaxy-particle,.reward-star-burst span) { --pastel-light:#a4f5f0; }
+[data-effect-preview="2"] :is(.reward-galaxy-particle,.reward-star-burst span):nth-of-type(3n+1) { --pastel-light:#fff8b7; }
+[data-effect-preview="2"] :is(.reward-galaxy-particle,.reward-star-burst span):nth-of-type(7n) { --pastel-light:#e8dcff; }
+[data-effect-preview="2"] .reward-galaxy-particle:not(.is-dust) {
+  font-size:calc(var(--size) * .82);color:var(--pastel-light);
+  text-shadow:0 0 4px var(--pastel-light),0 0 10px color-mix(in srgb,var(--pastel-light) 55%,transparent);
+}
+[data-effect-preview="2"] .reward-galaxy-particle.is-dust {
+  background:var(--pastel-light);box-shadow:0 0 3px var(--pastel-light);
+}
+[data-effect-preview="2"] .reward-star-burst span { filter:drop-shadow(0 0 5px var(--pastel-light)); }
+[data-effect-preview="2"] .reward-star-burst span::before { background:radial-gradient(circle,#fff 12%,var(--pastel-light) 72%); }
+[data-effect-preview="2"] .reward-star-burst span:not(.is-dust)::before { clip-path:var(--pastel-star-shape); }
+@media (prefers-reduced-motion:no-preference) {
+  [data-effect-preview="2"] .reward-galaxy-particle { animation-name:reward-pastel-twinkle,reward-pastel-drift; }
+}
+@keyframes reward-pastel-twinkle { 0%,100% { opacity:.25; } 40% { opacity:.95; } 65% { opacity:.72; } }
+@keyframes reward-pastel-drift { from { transform:translate(-3px,-7px) rotate(-10deg); } to { transform:translate(5px,10px) rotate(12deg); } }
+
 .reward-received-content { position:absolute;top:320px;left:calc(50% + .5px);width:176px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:16px; }
 .reward-received-thumb { position:relative;flex:none;width:130px;height:130px;background:#fff;border-radius:36.4px;overflow:hidden; }
 .reward-received-art { position:absolute;left:0;top:0;display:block;width:50px;height:50px;transform:scale(2.6);transform-origin:0 0; }

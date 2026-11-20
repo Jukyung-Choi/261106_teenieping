@@ -1,17 +1,17 @@
 # 다른 컴퓨터에서 이어가기
 
-## 다음 작업에서 가장 먼저 확인 (2026-11-19 퇴근 시점)
+## 최신 작업 상태 (2026-11-20)
 
-- **보상 수령 화면의 별빛 효과는 사용자 미승인 상태입니다.** 마지막 피드백은 “별로야”이며 추가 시안 수정이 필요합니다. 현재 버전을 최종 디자인으로 확정하지 마세요. 이번 Git 저장은 집에서 이어가기 위한 작업 보관입니다.
-- 현재는 참고 GIF 분위기의 핑크·하늘색 별 + 보라 은하빛이 반복되고, 수령 시 별 28개가 한 번 팡 터집니다. 기존 하트·보석 콘페티는 화면에서 제거했습니다. 변경 위치: `menu-variant.html`의 `reward-received-galaxy` / `reward-star-burst`, CSS의 같은 클래스 및 `reward-star-pop`. 수령 연결은 JS `showRewardReceived()`입니다.
-- DEMO 05에서 소울을 올리고 적용 완료 → 상단 나의 소울 게이지 → 미수령 단계 ‘받기’로 확인합니다. 이미 받은 단계는 기기에 저장되므로 다른 미수령 단계로 확인하세요.
-- DEMO 06 색상 조절은 유지합니다. 최종 색감은 아직 확정되지 않았고 캐릭터 원본 WebP를 일괄 교체하지 않았습니다. 설정 JSON은 브라우저에서 별도 저장해야 다른 기기에 전달할 수 있습니다.
+- [최신 미리보기](https://teenieping-game-designs-1111.jukyung-choi.chatgpt.site/menu-variant?ui=galaxy-burst-1)는 `menu-variant.html`을 기준으로 합니다.
+- 소울 게이지 단계별 보상에서 **받기**를 누르면 테스트 1 효과가 재생됩니다. 별 콘페티가 네 지점에서 약 0.28초 동안 퍼지고 약 0.42초 동안 떨어지며 사라집니다. 이어서 핑크·하늘색 별 64개와 작은 반짝이 점 91개가 나타납니다.
+- 개발용 데모 패널의 **테스트 1**로 현재 연출을 반복 재생할 수 있습니다. **테스트 2**는 비교용입니다. 수령 흐름은 데모에서 소울 XP를 올린 뒤 단계별 보상의 미수령 항목으로 확인합니다.
+- 연출은 `menu-variant.css`, 수령·데모 연결은 `menu-variant.js`의 `showRewardReceived()`, 입자 배치는 `prepareRewardAfterglow()`에서 수정합니다. 시각 참고는 [별빛](references/reward-effects/starlight.png)과 [반짝이 배치](references/reward-effects/afterglow.png)입니다.
 
 ## 고정된 제작 기준
 
 - [레전드 티니핑 3종 모션 제작 기준](LEGEND-MOTION-SPEC.md): 480×480px 원본, 최대 240×240px 표시, 1종당 300KB 목표·최대 500KB. 2026-11-18 사용자 고정 기준이며 후속 변경 요청 전까지 유지합니다.
 
-## 집에서 이어갈 때 확인할 최신 상태 (2026-11-19)
+## 이전 작업 상태 (2026-11-19)
 
 - 최신 화면: `menu-variant.html`. 공개 미리보기: https://teenieping-game-designs-1111.jukyung-choi.chatgpt.site/menu-variant.html?ui=galaxy-burst-1
 - DEMO 06 ‘티니핑 색상 보정’: 채도와 입력 레벨(검정·감마·흰색)을 실시간 조절합니다. 30종 원본/보정 비교, 브라우저별 자동 저장, 최종 설정 JSON 저장을 지원합니다. 기본값은 +25 / 0, 1.00, 240이며 **원본 이미지 파일은 변경하지 않았습니다.**
