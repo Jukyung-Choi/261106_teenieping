@@ -1,11 +1,13 @@
 # 다른 컴퓨터에서 이어가기
 
-## 최신 작업 상태 (2026-11-20)
+## 최신 작업 상태 (2026-11-23)
 
-- [최신 미리보기](https://teenieping-game-designs-1111.jukyung-choi.chatgpt.site/menu-variant?ui=galaxy-burst-1)는 `menu-variant.html`을 기준으로 합니다.
-- 소울 게이지 단계별 보상에서 **받기**를 누르면 테스트 1 효과가 재생됩니다. 별 콘페티가 네 지점에서 약 0.28초 동안 퍼지고 약 0.42초 동안 떨어지며 사라집니다. 이어서 핑크·하늘색 별 64개와 작은 반짝이 점 91개가 나타납니다.
-- 개발용 데모 패널의 **테스트 1**로 현재 연출을 반복 재생할 수 있습니다. **테스트 2**는 비교용입니다. 수령 흐름은 데모에서 소울 XP를 올린 뒤 단계별 보상의 미수령 항목으로 확인합니다.
-- 연출은 `menu-variant.css`, 수령·데모 연결은 `menu-variant.js`의 `showRewardReceived()`, 입자 배치는 `prepareRewardAfterglow()`에서 수정합니다. 시각 참고는 [별빛](references/reward-effects/starlight.png)과 [반짝이 배치](references/reward-effects/afterglow.png)입니다.
+- 최신 작업 화면은 `menu-variant.html`입니다. [배포된 데모](https://teenieping-game-designs-1111.jukyung-choi.chatgpt.site/menu-variant)는 같은 화면의 리소스를 사용합니다.
+- **배경 바꾸기**에서 최신 Figma 배경 6종을 선택할 수 있습니다. 메인 배경과 선택 썸네일은 `assets/backgrounds/tp-bg-*`에 있습니다. 월드 크기와 스크롤 방식은 이전과 동일합니다.
+- **소울 게이지 → 단계별 보상 → 받기**에서 별 콘페티가 퍼지고 아래로 사라진 뒤 별과 반짝이 점이 나타납니다. **DEMO → 소울 보상 수령 미리보기 → 테스트 1**에서 반복 재생할 수 있습니다. **단계별 보상 상태**에서 각 단계의 표시를 기본 상태, 받기, 미달성으로 바꿀 수 있습니다.
+- **DEMO → 화면 언어**에서 한국어, 영어, 일본어, 중국어 간체를 테스트합니다. 화면 번역은 `menu-variant-i18n.js`에서 관리하며, DEMO 설정 패널은 한국어로 표시합니다.
+- 랭킹·보상 안내, 도감, 참여방법, 배경 선택, 미획득 안내 팝업에 최신 디자인을 적용했습니다. 메인 **뽑기**와 미획득 안내의 **컬렉템으로 가기**에서 같은 뽑기 화면으로 이동합니다. **DEMO → 팝업 로딩 미리보기**에서 공통 로딩 스피너를 확인할 수 있습니다.
+- 수령 연출은 `menu-variant.css`와 `menu-variant.js`의 `showRewardReceived()`, `prepareRewardAfterglow()`를 참고하세요. 시각 참고는 [별빛](references/reward-effects/starlight.png)과 [반짝이 배치](references/reward-effects/afterglow.png)입니다.
 
 ## 고정된 제작 기준
 

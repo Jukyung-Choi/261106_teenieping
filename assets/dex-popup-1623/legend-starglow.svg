@@ -1,0 +1,20 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="140.162" height="140.162" viewBox="0 0 140.162 140.162" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="starglow">
+<g id="Combined Shape" filter="url(#filter0_f_0_63)">
+<path d="M76.5752 1C86.2983 1.91979 95.9797 4.94084 104.958 10.2451L70.1191 70.0137L70.1436 70.0088L115.812 18.0176C123.164 24.5182 129.253 32.694 133.434 42.3027L70.3496 69.9629L137.499 54.917C139.639 64.4971 139.778 74.6868 137.536 84.9082L70.168 70.042L70.0889 70.0771L133.434 97.6367C129.552 106.664 123.695 115.004 115.894 121.963L70.0967 70.1074L105.296 129.841C96.8596 134.853 87.2248 138.14 76.8232 139.162L70.0811 70.0908L70.0586 70.0645L63.5508 139.162C53.8089 138.242 44.1075 135.22 35.1113 129.914L70.0586 70.0645L24.3838 122.122C17.0406 115.622 10.9581 107.446 6.7832 97.8389L70.0576 70.0645L2.66211 85.1973C0.522543 75.6005 0.383617 65.3938 2.62402 55.1553L70.0586 70.0645L6.68359 42.4922C10.5648 33.4648 16.4215 25.1252 24.2227 18.166L70.0586 70.0645L34.9121 10.3203C43.3312 5.30918 52.9474 2.02194 63.3291 1L70.0586 70.0645L70.0811 70.0732L70.0859 70.0244L70.0811 70.0234L70.0859 70.0215L76.5752 1ZM70.084 70.0742L70.085 70.0752L70.123 70.0322L70.1104 70.0293L70.084 70.0742Z" fill="url(#paint0_radial_0_63)"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_0_63" x="1.16052e-08" y="0" width="140.162" height="140.162" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="0.5" result="effect1_foregroundBlur_0_63"/>
+</filter>
+<radialGradient id="paint0_radial_0_63" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(68.1807 71.9464) rotate(-174.608) scale(54.014 54.014)">
+<stop stop-color="white"/>
+<stop stop-color="white" stop-opacity="0.540545"/>
+<stop offset="0.498102" stop-color="white" stop-opacity="0.5"/>
+<stop offset="0.924122" stop-color="white" stop-opacity="0.01"/>
+</radialGradient>
+</defs>
+</svg>

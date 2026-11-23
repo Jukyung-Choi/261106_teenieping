@@ -7,7 +7,8 @@
     <title>티니핑 세상</title>
     <link rel="stylesheet" href="styles.css?v=figma-664-41273" />
   <link rel="stylesheet" href="redesign.css?v=ranking-rewards-no-score-1" />
-    <link rel="stylesheet" href="menu-variant.css?v=reward-effect-demo-19" />
+    <link rel="preload" href="assets/popup-loading/spinner.svg" as="image" />
+    <link rel="stylesheet" href="menu-variant.css?v=figma-backgrounds" />
   </head>
   <body>
     <svg class="color-filter-definitions" aria-hidden="true" width="0" height="0" xmlns="http://www.w3.org/2000/svg">
@@ -23,20 +24,21 @@
     </svg>
     <main class="webview-stage" aria-label="티니핑 세상 미니게임">
       <div class="screen-viewport" id="screenViewport">
-        <section class="game-screen" id="gameScreen" data-node-id="1140:48602">
+        <section class="game-screen" id="gameScreen" data-node-id="1563:45514">
           <header class="status-bar" aria-label="상태 표시줄">
   <time class="status-time" id="statusTime">9:41</time>
-  <div class="status-signals" aria-hidden="true"><img class="" style="" src="assets/redesign/imgCellularConnection.svg" alt="" draggable="false" /><img class="" style="" src="assets/redesign/imgWifi.svg" alt="" draggable="false" /><img class="" style="" src="assets/redesign/imgBattery.svg" alt="" draggable="false" /></div>
+  <div class="status-signals" aria-hidden="true"><img class="" style="" src="assets/main-1563/cellular.svg" alt="" draggable="false" /><img class="" style="" src="assets/main-1563/wifi.svg" alt="" draggable="false" /><img class="" style="" src="assets/redesign/imgBattery.svg" alt="" draggable="false" /></div>
 </header>
 
-          <button class="round-control back-control" type="button" data-action="back" aria-label="뒤로 가기"><img class="" style="" src="assets/redesign/imgBtnBack.svg" alt="" draggable="false" /></button>
+          <button class="round-control back-control" type="button" data-action="back" aria-label="뒤로 가기"><img class="" style="" src="assets/main-1563/back.svg" alt="" draggable="false" /></button>
 
           <button class="soul-card" type="button" data-action="soul" aria-label="나의 소울 게이지">
-  <img class="soul-bg" src="assets/soul-hud-v2/soul-bg.svg" alt="" draggable="false" />
+  <!-- Keep the rendered 3x frame so the stroke meets the shadow without a seam. -->
+  <img class="soul-bg" src="assets/soul-hud-v2/soul-bg-figma-3x.png" alt="" draggable="false" />
   <span class="soul-emblem" aria-hidden="true"><img class="emblem-outline" style="" src="assets/soul-hud-v2/emblem-outline.svg" alt="" draggable="false" /><img class="emblem-art" style="" src="assets/soul-hud-v2/emblem.png" alt="" draggable="false" /></span>
   <strong>나의 소울 게이지</strong>
   <span class="gauge-track"><span class="gauge-fill" id="gaugeFill" aria-hidden="true"></span><span class="gauge-value" id="gaugeValue">999999</span><span class="gauge-outline" aria-hidden="true"></span><span class="gauge-touch-shine" aria-hidden="true"></span></span>
-  <span class="rank-summary" id="rankSummary" hidden><span>랭킹점수 <strong id="rankScoreValue"></strong>점</span><i aria-hidden="true"></i><span><strong id="rankPositionValue"></strong>위</span></span>
+  <span class="rank-summary" id="rankSummary" hidden><span>랭킹점수 <strong id="rankScoreValue"></strong><span data-i18n-html>점</span></span><i aria-hidden="true"></i><span><strong id="rankPositionValue"></strong><span data-i18n-html>위</span></span></span>
   <span class="soul-reward-dot" id="soulRewardDot" hidden aria-hidden="true"><img src="assets/soul-hud-v2/reward-dot.svg" alt="" /></span>
 </button>
 
@@ -48,27 +50,27 @@
           </div>
           <span class="sr-only" id="soulRewardAnnouncement" role="status" aria-live="polite"></span>
 
-          <button class="round-control help-control" type="button" data-action="help" aria-label="참여방법"><img class="" style="" src="assets/redesign/imgBtnBack1.svg" alt="" draggable="false" /></button>
+          <button class="round-control help-control" type="button" data-action="help" aria-label="참여방법"><img class="" style="" src="assets/main-1563/help.svg" alt="" draggable="false" /></button>
 
 
 
-          <button class="demo-toggle" type="button" data-action="open-demo" aria-label="개발용 데모 패널 열기">
-            <span aria-hidden="true">⚙</span> DEMO
+          <button class="demo-toggle" lang="ko" type="button" data-action="open-demo" aria-label="개발용 데모 패널 열기">
+            <span aria-hidden="true">⚙</span> 데모
           </button>
 
           <section class="world-scroll" id="worldScroll" aria-label="티니핑 세상">
             <div class="ping-world" id="pingWorld" aria-live="polite"></div>
           </section>
 
-<nav class="side-actions" aria-label="꾸미기 메뉴">
-<button class="side-button background-button" type="button" data-action="background"><span class="side-icon"><img class="" style="" src="assets/redesign/imgImage1880.png" alt="" draggable="false" /><img class="side-screen" style="" src="assets/redesign/imgImage1880.png" alt="" draggable="false" /></span><span class="side-label">배경 바꾸기</span></button>
-<button class="side-button booth-button" type="button" data-action="booth"><span class="side-icon"><img class="" style="" src="assets/redesign/imgImage1885.png" alt="" draggable="false" /></span><span class="side-label">티니핑 부스</span></button>
+<nav class="side-actions" aria-label="꾸미기 메뉴" data-node-id="1554:44246">
+<button class="side-button background-button" type="button" data-action="background"><span class="side-icon"><img class="" style="" src="assets/redesign/imgImage1880.png" alt="" draggable="false" /><img class="side-screen" style="" src="assets/redesign/imgImage1880.png" alt="" draggable="false" /></span><span class="side-label" data-i18n-html="숏컷 배경 바꾸기">배경 바꾸기</span></button>
+<button class="side-button booth-button" type="button" data-action="booth"><span class="side-icon"><img class="" style="" src="assets/redesign/imgImage1885.png" alt="" draggable="false" /></span><span class="side-label" data-i18n-html="숏컷 티니핑 부스">티니핑 부스</span></button>
 </nav>
-<nav class="bottom-actions variant-bottom-actions" aria-label="게임 메뉴" data-node-id="1147:50190">
-<button class="menu-button menu-ranking" type="button" data-action="ranking"><img class="variant-menu-card" src="assets/menu-variant/imgRectangle346601023.svg" alt="" draggable="false" /><img class="variant-menu-icon" src="assets/menu-variant/imgIc.png" alt="" draggable="false" /><span class="variant-menu-label">랭킹</span></button>
-<button class="menu-button menu-book" type="button" data-action="collection"><img class="variant-menu-card" src="assets/menu-variant/imgRectangle346601023.svg" alt="" draggable="false" /><img class="variant-menu-icon" src="assets/menu-variant/imgImage1875.png" alt="" draggable="false" /><span class="variant-menu-label">도감</span></button>
-<button class="menu-button menu-draw" type="button" data-action="draw"><img class="variant-menu-card" src="assets/menu-variant/imgRectangle346601023.svg" alt="" draggable="false" /><img class="variant-menu-icon" src="assets/menu-variant/imgImage1876.png" alt="" draggable="false" /><span class="variant-menu-label">뽑기</span></button>
-<button class="menu-button charge-button" type="button" data-action="charge"><img class="variant-menu-card" src="assets/menu-variant/imgRectangle346601022.svg" alt="" draggable="false" /><img class="variant-charge-icon" src="assets/menu-variant/charge-icon.png" alt="" draggable="false" /><span class="variant-menu-label">한번에<br>충전하기</span></button>
+<nav class="bottom-actions variant-bottom-actions" aria-label="게임 메뉴" data-node-id="1478:62224">
+<button class="menu-button menu-ranking" type="button" data-action="ranking"><img class="variant-menu-icon" src="assets/menu-variant/imgIc.png" alt="" draggable="false" /><span class="variant-menu-label">랭킹</span></button>
+<button class="menu-button menu-book" type="button" data-action="collection"><img class="variant-menu-icon" src="assets/menu-variant/imgImage1875.png" alt="" draggable="false" /><span class="variant-menu-label" data-i18n-html="메인 메뉴 도감">도감</span></button>
+<button class="menu-button menu-draw" type="button" data-action="draw"><img class="variant-menu-icon" src="assets/menu-variant/imgImage1876.png" alt="" draggable="false" /><span class="variant-menu-label" data-i18n-html="메인 메뉴 뽑기">뽑기</span></button>
+<button class="menu-button charge-button" type="button" data-action="charge"><img class="variant-menu-card" src="assets/main-1563/charge-frame.svg" alt="" draggable="false" /><span class="variant-charge-icon" aria-hidden="true"><img class="charge-gem" src="assets/redesign/imgZem.png" alt="" draggable="false" /><span class="charge-shadow"><img src="assets/main-1563/charge-shadow.svg" alt="" draggable="false" /></span><img class="charge-energy" src="assets/redesign/imgEnergy.png" alt="" draggable="false" /></span><span class="variant-menu-label" data-i18n-html>한번에<br>충전하기</span></button>
 </nav>
           <div class="home-indicator" aria-hidden="true"><span></span></div>
 
@@ -232,16 +234,25 @@
             <button class="reward-received-confirm" id="rewardReceivedConfirm" type="button" aria-label="보상 확인 후 단계별 보상으로 돌아가기">받기</button>
           </section>
 
-          <div class="demo-layer" id="demoLayer" hidden>
+          <div class="demo-layer" id="demoLayer" lang="ko" hidden>
             <button class="demo-dim" type="button" data-action="close-demo" aria-label="데모 패널 닫기"></button>
             <aside class="demo-panel" role="dialog" aria-modal="true" aria-labelledby="demoTitle">
               <header class="demo-header">
                 <div>
-                  <span class="demo-eyebrow">DEVELOPER TOOLS</span>
+                  <span class="demo-eyebrow">개발자 도구</span>
                   <h2 id="demoTitle">데모 패널</h2>
                 </div>
                 <button class="demo-close" type="button" data-action="close-demo" aria-label="데모 패널 닫기">✕</button>
               </header>
+
+              <label class="demo-color-picker demo-language-picker" for="demoLanguage">화면 언어
+                <select id="demoLanguage">
+                  <option value="ko" lang="ko">한국어</option>
+                  <option value="en">영어</option>
+                  <option value="ja">일본어</option>
+                  <option value="zh-CN">중국어 간체</option>
+                </select>
+              </label>
 
               <div class="demo-summary" aria-live="polite">
                 <span><small>전체 게이지</small><strong id="demoGaugeSummary">100%</strong></span>
@@ -253,9 +264,27 @@
                 <div class="demo-control-head">
                   <strong id="demoRewardReceiptLabel">소울 보상 수령 미리보기</strong>
                 </div>
+                <div class="demo-control-head demo-reward-claim-control">
+                  <strong id="demoRewardClaimLabel">받기 버튼 강제 활성화</strong>
+                  <label class="demo-switch">
+                    <input id="demoForceRewardClaim" type="checkbox" aria-labelledby="demoRewardClaimLabel" aria-describedby="demoRewardClaimHelp" />
+                    <span aria-hidden="true"></span><em>꺼짐</em>
+                  </label>
+                </div>
+                <p class="demo-hint" id="demoRewardClaimHelp">켜면 미달성 보상도 ‘받기’로 표시돼요.</p>
+                <details>
+                  <summary>단계별 보상 상태</summary>
+                  <label class="demo-color-picker">보상 단계<select id="demoRewardStage"></select></label>
+                  <label class="demo-color-picker">표시 상태
+                    <select id="demoRewardStageState">
+                      <option value="">기본 상태</option>
+                      <option value="available">받기</option>
+                      <option value="locked">미달성</option>
+                    </select>
+                  </label>
+                </details>
                 <div class="demo-presets demo-reward-tests">
                   <button type="button" data-demo-reward-effect="1">테스트 1</button>
-                  <button type="button" data-demo-reward-effect="2" class="is-active">테스트 2</button>
                 </div>
                 <p class="demo-hint">누를 때마다 별빛을 다시 볼 수 있어요.</p>
               </section>
@@ -377,6 +406,23 @@
                 <p class="demo-hint">30종의 유영·눈 감은 상태·도감에 함께 적용합니다. 원본 파일은 변경하지 않아요. 최종 파일은 저장한 설정으로 보정 후 확인해 주세요.</p>
               </section>
 
+              <section class="demo-control-group" aria-labelledby="demoPopupLoadingLabel">
+                <div class="demo-control-head"><div><strong id="demoPopupLoadingLabel">팝업 로딩 미리보기</strong></div></div>
+                <label class="demo-color-picker">팝업
+                  <select id="demoPopupLoadingType">
+                    <option value="ranking">랭킹</option>
+                    <option value="soul">소울 게이지 단계별 보상</option>
+                    <option value="charge">한번에 충전하기</option>
+                    <option value="collection">도감</option>
+                    <option value="help">참여방법</option>
+                    <option value="background">배경 바꾸기</option>
+                    <option value="empty-owned">획득한 티니핑이 없어요!</option>
+                    <option value="reward-received">소울 보상 수령</option>
+                  </select>
+                </label>
+                <div class="demo-presets"><button type="button" id="demoPopupLoadingPlay">재생</button></div>
+              </section>
+
               <div class="demo-footer">
                 <button class="demo-reset" type="button" data-action="reset-demo">초기 상태로</button>
                 <button class="demo-done" type="button" data-action="close-demo">적용 완료</button>
@@ -384,12 +430,60 @@
             </aside>
           </div>
 
+          <div class="popup-loading" id="popupLoading" hidden>
+            <div class="popup-loading-panel" role="dialog" aria-modal="true" aria-label="팝업 로딩 중" tabindex="-1">
+              <div class="popup-loading-header" aria-hidden="true">
+                <img class="popup-loading-header-art" src="assets/popup-loading/basic-header.svg" alt="" />
+                <img class="popup-loading-hearts" src="assets/popup-loading/hearts.svg" alt="" />
+              </div>
+              <button class="popup-loading-close" type="button" aria-label="팝업 닫기"><img src="assets/popup-loading/close.svg" alt="" /></button>
+              <div class="popup-loading-body" role="status">
+                <img class="popup-loading-spinner" src="assets/popup-loading/spinner.svg" alt="" />
+                <span class="sr-only">불러오는 중</span>
+              </div>
+              <span class="popup-loading-placeholder" aria-hidden="true"></span>
+            </div>
+          </div>
+
           <div class="toast" id="toast" role="status" aria-live="polite"></div>
+          <div class="collection-draw-preview" id="collectionDrawPreview" role="dialog" aria-modal="true" aria-label="컬렉템 뽑기" hidden>
+            <div id="collectionDrawScreen">
+              <img class="collection-draw-backdrop" src="assets/collection-draw-preview/collection-draw.png" alt="" draggable="false" />
+              <div class="collection-localized">
+                <div class="collection-localized-offers">
+                  <span>[코인] 월하의 늑대</span><span>[코인] 고스트 키티</span>
+                  <small>3일</small>
+                </div>
+                <div class="collection-localized-details">
+                  <strong>[코인] 월하의 늑대</strong><span>9일 23시간 21분 남음</span>
+                  <div><span>입어보기</span><span>아이템 1/27</span></div>
+                </div>
+                <span class="collection-localized-mileage">Free Mileage</span>
+                <strong class="collection-localized-question">컬렉템을 1회 뽑아볼까요?</strong>
+                <span class="collection-localized-draw-button">1회 뽑기</span>
+              </div>
+              <button type="button" class="collection-draw-close" id="collectionDrawClose" aria-label="닫기"></button>
+              <button type="button" class="collection-draw-confirm" id="collectionDrawConfirm" aria-label="1회 뽑기"></button>
+            </div>
+            <div id="collectionResultScreen" hidden>
+              <img class="collection-draw-backdrop" src="assets/collection-draw-preview/collection-result.png" alt="" draggable="false" />
+              <span class="collection-result-card" aria-hidden="true"></span>
+              <img class="collection-result-character" src="assets/collection-draw-preview/hachuping.png" alt="" draggable="false" />
+              <div class="collection-localized">
+                <strong class="collection-localized-congrats">축하해요!</strong>
+                <span class="collection-localized-acquired">컬렉템을 획득했어요</span>
+                <strong class="collection-localized-grade">NORMAL</strong>
+                <span class="collection-localized-next">화면을 터치해 다음으로 넘어갈 수 있어요</span>
+              </div>
+              <button type="button" class="collection-result-return" id="collectionResultReturn" aria-label="하츄핑을 획득했어요. 티니핑 세상으로 돌아가기"></button>
+            </div>
+          </div>
         </section>
       </div>
     </main>
     <script src="policy-engine.js?v=live-color-1"></script>
     <script src="color-adjustment.js?v=live-color-1"></script>
-    <script src="menu-variant.js?v=reward-effect-demo-21"></script>
+    <script src="menu-variant-i18n.js?v=reward-done-get"></script>
+    <script src="menu-variant.js?v=figma-backgrounds"></script>
   </body>
 </html>

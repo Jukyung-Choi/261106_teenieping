@@ -19,6 +19,15 @@ const sheetTitle = document.querySelector("#sheetTitle");
 const sheetEmoji = document.querySelector("#sheetEmoji");
 const sheetContent = document.querySelector("#sheetContent");
 const sheetPrimary = document.querySelector("#sheetPrimary");
+const popupLoading = document.getElementById('popupLoading');
+const popupLoadingHeader = popupLoading.querySelector('.popup-loading-header-art');
+let pendingPopupLoad = null;
+const collectionDrawPreview = document.getElementById('collectionDrawPreview');
+const collectionDrawScreen = document.getElementById('collectionDrawScreen');
+const collectionResultScreen = document.getElementById('collectionResultScreen');
+const collectionDrawConfirm = document.getElementById('collectionDrawConfirm');
+const collectionResultReturn = document.getElementById('collectionResultReturn');
+let collectionPreviewInert = [];
 const gaugeFill = document.querySelector("#gaugeFill");
 const gaugeValue = document.querySelector("#gaugeValue");
 const toast = document.querySelector("#toast");
@@ -124,7 +133,7 @@ function downloadColorSettings() {
   link.download=`teenieping-color-s${colorSettings.saturation}-b${colorSettings.black}-g${colorSettings.gamma.toFixed(2)}-w${colorSettings.white}.json`;
   document.body.appendChild(link);link.click();link.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
-  showToast('보정 설정 파일을 저장했어요');
+  showToast(tr('보정 설정 파일을 저장했어요'));
 }
 const demoCountRange = document.querySelector("#demoCountRange");
 const demoCountOutput = document.querySelector("#demoCountOutput");
@@ -135,6 +144,9 @@ const rankScoreValue = document.querySelector("#rankScoreValue");
 const rankPositionValue = document.querySelector("#rankPositionValue");
 const demoRankVisibility = document.querySelector("#demoRankVisibility");
 const demoRewardCoachVisibility = document.querySelector('#demoRewardCoachVisibility');
+const demoForceRewardClaim = document.querySelector('#demoForceRewardClaim');
+const demoRewardStage = document.querySelector('#demoRewardStage');
+const demoRewardStageState = document.querySelector('#demoRewardStageState');
 
 const PING_WIDTH = 100;
 const PING_HEIGHT = 127;
@@ -146,38 +158,34 @@ const ROW_GAP = 220;
 const XP_PAINT_INTERVAL = 250;
 const WANDER_SPEED_MULTIPLIER = 1.2;
 const CRUISE_MAX_SPEED = 0.0415 * WANDER_SPEED_MULTIPLIER;
-const COLLISION_MAX_SPEED = 0.06;
 const PLAYER_RANK = 518;
 let activeWorldHeight = WORLD_HEIGHT;
 
 const BACKGROUND_STORAGE='teenieping-menu-variant-background-v1';
 const BACKGROUND_OPTIONS=[
-  {id:1,name:'분홍 구름과 별빛',layers:[{file:5,height:1586,top:0},{file:6,height:1585,top:1},{file:7,height:1585,top:0}]},
-  {id:2,name:'파스텔 별빛 구름',layers:[{file:1,height:1586,top:0}]},
-  {id:3,name:'핑크 하트',layers:[{file:3,height:1596,top:-5}]},
-  {id:4,name:'핑크 라벤더',layers:[{file:8,height:1586,top:0}]},
-  {id:5,name:'분홍 구름과 파스텔 하늘',layers:[{file:1,height:1586,top:0},{file:2,height:1586,top:0}]},
-  {id:6,name:'별과 구름의 파스텔 하늘',layers:[{file:3,height:1596,top:-5},{file:4,height:1586,top:0}]},
+  {id:1,name:'분홍 구름과 별빛',image:'tp-bg-1.png'},
+  {id:2,name:'파스텔 별빛 구름',image:'tp-bg-2.png'},
+  {id:3,name:'핑크 하트',image:'tp-bg-3.png'},
+  {id:4,name:'핑크 라벤더',image:'tp-bg-4.jpeg'},
+  {id:5,name:'분홍 구름과 파스텔 하늘',image:'tp-bg-5.png'},
+  {id:6,name:'별과 구름의 파스텔 하늘',image:'tp-bg-6.png'},
 ];
-let activeBackgroundId=5;
+let activeBackgroundId=4;
 try {
   const saved=Number(localStorage.getItem(BACKGROUND_STORAGE));
   if(BACKGROUND_OPTIONS.some(bg=>bg.id===saved))activeBackgroundId=saved;
 } catch { /* Keep the default if local storage is unavailable. */ }
 let pendingBackgroundId=activeBackgroundId;
-let backgroundSwipe=null;
-let backgroundMotion=null;
-let suppressBackgroundClick=false;
 
-function backgroundLayers(option,thumbnail=false) {
-  const ratio=thumbnail?120/WORLD_WIDTH:1;
-  return option.layers.map(layer=>`<img src="assets/backgrounds/resources-img${layer.file}.png" alt="" draggable="false" style="left:0;top:${layer.top*ratio}px;width:${WORLD_WIDTH*ratio}px;height:${layer.height*ratio}px" />`).join('');
+function backgroundImage(option,thumbnail=false) {
+  const file=thumbnail ? `tp-bg-${option.id}-preview.png` : option.image;
+  return `<img src="assets/backgrounds/${file}" alt="" draggable="false" />`;
 }
 
 function paintWorldBackground() {
   const option=BACKGROUND_OPTIONS.find(bg=>bg.id===activeBackgroundId);
   pingWorld.querySelector('.world-background')?.remove();
-  pingWorld.insertAdjacentHTML('afterbegin',`<div class="world-background" aria-hidden="true">${backgroundLayers(option)}</div>`);
+  pingWorld.insertAdjacentHTML('afterbegin',`<div class="world-background" aria-hidden="true">${backgroundImage(option)}</div>`);
   pingWorld.style.backgroundImage='none';
   pingWorld.dataset.background=String(option.id);
 }
@@ -188,6 +196,7 @@ function selectBackground(id) {
   for(const button of sheetContent.querySelectorAll('[data-background-id]')) {
     const selected=Number(button.dataset.backgroundId)===id;
     button.setAttribute('aria-checked',String(selected));
+    button.tabIndex = selected ? 0 : -1;
     button.querySelector('.bg-choice-selected').hidden=!selected;
   }
 }
@@ -204,20 +213,18 @@ function renderBackgroundPicker() {
   const base='assets/backgrounds/';
   const cards=BACKGROUND_OPTIONS.map(option=>{
     const selected=option.id===pendingBackgroundId;
-    return `<button class="bg-choice" type="button" role="radio" aria-checked="${selected}" aria-label="${option.name}" data-background-id="${option.id}">
-      <img class="bg-choice-border" src="${base}popup-imgRectangle346601078.svg" alt="" />
-      <span class="bg-choice-crop"><img class="bg-choice-base" src="${base}popup-imgRectangle346601079.svg" alt="" /><span class="bg-choice-scene">${backgroundLayers(option,true)}</span></span>
-      <span class="bg-choice-selected" ${selected?'':'hidden'}><img class="bg-choice-outline" src="${base}popup-imgSelect.svg" alt="" /><span class="bg-choice-check"><img src="${base}popup-imgVector4096.svg" alt="" /></span></span>
+    return `<button class="bg-choice" type="button" role="radio" aria-checked="${selected}" aria-label="${tr(option.name)}" data-background-id="${option.id}" tabindex="${selected ? 0 : -1}">
+      <img class="bg-choice-border" src="${base}figma-1563-card.svg" alt="" />
+      <span class="bg-choice-crop"><img class="bg-choice-base" src="${base}figma-1563-base.svg" alt="" /><span class="bg-choice-scene">${backgroundImage(option,true)}</span></span>
+      <img class="bg-choice-selected" src="${base}figma-1563-selected.svg" alt="" ${selected ? '' : 'hidden'} />
     </button>`;
   }).join('');
-  return `<div class="bg-popup-content" data-node-id="1172:60696">
-    <div class="bg-popup-top" aria-hidden="true"><img class="bg-popup-bg" src="${base}popup-imgUnion.svg" alt="" /></div>
+  return `<div class="bg-popup-content" data-node-id="1563:46007">
     <div class="bg-popup-body" aria-hidden="true"></div>
+    <div class="bg-popup-top" aria-hidden="true"><img class="bg-popup-bg" src="${base}figma-1563-header.svg" alt="" /></div>
     <img class="bg-popup-hearts" src="${base}popup-imgUnion1.svg" alt="" aria-hidden="true" />
-    <p class="bg-popup-description">마음에 드는 배경을 선택하세요.</p>
-    <div class="bg-popup-scroll" role="radiogroup" aria-label="배경 선택"><div class="bg-popup-options">${cards}</div></div>
-    <span class="bg-popup-fade" aria-hidden="true"></span>
-    <div class="bg-popup-footer"><button class="bg-popup-confirm" type="button" data-action="confirm-background">확인</button></div>
+    <div class="bg-popup-options" role="radiogroup" aria-label="${tr("배경 선택")}">${cards}</div>
+    <button class="bg-popup-confirm" type="button" data-action="confirm-background">${tr("확인")}</button>
   </div>`;
 }
 
@@ -1067,14 +1074,15 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matc
 const FREEFORM_X = [0, -10, 8, 14, -16, 7, -8, 14, -12, 0];
 const FREEFORM_Y = [-18, 38, -40, 46, -34, 16, -24, 52, -44, 15];
 
-// Reward content from Figma 1140:40458, including the repeated sixth row.
+// Reward tiers from Figma 1563:51969. Level IDs are used by saved claims.
 const MILESTONES = [
   {level:1,need:1000,name:'500코인',art:'coin'},
   {level:2,need:2000,name:'1젬',art:'gem'},
   {level:3,need:3000,name:'티니핑 효과',art:'img031'},
-  {level:4,need:4000,name:'양갈래 헤어',art:'imgIpMikuFHair1Thumb1'},
-  {level:5,need:5000,name:'특별한 코스튬',art:'imgIpMikuTop4Thumb1'},
-  {level:6,need:2000,name:'500코인',art:'imgIpCovernatTop91'},
+  {level:4,need:4000,name:'헤드웨어',art:'imgIpTeeniepingHeadwear1Thumb1'},
+  {level:5,need:5000,name:'오로라 드레스',art:'imgIpTeeniepingDr1Thumb1'},
+  {level:6,need:6000,name:'레인보우 슈즈',art:'imgIpTeeniepingSh1Thumb1'},
+  {level:7,need:7000,name:'로미 헤어',art:'imgIpTeeniepingFHair1Thumb1'},
 ];
 
 const LEADERBOARD = [
@@ -1089,10 +1097,10 @@ const LEADERBOARD = [
 ];
 
 const RANKING_REWARDS = [
-  { range: "TOP 1~10", reward: "스페셜 드레스 세트 + 💎 100젬" },
-  { range: "TOP 11~30", reward: "스페셜 드레스 세트 + 💎 50젬" },
-  { range: "TOP 31~50", reward: "스페셜 드레스 세트 + 💎 30젬" },
-  { range: "TOP 51~100", reward: "스페셜 드레스 세트" },
+  { range: "1 - 10", zem: 100 },
+  { range: "11 - 30", zem: 50 },
+  { range: "31 - 50", zem: 30 },
+  { range: "51 - 100", zem: 0 },
 ];
 
 const DEX = [
@@ -1128,7 +1136,8 @@ const soulRewardAnnouncement = document.getElementById('soulRewardAnnouncement')
 const announcedSoulRewards = new Set();
 let soulRewardCoachTimer;
 let forceSoulRewardCoach = false;
-const collisionCooldowns = new Map();
+let forceRewardClaim = false;
+const rewardStageOverrides = new Map();
 
 // Policy values are shared by the main screen, collection and confirmation sheet.
 // Species XP assignments retain the existing prototype table (official mapping TBD).
@@ -1187,10 +1196,9 @@ function updateSoulFromPings() {
   const rewardGoal = Math.max(...MILESTONES.map(item => item.need));
   const fillWidth = Math.min(240,total/rewardGoal*240);
   gaugeFill.style.width = `${fillWidth}px`;
-  gaugeValue.textContent = Math.floor(total + 1e-7).toLocaleString();
-  document.querySelector('.soul-card').setAttribute('aria-label',`나의 소울 게이지 ${Math.floor(total + 1e-7)} XP`);
+  gaugeValue.textContent = Math.floor(total + 1e-7).toLocaleString(demoLanguage);
   syncSoulRewardNotice();
-  rankScoreValue.textContent = Math.round(policyGame.state.rankingScore).toLocaleString();
+  rankScoreValue.textContent = Math.round(policyGame.state.rankingScore).toLocaleString(demoLanguage);
   if (!demoLayer.hidden) syncDemoPanel();
   syncSoulPopup();
   syncRankingPopup();
@@ -1199,13 +1207,13 @@ function updateSoulFromPings() {
 }
 
 function updateRankSummary() {
-  rankScoreValue.textContent = Math.round(policyGame.state.rankingScore).toLocaleString();
-  rankPositionValue.textContent = PLAYER_RANK.toLocaleString();
+  rankScoreValue.textContent = Math.round(policyGame.state.rankingScore).toLocaleString(demoLanguage);
+  rankPositionValue.textContent = PLAYER_RANK.toLocaleString(demoLanguage);
   rankSummary.hidden = !showRankSummary;
   document.querySelector(".soul-card").classList.toggle("is-rank-visible", showRankSummary);
   rankSummary.setAttribute(
     "aria-label",
-    `나의 랭킹점수 ${Math.round(policyGame.state.rankingScore).toLocaleString()}점, 현재 순위 ${PLAYER_RANK.toLocaleString()}위`,
+    tr("나의 랭킹점수 {score}점, 현재 순위 {rank}위", {score:Math.round(policyGame.state.rankingScore).toLocaleString(demoLanguage),rank:PLAYER_RANK.toLocaleString(demoLanguage)}),
   );
   soulRewardCoach.classList.toggle('is-rank-visible', showRankSummary);
 }
@@ -1232,7 +1240,7 @@ function updatePingElement(actor) {
     actor.label.classList.toggle('is-full',actor.data.xp>=99.5);
     actor.label.classList.toggle('is-low-xp',isExhausted(actor.data));
   }
-  actor.element.setAttribute("aria-label", `${actor.data.name} XP ${roundedXp}%. 터치해서 최대 15 XP 회복하기`);
+  actor.element.setAttribute("aria-label", tr("{name} XP {xp}%. 터치해서 최대 15 XP 회복하기", {name:tr(actor.data.name),xp:roundedXp}));
 }
 
 function centerOutOffsets(count) {
@@ -1359,7 +1367,6 @@ function renderPingWorld({ spawnIds = [], focusSpawnId = null } = {}) {
   pingWorld.style.width = `${WORLD_WIDTH}px`;
   pingWorld.style.height = `${activeWorldHeight}px`;
   collisionCount = 0;
-  collisionCooldowns.clear();
   pingWorld.dataset.collisionCount = "0";
   pingWorld.innerHTML = ownedPings.length ? ownedPings.map((ping, index) => `
     <button
@@ -1368,11 +1375,11 @@ function renderPingWorld({ spawnIds = [], focusSpawnId = null } = {}) {
       data-ping="${ping.id}"
       data-gauge-tone="${ping.gaugeTone}"
       style="touch-action:pan-x pan-y pinch-zoom;--ping-color:${ping.color};--art-size:${ping.artW}px;--ping-image:url('${ping.image}');--xp:${ping.xp}%;--ping-saturation:100%;--art-w:${ping.artW}px;--art-h:${ping.artH}px;--bob-delay:${-index * 0.31}s;--bob-duration:${2.35 + (index % 4) * 0.24}s;--bob-distance:${3.2 + (index % 3) * 0.55}px;--hop-delay:${-index * 0.83}s;--hop-duration:${5.2 + (index % 5) * 0.38}s;--eye-lx:${ping.eyeL[0]}%;--eye-ly:${ping.eyeL[1]}%;--eye-lw:${ping.eyeL[2]}%;--eye-lh:${ping.eyeL[3]}%;--eye-rx:${ping.eyeR[0]}%;--eye-ry:${ping.eyeR[1]}%;--eye-rw:${ping.eyeR[2]}%;--eye-rh:${ping.eyeR[3]}%;--lid-color:${ping.lid};--blink-delay:${-index * 0.47}s;--blink-duration:${3.8 + (index % 5) * 0.43}s"
-      aria-label="${ping.name} XP ${ping.xp}%. 터치해서 최대 15 XP 회복하기"
+      aria-label="${tr("{name} XP {xp}%. 터치해서 최대 15 XP 회복하기", {name:tr(ping.name),xp:ping.xp})}"
     >
       <span class="ping-visual">
         <span class="ping-info">
-          <span class="ping-name">${ping.name}</span>
+          <span class="ping-name">${tr(ping.name)}</span>
           <span class="ping-progress"><span class="ping-xp-track"><span class="ping-xp-fill"></span></span><span class="ping-heart" aria-hidden="true"><img src="assets/gauge-colors-v3/heart-${ping.gaugeTone}.svg" alt="" /><span class="heart-shine"><img src="assets/gauge-colors-v3/heart-shine.svg" alt="" /></span></span></span>
         </span>
         <span class="ping-art-wrap">
@@ -1415,7 +1422,6 @@ function renderPingWorld({ spawnIds = [], focusSpawnId = null } = {}) {
       bouncePhase: seededUnit(index, 11) * Math.PI * 2,
       bounceSpeed: (Math.PI * 2) / (2200 + (index % 4) * 280),
       bounceAmplitude: 5 + (index % 3) * 1.2,
-      collisionBoost: 0,
       pulseTimer: 0,
     };
     if (isSummoning && actor.spawnDelay<=0 && !reducedMotion) actor.element.classList.add('is-spawning');
@@ -1467,14 +1473,13 @@ function positionActor(actor) {
   }
 }
 
-// Smaller colliders and generous overlap let crowded groups swim past each other.
-const PING_COLLIDER_SCALE = 0.90;
+// Let the outer edges pass each other and ease apart only when the bodies overlap.
+const PING_COLLIDER_SCALE = 0.87;
 const PING_COLLIDER_ALLOWED_OVERLAP = 0.20;
-const PING_COLLISION_REBOUND_SPEED = 0.016;
-const PING_COLLISION_REBOUND_MS = 180;
-const PING_COLLISION_COOLDOWN_MS = 420;
-function resolvePingCollisions() {
-  // Recheck nearby pairs after separation so crowded groups settle together.
+const PING_SEPARATION_SPEED = 0.065;
+function resolvePingCollisions(elapsed) {
+  const contactDamping = Math.pow(0.93, elapsed / 16);
+  // A second pass helps crowded groups separate without a large correction per contact.
   for (let pass=0;pass<2;pass++)
   for (let i=0;i<pingActors.length;i++) for (let j=i+1;j<pingActors.length;j++) {
     const a=pingActors[i], b=pingActors[j];
@@ -1492,27 +1497,18 @@ function resolvePingCollisions() {
     const correctionY=overlapY-allowed/overlapX+.01;
     const direction=(correctionX<correctionY ? bx-ax : by-ay)>=0 ? 1 : -1;
     const axis=correctionX<correctionY?'x':'y';
-    const correction=(correctionX<correctionY?correctionX:correctionY)*.6;
+    const correction=Math.min(Math.min(correctionX,correctionY)*.25,elapsed*PING_SEPARATION_SPEED);
     const fixedA=isExhausted(a.data);
     const fixedB=isExhausted(b.data);
     if (fixedA && fixedB) continue;
     if (fixedA) b[axis]+=direction*correction;
     else if (fixedB) a[axis]-=direction*correction;
     else { a[axis]-=direction*correction/2; b[axis]+=direction*correction/2; }
-    // Apply one small outward impulse per contact, not on every solver pass.
-    const contactKey=`${a.index}:${b.index}`;
-    const now=performance.now();
-    if (now-(collisionCooldowns.get(contactKey) ?? -Infinity)>=PING_COLLISION_COOLDOWN_MS) {
-      collisionCooldowns.set(contactKey,now);
-      for (const [actor,fixed,outward] of [[a,fixedA,-direction],[b,fixedB,direction]]) {
-        if (fixed) continue;
-        const velocity=axis==='x'?'vx':'vy';
-        // Rebound only when heading into contact; retain tangent velocity and wander target.
-        if(actor[velocity]*outward<0) {
-          actor[velocity]=outward*Math.min(.025,Math.max(PING_COLLISION_REBOUND_SPEED,Math.abs(actor[velocity])*.4));
-          actor.collisionBoost=PING_COLLISION_REBOUND_MS;
-        }
-      }
+    // Slow the inward component without reversing direction or disturbing sideways drift.
+    if (pass === 0) {
+      const velocity = axis === 'x' ? 'vx' : 'vy';
+      if (!fixedA && a[velocity] * direction > 0) a[velocity] *= contactDamping;
+      if (!fixedB && b[velocity] * direction < 0) b[velocity] *= contactDamping;
     }
     collisionCount++;
     pingWorld.dataset.collisionCount=String(collisionCount);
@@ -1557,13 +1553,11 @@ function animatePingWorld(timestamp) {
       if (isLowXp) {
         actor.vx = 0;
         actor.vy = 0;
-        actor.collisionBoost = 0;
         actor.bouncePhase += actor.bounceSpeed * motionElapsed;
         return;
       }
 
       actor.targetTimer -= motionElapsed;
-      actor.collisionBoost = Math.max(0, actor.collisionBoost - elapsed);
       const targetDistance = Math.hypot(actor.targetX - actor.x, actor.targetY - actor.y);
       if (actor.targetTimer <= 0 || targetDistance < 16) chooseWanderTarget(actor);
 
@@ -1574,12 +1568,9 @@ function animatePingWorld(timestamp) {
       actor.bouncePhase += actor.bounceSpeed * motionElapsed;
 
       const speed = Math.hypot(actor.vx, actor.vy);
-      const maxSpeed = actor.collisionBoost > 0
-        ? COLLISION_MAX_SPEED
-        : CRUISE_MAX_SPEED;
-      if (speed > maxSpeed) {
-        actor.vx = (actor.vx / speed) * maxSpeed;
-        actor.vy = (actor.vy / speed) * maxSpeed;
+      if (speed > CRUISE_MAX_SPEED) {
+        actor.vx = (actor.vx / speed) * CRUISE_MAX_SPEED;
+        actor.vy = (actor.vy / speed) * CRUISE_MAX_SPEED;
       }
       actor.x += actor.vx * motionElapsed;
       actor.y += actor.vy * motionElapsed;
@@ -1588,7 +1579,7 @@ function animatePingWorld(timestamp) {
   });
 
   if (!reducedMotion) {
-    resolvePingCollisions();
+    resolvePingCollisions(elapsed);
     pingActors.forEach((actor) => {
       keepActorInWorld(actor);
       positionActor(actor);
@@ -1619,10 +1610,10 @@ function playSoulTouchFeedback() {
   ],{duration:600,easing:'ease-out'});
   if (!reducedMotion) soulTouchShineAnimation=shine.animate([
     {transform:'translateX(-100%)',opacity:0},
-    {offset:.2,opacity:.85},
-    {offset:.75,opacity:.6},
+    {offset:.2,opacity:.56},
+    {offset:.75,opacity:.40},
     {transform:'translateX(470%)',opacity:0}
-  ],{duration:600,easing:'ease-out'});
+  ],{duration:400,easing:'ease-out'});
 }
 
 function feedPing(id) {
@@ -1630,7 +1621,7 @@ function feedPing(id) {
   if (!actor) return;
   playSoulTouchFeedback();
   const added = policyGame.touch(id,policyNow());
-  if (!added) { showToast('이미 XP가 가득 차 있어요'); return; }
+  if (!added) { showToast(tr('이미 XP가 가득 차 있어요')); return; }
   refreshPolicy();
   actor.targetTimer = 0;
   chooseWanderTarget(actor);
@@ -1676,12 +1667,11 @@ function syncSoulRewardNotice() {
   const hasReward = available.length > 0;
   soulRewardDot.hidden = !hasReward;
   const card = document.querySelector('.soul-card');
-  // updateSoulFromPings replaces the numeric label before this call.
-  const baseLabel = card.getAttribute('aria-label').replace(/, 받을 수 있는 보상 \d+개$/, '');
-  card.setAttribute('aria-label', baseLabel + (hasReward ? `, 받을 수 있는 보상 ${available.length}개` : ''));
+  const baseLabel = `${tr('나의 소울 게이지')} ${Math.floor(xp + 1e-7).toLocaleString(demoLanguage)} XP`;
+  card.setAttribute('aria-label', baseLabel + (hasReward ? tr(', 받을 수 있는 보상 {n}개', {n:available.length}) : ''));
   if (forceSoulRewardCoach && sheetLayer.hidden && demoLayer.hidden && !document.hidden) {
     clearTimeout(soulRewardCoachTimer);
-    if (soulRewardCoach.hidden) soulRewardAnnouncement.textContent = '데모: 소울 보상 말풍선 미리보기입니다.';
+    if (soulRewardCoach.hidden) soulRewardAnnouncement.textContent = tr('데모: 소울 보상 말풍선 미리보기입니다.');
     soulRewardCoach.hidden = false;
     return;
   }
@@ -1695,7 +1685,7 @@ function syncSoulRewardNotice() {
   available.forEach(item => announcedSoulRewards.add(item.level));
   clearTimeout(soulRewardCoachTimer);
   soulRewardCoach.hidden = false;
-  soulRewardAnnouncement.textContent = `받을 수 있는 소울 보상이 ${available.length}개 있어요. 소울 게이지를 눌러 확인해 보세요.`;
+  soulRewardAnnouncement.textContent = tr("받을 수 있는 소울 보상이 {n}개 있어요. 소울 게이지를 눌러 확인해 보세요.", {n:available.length});
   soulRewardCoachTimer = setTimeout(hideSoulRewardCoach, 5000);
 }
 
@@ -1740,35 +1730,44 @@ function prepareRewardAfterglow() {
   rewardGalaxyAfterglow.replaceChildren(particles);
 }
 
-function showRewardReceived(reward, previewTrigger = null) {
+function showRewardReceived(reward, previewTrigger = null, previewMs = 0) {
   closeRewardReceived(false);
   rewardPreviewTrigger = previewTrigger;
   rewardReceivedLayer.dataset.effectPreview = previewTrigger?.dataset.demoRewardEffect ?? '1';
   if (previewTrigger) {
-    rewardReceivedConfirm.setAttribute('aria-label', '보상 확인 후 데모 패널로 돌아가기');
+    rewardReceivedConfirm.setAttribute('aria-label', tr('보상 확인 후 데모 패널로 돌아가기'));
   }
   if (rewardReceivedLayer.dataset.effectPreview === '1') {
     prepareRewardAfterglow();
     if (!reducedMotion) setRewardConfettiOrigins();
   }
   rewardReceivedThumb.innerHTML = `<span class="reward-received-art">${soulRewardArt(reward)}</span>`;
-  rewardReceivedText.textContent = `${reward.name}${rewardObjectParticle(reward.name)} 받았어요!`;
+  rewardReceivedText.textContent = demoLanguage === "ko"
+    ? `${reward.name}${rewardObjectParticle(reward.name)} 받았어요!`
+    : tr("{reward} 받았어요!", {reward:tr(reward.name)});
   rewardReceivedLayer.dataset.rewardLevel = String(reward.level);
   rewardReceivedLayer.hidden = false;
   // Keep the completed reward list visible underneath, without letting it receive input.
   rewardReceivedInert = [...gameScreen.children]
-    .filter(element => element !== rewardReceivedLayer && !element.inert);
+    .filter(element => element !== rewardReceivedLayer && element !== popupLoading && !element.inert);
   rewardReceivedInert.forEach(element => { element.inert = true; });
   hideSoulRewardCoach();
-  if (!reducedMotion) {
-    rewardReceivedAnimations = [rewardReceivedThumb.animate([
-      {transform:'scale(.88)'},{transform:'scale(1.03)',offset:.65},{transform:'scale(1)'},
-    ],{duration:220,easing:'ease-out'})];
-  }
-  rewardReceivedConfirm.focus({preventScroll:true});
+  waitForPopup(rewardReceivedLayer, {
+    previewMs,
+    onClose: closeRewardReceived,
+    onReady: () => {
+      if (!reducedMotion) {
+        rewardReceivedAnimations = [rewardReceivedThumb.animate([
+          {transform:'scale(.88)'},{transform:'scale(1.03)',offset:.65},{transform:'scale(1)'},
+        ],{duration:220,easing:'ease-out'})];
+      }
+      rewardReceivedConfirm.focus({preventScroll:true});
+    },
+  });
 }
 
 function closeRewardReceived(restoreFocus=true) {
+  clearPopupLoading(rewardReceivedLayer);
   const wasOpen = !rewardReceivedLayer.hidden;
   const previewTrigger = rewardPreviewTrigger;
   rewardPreviewTrigger = null;
@@ -1778,7 +1777,7 @@ function closeRewardReceived(restoreFocus=true) {
   delete rewardReceivedLayer.dataset.effectPreview;
   rewardGalaxyAfterglow.replaceChildren();
   if (previewTrigger) {
-    rewardReceivedConfirm.setAttribute('aria-label', '보상 확인 후 단계별 보상으로 돌아가기');
+    rewardReceivedConfirm.setAttribute('aria-label', tr('보상 확인 후 단계별 보상으로 돌아가기'));
   }
   rewardReceivedInert.forEach(element => { element.inert = false; });
   rewardReceivedInert = [];
@@ -1794,24 +1793,37 @@ function closeRewardReceived(restoreFocus=true) {
 
 rewardReceivedConfirm.addEventListener('click', () => closeRewardReceived());
 
+const SOUL_REWARD_ACTION_LABELS = {claimed:'완료',available:'받기',locked:'미달성'};
+
+function soulRewardState(item, xp) {
+  const override = rewardStageOverrides.get(item.level);
+  if (override) return override;
+  if (claimedRewards.has(item.level)) return 'claimed';
+  return forceRewardClaim || xp >= item.need ? 'available' : 'locked';
+}
+
 function renderSoulRewards() {
   const currentXp=policyGame.soulTotal();
   const rows=MILESTONES.map(item=>{
-    const claimed=claimedRewards.has(item.level);
-    const state=claimed?'claimed':currentXp>=item.need?'available':'locked';
+    const state=soulRewardState(item,currentXp);
     return `<div class="soul-popup-row" data-reward-level="${item.level}" data-state="${state}">
       <span class="soul-popup-thumb" aria-hidden="true">${soulRewardArt(item)}</span>
-      <span class="soul-popup-copy"><span class="soul-popup-condition">${item.need.toLocaleString()} 달성시</span><span class="soul-popup-reward">${item.name}</span></span>
-      <button class="soul-popup-action" type="button" data-claim="${item.level}" ${state==='available'?'':'disabled'}>${state==='claimed'?'완료':state==='available'?'받기':'미달성'}</button>
+      <span class="soul-popup-copy"><span class="soul-popup-condition">${tr("{n} 달성시", {n:item.need.toLocaleString(demoLanguage)})}</span><span class="soul-popup-reward">${tr(item.name)}</span></span>
+      <button class="soul-popup-action" type="button" data-claim="${item.level}" ${state==='available'?'':'disabled'}>${tr(SOUL_REWARD_ACTION_LABELS[state])}</button>
     </div>`;
   }).join('');
-  return `<div class="soul-popup-content">
-    <img class="soul-popup-bg" src="assets/soul-popup/imgUnion1.svg" alt="" aria-hidden="true" />
-    <img class="soul-popup-title-hearts" src="assets/soul-popup/imgUnion2.svg" alt="" aria-hidden="true" />
-    <p class="soul-popup-current"><span>나의 소울게이지</span> <strong class="soul-popup-value">${Math.floor(currentXp + 1e-7).toLocaleString()}</strong></p>
-    <div class="soul-popup-list" tabindex="0" role="region" aria-label="소울게이지 단계별 보상 목록">${rows}</div>
-    <p class="soul-popup-caption">소울게이지를 더 모아서 다음 보상을 받으세요!</p>
-    <button class="soul-popup-confirm" type="button" data-action="close-sheet">확인</button>
+  return `<div class="soul-popup-content" data-node-id="1563:51969">
+    <div class="soul-popup-header" aria-hidden="true">
+      <img class="soul-popup-bg" src="assets/soul-popup/gauge-1563/header-bg.svg" alt="" />
+      <img class="soul-popup-title-hearts" src="assets/soul-popup/gauge-1563/title-hearts.svg" alt="" />
+    </div>
+    <div class="soul-popup-body">
+      <p class="soul-popup-current"><span>${tr("나의 소울게이지")}</span><strong class="soul-popup-value">${Math.floor(currentXp + 1e-7).toLocaleString(demoLanguage)}</strong></p>
+      <div class="soul-popup-list" tabindex="0" role="region" aria-label="${tr("소울게이지 단계별 보상 목록")}">${rows}</div>
+    </div>
+    <div class="soul-popup-footer">
+      <button class="soul-popup-confirm" type="button" data-action="close-sheet">${tr("확인")}</button>
+    </div>
   </div>`;
 }
 
@@ -1819,51 +1831,66 @@ function syncSoulPopup() {
   if(activeSheet!=='soul' || sheetLayer.hidden) return;
   const xp=policyGame.soulTotal();
   const value=sheetContent.querySelector('.soul-popup-value');
-  if(value) value.textContent=Math.floor(xp + 1e-7).toLocaleString();
+  if(value) value.textContent=Math.floor(xp + 1e-7).toLocaleString(demoLanguage);
   for(const row of sheetContent.querySelectorAll('[data-reward-level]')) {
     const item=MILESTONES.find(item=>item.level===Number(row.dataset.rewardLevel));
-    const claimed=claimedRewards.has(item.level),available=xp>=item.need&&!claimed;
-    row.dataset.state=claimed?'claimed':available?'available':'locked';
+    const state=soulRewardState(item,xp);
+    row.dataset.state=state;
     const button=row.querySelector('[data-claim]');
-    button.disabled=!available;button.textContent=claimed?'완료':available?'받기':'미달성';
+    button.disabled=state!=='available';
+    button.textContent=tr(SOUL_REWARD_ACTION_LABELS[state]);
   }
 }
 
 function renderHelp() {
-  const tabs=[['how','참여방법'],['sns','SNS 이벤트']].map(([id,label])=>`<button class="help-popup-tab ${activeHelpTab===id?'is-active':''}" type="button" role="tab" aria-selected="${activeHelpTab===id}" data-sheet-tab="${id}">${label}</button>`).join('');
-  const participation=[
-    '티니핑 뽑기로 티니핑을 획득해요.<br>처음 얻는 티니핑만 XP가 활성화돼요.',
-    '같은 티니핑을 다시 뽑으면 마일리지가 돼요.<br>마일리지는 추가 뽑기에 쓸 수 있어요.',
-    '터치 한 번에 최대 15 XP가 회복돼요.<br>XP가 30%면 눈을 감고 쉬어요.',
-    '회복한 XP는 2시간에 걸쳐 줄어들어요.<br>기본 XP 30%는 유지돼요.',
-    '터치·한번에 충전하기로 회복한 XP가<br>소울게이지에 누적돼요. 줄어들지 않아요.',
-    '랭킹점수는 티니핑의 현재 XP 합을<br>10분마다 더해 계산해요.',
+  const tabs=[['how','참여방법'],['sns','SNS 이벤트']].map(([id,label])=>`<button class="help-popup-tab ${activeHelpTab===id?'is-active':''}" type="button" role="tab" aria-selected="${activeHelpTab===id}" data-sheet-tab="${id}">${tr(label)}</button>`).join('');
+  const participation = [
+    '티니핑 컬렉템에서 티니핑을 획득해요!',
+    '획득한 티니핑을 티니핑 세상에서 돌봐줘요.',
+    '티니핑을 잘 돌봐줄수록 점수가 더 많이<br>쌓여요!',
+    '쌓인 점수에 따라 랭킹이 정해져요.',
+    '100위 안에 들면 보상을 받을 수 있어요!',
   ];
-  const sns=[
-    '나의 티니핑 세상을 캡처해서 #티니핑세상 #ZEPETO 해시태그와 함께 피드 또는 SNS에 올려주세요.',
-    '참여 유저 중 추첨을 통해 티니핑 실물 굿즈를 드려요.',
-    '미리보기 중인 유료 배경화면은 캡처할 수 없어요.',
-  ];
-  const rows=(activeHelpTab==='sns'?sns:participation).map((copy,index)=>`<div class="help-popup-row"><div class="help-popup-row-inner"><span class="help-popup-number">${index+1}.</span><p>${copy}</p></div></div>`).join('');
-  return `<div class="help-popup-content" data-node-id="1140:41745">
-    <img class="help-popup-bg" src="assets/help-popup/background.svg" alt="" aria-hidden="true" />
+  const participationContent = `
+    <ol class="help-popup-steps">${participation.map((copy, index) => `
+      <li class="help-popup-row"><span class="help-popup-number" aria-hidden="true">${index+1}.</span><p>${tr(copy)}</p></li>
+    `).join('')}</ol>
+    <div class="help-popup-tip">
+      <span>${tr("Tip")}</span>
+      <p>${tr("자주 들어와서 소울 게이지를 높게 오래 유지할수록 높은<br>랭킹 점수를 유지할 수 있어요!")}</p>
+    </div>`;
+  const snsContent = `
+    <div class="help-popup-sns-copy">
+      <p>${tr("나의 티니핑세상을 피드 또는<br>SNS에 자랑해주세요!")}</p>
+      <p>${tr("이벤트 종료 후, 추첨하여<br>특별한 보상을 제공합니다!")}</p>
+      <p class="help-popup-hashtag"><strong>#teenieping x zepeto</strong> ${tr("해시태그 필수!")}</p>
+    </div>
+    <img class="help-popup-sns-art" src="assets/help-popup/figma-1623-sns.png" alt="" />`;
+  return `<div class="help-popup-content" data-tab="${activeHelpTab}">
+    <div class="help-popup-header" aria-hidden="true">
+      <img class="help-popup-bg" src="assets/help-popup/figma-1623-header.svg" alt="" />
+    </div>
     <img class="help-popup-hearts" src="assets/help-popup/title-hearts.svg" alt="" aria-hidden="true" />
-    <div class="help-popup-tabs" role="tablist" aria-label="안내 메뉴">${tabs}</div>
-    <div class="help-popup-scroll" role="tabpanel" tabindex="0" aria-label="${activeHelpTab==='sns'?'SNS 이벤트':'참여방법'}">${rows}</div>
-    <p class="help-popup-caption">기간: 2027년 1월 1일 10:00 ~ 현재 (KST)<br>기준: 이벤트 기간 누적 랭킹점수 기준</p>
-    <button class="help-popup-confirm" type="button" data-action="close-sheet">확인</button>
+    <div class="help-popup-tabs" role="tablist" aria-label="${tr("안내 메뉴")}">${tabs}</div>
+    <div class="help-popup-panel" role="tabpanel" tabindex="0" aria-label="${tr(activeHelpTab==='sns'?'SNS 이벤트':'참여방법')}">${activeHelpTab==='sns'?snsContent:participationContent}</div>
+    <button class="help-popup-confirm" type="button" data-action="close-sheet">${tr("확인")}</button>
   </div>`;
 }
 
 function rankingProfile(index) {
   const base='assets/ranking-popup/';
-  const ring=index>=0&&index<3?`<img class="ranking-profile-ring" src="${base}imgEllipse${4764+index}.svg" alt="" />`:'';
+  const medal=['gold','silver','bronze'][index];
+  const ring=medal?`<img class="ranking-profile-ring" src="${base}figma-1588/profile-${medal}.svg" alt="" />`:'';
   return `<span class="ranking-profile" aria-hidden="true">${ring}<span class="ranking-photo"><img src="${base}img0101.png" alt="" /></span></span>`;
 }
 
 function rankingMedal(index) {
   if(index>2) return `<span class="ranking-position">${index+1}</span>`;
-  return `<span class="ranking-position ranking-medal" aria-label="${index+1}위"><img class="ranking-medal-star" src="assets/ranking-popup/imgStar${58+index}.svg" alt="" /><img class="ranking-medal-number number-${index+1}" src="assets/ranking-popup/img${index+3}.svg" alt="" /></span>`;
+  const base='assets/ranking-popup/figma-1588/';
+  const artwork=index===1
+    ? `<img class="ranking-medal-star" src="${base}rank-silver-star.svg" alt="" /><img class="ranking-medal-number number-2" src="${base}rank-silver-number.svg" alt="" />`
+    : `<img src="${base}rank-${index===0?'gold':'bronze'}.svg" alt="" />`;
+  return `<span class="ranking-position ranking-medal" role="img" aria-label="${tr("{n}위", {n:index+1})}">${artwork}</span>`;
 }
 
 function renderRankingBoard() {
@@ -1871,48 +1898,52 @@ function renderRankingBoard() {
     const following=followed.has(user.name);
     return `<div class="ranking-popup-row">
       ${rankingMedal(index)}
-      <span class="ranking-identity">${rankingProfile(index)}<span class="ranking-copy"><span class="ranking-name">${user.name}</span><span class="ranking-score">${user.score.toLocaleString()}점</span></span></span>
-      <button class="ranking-follow ${following?'is-following':''}" type="button" data-follow="${user.name}" aria-pressed="${following}">${following?'Following':'Follow'}</button>
+      <span class="ranking-identity">${rankingProfile(index)}<span class="ranking-copy"><span class="ranking-name">${tr(user.name)}</span><span class="ranking-score">${user.score.toLocaleString(demoLanguage)}${tr("점")}</span></span></span>
+      <button class="ranking-follow ${following?'is-following':''}" type="button" data-follow="${user.name}" aria-pressed="${following}">${tr(following?'Following':'Follow')}</button>
     </div>`;
   }).join('');
 }
 
 function renderRankingRewards() {
-  const topRewards = RANKING_REWARDS.map((item) => `
-    <div class="event-reward-row event-reward-rank">
-      <span class="event-reward-range">${item.range}</span>
-      <span class="event-reward-copy">${item.reward}</span>
-    </div>
-  `).join("");
-
-  return `
-    <section class="event-rewards" aria-label="이벤트 보상 안내">
-      <h3 class="event-reward-title">🏆 랭킹점수 상위 랭커</h3>
-      <div class="event-reward-list">${topRewards}</div>
-    </section>
-  `;
+  const base = 'assets/ranking-popup/figma-1614/';
+  return `<ul class="ranking-reward-list" aria-label="${tr("순위별 보상")}">${RANKING_REWARDS.map(({range, zem}) => `
+    <li class="ranking-reward-card">
+      <span class="ranking-reward-range">${tr("TOP")}<br>${range}</span>
+      <div class="ranking-reward-items">
+        <div class="ranking-reward-item">
+          <span class="ranking-reward-icon ranking-reward-gift"><img src="${base}dress-gift.png" alt="" /></span>
+          <span>${tr("스페셜 드레스 세트")}</span>
+        </div>
+        ${zem ? `<div class="ranking-reward-item">
+          <span class="ranking-reward-icon zem-${zem}"><span><img src="${base}zem-${zem}.png" alt="" /></span></span>
+          <span>${zem} ZEM</span>
+        </div>` : ''}
+      </div>
+    </li>`).join('')}</ul>`;
 }
 
 function renderRanking() {
-  const tabs=[['ranking','랭킹'],['rewards','보상안내']].map(([id,label])=>`<button class="ranking-popup-tab ${activeRankingTab===id?'is-active':''}" type="button" role="tab" aria-selected="${activeRankingTab===id}" data-ranking-tab="${id}">${label}</button>`).join('');
+  const tabs=[['ranking','랭킹'],['rewards','보상안내']].map(([id,label])=>`<button class="ranking-popup-tab ${activeRankingTab===id?'is-active':''}" type="button" role="tab" aria-selected="${activeRankingTab===id}" data-ranking-tab="${id}">${tr(label)}</button>`).join('');
   return `<div class="ranking-popup-content">
-    <img class="ranking-popup-bg" src="assets/ranking-popup/imgUnion1.svg" alt="" aria-hidden="true" />
+    <div class="ranking-popup-header" aria-hidden="true">
+      <img class="ranking-popup-bg" src="assets/ranking-popup/${activeRankingTab==='ranking'?'figma-1588':'figma-1614'}/header.svg" alt="" />
+    </div>
     <img class="ranking-title-hearts" src="assets/ranking-popup/imgUnion2.svg" alt="" aria-hidden="true" />
-    <div class="ranking-popup-tabs" role="tablist" aria-label="랭킹 메뉴">${tabs}</div>
-    <div class="ranking-popup-scroll" data-tab="${activeRankingTab}" role="tabpanel" tabindex="0" aria-label="${activeRankingTab==='ranking'?'랭킹 목록':'보상안내'}">${activeRankingTab==='ranking'?renderRankingBoard():renderRankingRewards()}</div>
-    ${activeRankingTab==='ranking'?`<div class="ranking-popup-mine" role="group" aria-label="나의 랭킹">
-      <span class="ranking-position">${PLAYER_RANK>99?'99+':PLAYER_RANK.toLocaleString()}</span>
-      <span class="ranking-identity">${rankingProfile(-1)}<span class="ranking-copy"><span class="ranking-name">나의 점수</span><span class="ranking-score ranking-own-score">${Math.round(policyGame.state.rankingScore).toLocaleString()}점</span></span></span>
-    </div>`:''}
-    <p class="ranking-popup-info">랭킹 목록은 예시 · 내 점수는 10분마다 반영<br>기준: 이벤트 기간 누적 랭킹점수 기준</p>
-    <button class="ranking-popup-confirm" type="button" data-action="close-sheet">확인</button>
+    <div class="ranking-popup-tabs" role="tablist" aria-label="${tr("랭킹 메뉴")}">${tabs}</div>
+    <div class="ranking-popup-scroll" data-tab="${activeRankingTab}" role="tabpanel" tabindex="0" aria-label="${tr(activeRankingTab==='ranking'?'랭킹 목록':'보상안내')}">${activeRankingTab==='ranking'?renderRankingBoard():renderRankingRewards()}</div>
+    ${activeRankingTab==='ranking'?`<div class="ranking-popup-mine" role="group" aria-label="${tr("나의 랭킹")}">
+      <span class="ranking-position">${PLAYER_RANK>999?'999+':PLAYER_RANK.toLocaleString(demoLanguage)}</span>
+      <span class="ranking-identity">${rankingProfile(-1)}<span class="ranking-copy"><span class="ranking-name">${tr("나의 점수")}</span><span class="ranking-score ranking-own-score">${Math.round(policyGame.state.rankingScore).toLocaleString(demoLanguage)}${tr("점")}</span></span></span>
+    </div>
+    <p class="ranking-popup-info">${tr("기간: 2027년 1월 1일 10:00 ~ 현재 (KST)")}<br>${tr("기준: 이벤트 기간 누적 랭킹점수 기준")}</p>`:''}
+    <button class="ranking-popup-confirm" type="button" data-action="close-sheet">${tr("확인")}</button>
   </div>`;
 }
 
 function syncRankingPopup() {
   if(activeSheet!=='ranking'||sheetLayer.hidden)return;
   const score=sheetContent.querySelector('.ranking-own-score');
-  if(score) score.textContent=Math.round(policyGame.state.rankingScore).toLocaleString()+'점';
+  if(score) score.textContent=Math.round(policyGame.state.rankingScore).toLocaleString(demoLanguage)+tr('점');
 }
 
 function renderDex() {
@@ -1926,7 +1957,7 @@ function renderDex() {
     return (ai<0?100:ai)-(bi<0?100:bi);
   });
   const ownedIds=new Set(policyGame.ownedIds());
-  const base='assets/dex-popup-v2/';
+  const base='assets/dex-popup-1623/';
   const sections=order.map(grade=>{
     const entries=items.filter(item=>item.grade===grade);
     const ownedCount=entries.filter(item=>ownedIds.has(characters.get(item.name).id)).length;
@@ -1934,34 +1965,35 @@ function renderDex() {
     const cards=entries.map(item=>{
       const character=characters.get(item.name);
       const owned=ownedIds.has(character.id);
-      const cardAssets='assets/dex-card-v3/';
-      const cardNode=stars===3?'1210:42708':stars===2?'1210:42744':'1210:42767';
+      const dimmed=!owned&&stars!==3;
+      const artwork=stars>1
+        ? `${base}${character.name}.png`
+        : owned ? character.image : `assets/teeniepings-still/${character.name}.png`;
       const background=stars===3
         ? `<span class="dex-popup-card-bg dex-legend-bg" aria-hidden="true">
-            <img class="dex-legend-outer" src="${cardAssets}legend-outer.svg" alt="" />
-            <img class="dex-legend-inner" src="${cardAssets}legend-inner.svg" alt="" />
-            <img class="dex-legend-bottom-detail" src="${cardAssets}legend-bottom-detail.svg" alt="" />
-            <img class="dex-legend-top-detail" src="${cardAssets}legend-top-detail.svg" alt="" />
-            <img class="dex-legend-starglow" src="${cardAssets}legend-starglow.svg" alt="" />
+            <img class="dex-legend-outer" src="${base}legend-outer.svg" alt="" />
+            <img class="dex-legend-inner" src="${base}legend-inner.svg" alt="" />
+            <img class="dex-legend-bottom-detail" src="${base}legend-bottom-detail.svg" alt="" />
+            <img class="dex-legend-top-detail" src="${base}legend-top-detail.svg" alt="" />
+            <img class="dex-legend-starglow" src="${base}legend-starglow.svg" alt="" />
           </span>`
-        : `<img class="dex-popup-card-bg" src="${cardAssets}${stars===2?'card-royal':'card-common'}.svg" alt="" />`;
-      return `<div class="dex-popup-card ${owned?'':'is-unowned'}" data-node-id="${cardNode}" aria-label="${item.name}, ${grade}, ${owned?'보유':'미획득'}">
+        : `<img class="dex-popup-card-bg" src="${base}${stars===2?'card-royal':'card-common'}.svg" alt="" />`;
+      return `<div class="dex-popup-card" aria-label="${tr(item.name)}, ${tr(grade)}, ${tr(owned?'보유':'미획득')}">
         ${background}
-        <span class="dex-popup-stars stars-${stars}" aria-label="${stars}성"><img src="${cardAssets}stars-${stars}.svg" alt="" /></span>
-        <img class="dex-popup-character" src="${pingColorSource(owned ? character.image : `assets/teeniepings-still/${character.name}.png`)}" alt="${item.name}" width="80" height="80" draggable="false" />
-        <span class="dex-popup-name">${item.name}</span>
-        ${owned?'':'<span class="dex-popup-off" aria-hidden="true"><span class="off-white"></span><span class="off-gray"></span><span class="off-tint"></span></span>'}
+        <span class="dex-popup-stars stars-${stars}" aria-label="${tr("{n}성", {n:stars})}"><img src="${base}stars-${stars}.svg" alt="" /></span>
+        <img class="dex-popup-character" src="${pingColorSource(artwork)}" alt="${tr(item.name)}" width="80" height="80" draggable="false" />
+        <span class="dex-popup-name">${tr(item.name)}</span>
+        ${!dimmed?'':'<span class="dex-popup-off" aria-hidden="true"><span class="off-white"></span><span class="off-gray"></span><span class="off-tint"></span></span>'}
       </div>`;
     }).join('');
-    return `<section class="dex-popup-section" aria-label="${grade} ${ownedCount}/${entries.length}"><h3 class="dex-popup-section-title">${grade} ${ownedCount}/${entries.length}</h3><div class="dex-popup-grid">${cards}</div></section>`;
+    return `<section class="dex-popup-section" aria-label="${tr(grade)} ${ownedCount}/${entries.length}"><h3 class="dex-popup-section-title">${tr(grade)} ${ownedCount}/${entries.length}</h3><div class="dex-popup-grid">${cards}</div></section>`;
   }).join('');
-  return `<div class="dex-popup-content" data-node-id="1162:53981" data-owned-ids="${[...ownedIds].sort().join(' ')}">
-    <div class="dex-popup-top" aria-hidden="true"><img class="dex-popup-bg" src="${base}popup-bg.svg" alt="" /></div>
+  return `<div class="dex-popup-content" data-node-id="1623:53135" data-owned-ids="${[...ownedIds].sort().join(' ')}">
     <div class="dex-popup-body" aria-hidden="true"></div>
-    <img class="dex-popup-title-hearts" src="${base}title-hearts.svg" alt="" aria-hidden="true" />
-    <div class="dex-popup-scroll" role="region" tabindex="0" aria-label="티니핑 도감 30종"><div class="dex-popup-sections">${sections}</div></div>
-    <span class="dex-popup-fade" aria-hidden="true"></span>
-    <div class="dex-popup-footer"><button class="dex-popup-confirm" type="button" data-action="close-sheet">확인</button></div>
+    <div class="dex-popup-top" aria-hidden="true"><img class="dex-popup-bg" src="${base}header.svg" alt="" /></div>
+    <img class="dex-popup-title-hearts" src="assets/dex-popup-v2/title-hearts.svg" alt="" aria-hidden="true" />
+    <div class="dex-popup-scroll" role="region" tabindex="0" aria-label="${tr("티니핑 도감 30종")}"><div class="dex-popup-sections">${sections}</div></div>
+    <div class="dex-popup-footer"><button class="dex-popup-confirm" type="button" data-action="close-sheet">${tr("확인")}</button></div>
   </div>`;
 }
 
@@ -1978,20 +2010,18 @@ function syncDexPopup() {
 
 function remainingCooldownText() {
   const quote = policyGame.quote(policyNow());
-  return quote.freeLeft ? `오늘 무료 충전 ${quote.freeLeft}회 남음` : '오늘 무료 충전 3회를 모두 사용했어요';
+  return quote.freeLeft ? tr("오늘 무료 충전 {n}회 남음", {n:quote.freeLeft}) : tr('오늘 무료 충전 3회를 모두 사용했어요');
 }
 
 function renderEmptyOwned() {
   const base='assets/empty-owned-popup/';
-  return `<div class="empty-owned-content" data-node-id="1243:53868">
-    <div class="empty-owned-top" aria-hidden="true"><img class="empty-owned-bg" src="${base}background.svg" alt="" /></div>
-    <div class="empty-owned-body" aria-hidden="true"></div>
+  return `<div class="empty-owned-content" data-node-id="1661:54620">
+    <img class="empty-owned-bg" src="${base}panel.svg" alt="" aria-hidden="true" />
     <div class="empty-owned-art" aria-hidden="true">
       <img class="empty-owned-glow" src="${base}character-glow-v2.svg" alt="" />
       <img class="empty-owned-character" src="${base}hachuping.png" alt="" draggable="false" />
     </div>
-    <p class="empty-owned-description" id="emptyOwnedDescription">컬렉템으로 이동해서<br>첫 번째 티니핑을 획득해보세요!</p>
-    <div class="empty-owned-footer" aria-hidden="true"></div>
+    <p class="empty-owned-description" id="emptyOwnedDescription">${tr("컬렉템으로 이동해서<br>첫 번째 티니핑을 획득해보세요!")}</p>
   </div>`;
 }
 
@@ -2007,6 +2037,50 @@ function syncEmptyOwnedPopup() {
   openSheet('empty-owned');
 }
 
+function openCollectionDrawPreview() {
+  closeSheet();
+  collectionDrawScreen.hidden = false;
+  collectionResultScreen.hidden = true;
+  collectionDrawPreview.hidden = false;
+  collectionPreviewInert = [...gameScreen.children].filter(element => element !== collectionDrawPreview && element !== popupLoading && !element.inert);
+  collectionPreviewInert.forEach(element => { element.inert = true; });
+  waitForPopup(collectionDrawPreview, {
+    scope: collectionDrawScreen,
+    backdrop: true,
+    onClose: closeCollectionDrawPreview,
+    onReady: () => collectionDrawConfirm.focus({preventScroll:true}),
+  });
+}
+
+function showCollectionDrawResult() {
+  collectionDrawScreen.hidden = true;
+  collectionResultScreen.hidden = false;
+  waitForPopup(collectionDrawPreview, {
+    scope: collectionResultScreen,
+    backdrop: true,
+    onClose: closeCollectionDrawPreview,
+    onReady: () => collectionResultReturn.focus({preventScroll:true}),
+  });
+}
+
+function closeCollectionDrawPreview() {
+  clearPopupLoading(collectionDrawPreview);
+  const drewCharacter = !collectionResultScreen.hidden;
+  collectionDrawPreview.hidden = true;
+  collectionPreviewInert.forEach(element => { element.inert = false; });
+  collectionPreviewInert = [];
+  if (!drewCharacter && policyGame.ownedIds().length === 0) {
+    openSheet('empty-owned');
+    return;
+  }
+  if (drewCharacter) acquirePing('hachuping');
+  document.querySelector('.demo-toggle').focus({preventScroll:true});
+}
+
+document.getElementById('collectionDrawClose').addEventListener('click', closeCollectionDrawPreview);
+collectionDrawConfirm.addEventListener('click', showCollectionDrawResult);
+collectionResultReturn.addEventListener('click', closeCollectionDrawPreview);
+
 function renderCharge() {
   chargeQuote = policyGame.quote(policyNow());
   return `<div class="charge-popup-content" data-node-id="1172:61590">
@@ -2015,20 +2089,22 @@ function renderCharge() {
     <div class="charge-popup-art" aria-hidden="true"><img src="assets/charge-popup-v2/charge-icon.png" alt="" draggable="false" /></div>
     <div class="charge-popup-text">
       <div class="charge-popup-copy">
-        <p class="charge-popup-description"><strong>무료 충전</strong>은 <strong>하루에 3번</strong>까지 가능해요.<br>4번째 충전부터는 <strong>1젬</strong>이 필요해요.</p>
+        <p class="charge-popup-description">${tr("<strong>무료 충전</strong>은 <strong>하루에 3번</strong>까지 가능해요.<br>4번째 충전부터는 <strong>1젬</strong>이 필요해요.")}</p>
       </div>
-      <p class="charge-popup-used">오늘 무료 : ${3-chargeQuote.freeLeft} / 3 사용</p>
+      <p class="charge-popup-used">${tr("오늘 무료 : {n} / 3 사용", {n:3-chargeQuote.freeLeft})}</p>
     </div>
     <div class="charge-popup-footer" aria-hidden="true"></div>
   </div>`;
 }
 
 function syncChargePopup() {
-  if (activeSheet!=='charge' || !sheetContent.querySelector('.charge-popup-content')) return;
+  if (activeSheet!=='charge') return;
+  const content=sheetContent.querySelector('.charge-popup-content');
+  if (!content) return;
   chargeQuote=policyGame.quote(policyNow());
-  sheetContent.querySelector('.charge-popup-used').textContent=`오늘 무료 : ${3-chargeQuote.freeLeft} / 3 사용`;
+  content.querySelector('.charge-popup-used').textContent=tr("오늘 무료 : {n} / 3 사용", {n:3-chargeQuote.freeLeft});
   sheetPrimary.disabled=!chargeQuote.count || policyGame.state.gems<chargeQuote.cost;
-  sheetPrimary.textContent=!chargeQuote.count?'충전 완료':policyGame.state.gems<chargeQuote.cost?'젬이 부족해요':chargeQuote.cost===0?'무료로 충전하기':'1젬으로 충전하기';
+  sheetPrimary.textContent=tr(!chargeQuote.count?'충전 완료':chargeQuote.freeLeft===0?'1젬으로 충전하기':'무료로 충전하기');
 }
 
 function lockWorldInteraction() {
@@ -2038,10 +2114,64 @@ function lockWorldInteraction() {
   syncSoulRewardNotice();
 }
 
-function openSheet(type, { behindDemoPreview = false } = {}) {
+const POPUP_LOADING_THRESHOLD = 180;
+const DEMO_POPUP_LOADING_DURATION = 2500;
+
+function clearPopupLoading(popup) {
+  const load = pendingPopupLoad;
+  if (!load || load.popup !== popup) return;
+  clearTimeout(load.showTimer);
+  clearTimeout(load.previewTimer);
+  popup.removeAttribute('data-popup-waiting');
+  popup.removeAttribute('aria-busy');
+  popupLoading.hidden = true;
+  pendingPopupLoad = null;
+}
+
+function waitForPopup(popup, { variant = 'basic', previewMs = 0, scope = popup, backdrop = false, onReady, onClose }) {
+  if (pendingPopupLoad) clearPopupLoading(pendingPopupLoad.popup);
+  const images = [...scope.querySelectorAll('img[src]')].filter(image => !image.complete && !image.closest('[hidden]'));
+  if (!images.length && !previewMs) {
+    onReady?.();
+    return;
+  }
+
+  const load = { popup, onClose };
+  pendingPopupLoad = load;
+  popup.setAttribute('data-popup-waiting', '');
+  popup.setAttribute('aria-busy', 'true');
+  popupLoading.dataset.variant = variant;
+  popupLoadingHeader.src = `assets/popup-loading/${variant}-header.svg`;
+  popupLoading.classList.toggle('has-backdrop', backdrop);
+
+  const show = () => {
+    popupLoading.hidden = false;
+    const selector = variant === 'basic' ? '.popup-loading-close' : '.popup-loading-panel';
+    popupLoading.querySelector(selector).focus({preventScroll:true});
+  };
+  if (previewMs) show();
+  else load.showTimer = setTimeout(show, POPUP_LOADING_THRESHOLD);
+
+  const preview = previewMs ? new Promise(resolve => {
+    load.previewTimer = setTimeout(resolve, previewMs);
+  }) : undefined;
+  Promise.allSettled([preview, ...images.map(image => image.decode())]).then(() => {
+    if (pendingPopupLoad !== load) return;
+    clearPopupLoading(popup);
+    onReady?.();
+  });
+}
+
+popupLoading.querySelector('.popup-loading-close').addEventListener('click', () => pendingPopupLoad?.onClose());
+
+function sheetLoadingVariant(type) {
+  return type === 'ranking' || type === 'soul' ? type : 'basic';
+}
+
+function openSheet(type, { behindDemoPreview = false, previewMs = 0 } = {}) {
   if (!demoLayer.hidden && !behindDemoPreview) closeDemoPanel();
   if (type === "draw") {
-    bridgeAction("draw");
+    openCollectionDrawPreview();
     return;
   }
 
@@ -2055,6 +2185,7 @@ function openSheet(type, { behindDemoPreview = false } = {}) {
     'empty-owned': ["", "획득한 티니핑이 없어요!"],
   }[type];
   if (!meta) return;
+  clearPopupLoading(bottomSheet);
 
   activeSheet = type;
   sheetLayer.classList.toggle('is-soul-popup',type==='soul');
@@ -2078,7 +2209,7 @@ function openSheet(type, { behindDemoPreview = false } = {}) {
   else bottomSheet.removeAttribute('aria-describedby');
   if (type === "ranking") { activeRankingTab = "ranking"; rankingScroll = {ranking:0,rewards:0}; }
   sheetEmoji.textContent = meta[0];
-  sheetTitle.textContent = meta[1];
+  sheetTitle.textContent = tr(meta[1]);
   bottomSheet.classList.toggle("is-rich", type !== "charge" && type !== "empty-owned");
   sheetContent.classList.toggle("is-ranking-content", type === "ranking");
   sheetContent.classList.toggle("is-soul-content", type === "soul");
@@ -2100,9 +2231,9 @@ function openSheet(type, { behindDemoPreview = false } = {}) {
     primaryHandler = chargeAll;
   } else if(type==='empty-owned') {
     sheetContent.innerHTML=renderEmptyOwned();
-    sheetPrimary.textContent='컬렉템으로 가기';
+    sheetPrimary.textContent=tr('컬렉템으로 가기');
     sheetPrimary.disabled=false;
-    primaryHandler=()=>{ closeSheet();bridgeAction('draw'); };
+    primaryHandler=openCollectionDrawPreview;
   } else {
     primaryHandler = closeSheet;
   }
@@ -2110,12 +2241,15 @@ function openSheet(type, { behindDemoPreview = false } = {}) {
   sheetLayer.hidden = false;
   lockWorldInteraction();
   if (behindDemoPreview) return;
-  requestAnimationFrame(() => {
-    if(type==='background') {
-      const index=BACKGROUND_OPTIONS.findIndex(bg=>bg.id===pendingBackgroundId);
-      sheetContent.querySelector('.bg-popup-scroll').scrollLeft=Math.max(0,index*112-102);
-    }
-    (type==='soul' ? sheetContent.querySelector('.soul-popup-confirm') : type==='ranking' ? sheetContent.querySelector('.ranking-popup-confirm') : type==='collection' ? sheetContent.querySelector('.dex-popup-confirm') : type==='help' ? sheetContent.querySelector('.help-popup-confirm') : type==='background' ? sheetContent.querySelector('.bg-popup-confirm') : sheetPrimary.hidden ? document.querySelector(".sheet-close") : sheetPrimary).focus({preventScroll:true});
+  waitForPopup(bottomSheet, {
+    variant: sheetLoadingVariant(type),
+    scope: type === 'help' ? sheetContent.querySelector('.help-popup-panel') : bottomSheet,
+    previewMs,
+    onClose: closeSheet,
+    onReady: () => requestAnimationFrame(() => {
+      if (sheetLayer.hidden || activeSheet !== type) return;
+      (type==='soul' ? sheetContent.querySelector('.soul-popup-confirm') : type==='ranking' ? sheetContent.querySelector('.ranking-popup-confirm') : type==='collection' ? sheetContent.querySelector('.dex-popup-confirm') : type==='help' ? sheetContent.querySelector('.help-popup-confirm') : type==='background' ? sheetContent.querySelector('.bg-popup-confirm') : sheetPrimary.hidden ? document.querySelector(".sheet-close") : sheetPrimary).focus({preventScroll:true});
+    }),
   });
 }
 
@@ -2134,7 +2268,7 @@ function rerenderActiveSheet() {
     sheetContent.querySelector('.ranking-popup-scroll').scrollTop=rankingScroll[activeRankingTab];
   }
   if (activeSheet === "collection") {
-    sheetTitle.textContent='도감';
+    sheetTitle.textContent=tr('도감');
     const scrollTop=sheetContent.querySelector('.dex-popup-scroll')?.scrollTop || 0;
     sheetContent.innerHTML=renderDex();
     sheetContent.querySelector('.dex-popup-scroll').scrollTop=scrollTop;
@@ -2142,12 +2276,8 @@ function rerenderActiveSheet() {
 }
 
 function closeSheet() {
+  clearPopupLoading(bottomSheet);
   closeRewardReceived(false);
-  stopBackgroundMotion();
-  if(backgroundSwipe) {
-    const swipe=backgroundSwipe;backgroundSwipe=null;
-    if(swipe.scroll.hasPointerCapture(swipe.id))swipe.scroll.releasePointerCapture(swipe.id);
-  }
   sheetLayer.hidden = true;
   activeSheet = null;
   lockWorldInteraction();
@@ -2172,6 +2302,8 @@ function syncDemoPanel() {
   demoCountSummary.textContent = `${ownedPingCount} / ${PINGS.length}`;
   demoRankVisibility.checked = showRankSummary;
   demoRewardCoachVisibility.checked = forceSoulRewardCoach;
+  demoForceRewardClaim.checked = forceRewardClaim;
+  demoForceRewardClaim.closest('.demo-switch').querySelector('em').textContent = forceRewardClaim ? '켜짐' : '꺼짐';
   demoRewardCoachVisibility.closest('.demo-switch').querySelector('em').textContent = forceSoulRewardCoach ? '켜짐' : '꺼짐';
   demoRankVisibility.closest(".demo-switch").querySelector("em").textContent = showRankSummary ? "표시" : "숨김";
 
@@ -2219,15 +2351,23 @@ function setOwnedPingCount(value) {
 }
 
 function openDemoPanel() {
+  if (!collectionDrawPreview.hidden) return;
   if (!sheetLayer.hidden) closeSheet();
   policyGame.pause(policyNow());
   syncDemoPanel();
   demoLayer.hidden = false;
   lockWorldInteraction();
-  requestAnimationFrame(() => document.querySelector(".demo-close").focus());
+  const panel = demoLayer.querySelector('.demo-panel');
+  waitForPopup(panel, {
+    onClose: closeDemoPanel,
+    onReady: () => requestAnimationFrame(() => {
+      if (!demoLayer.hidden) panel.querySelector('.demo-close').focus({preventScroll:true});
+    }),
+  });
 }
 
 function closeDemoPanel() {
+  clearPopupLoading(demoLayer.querySelector('.demo-panel'));
   demoLayer.hidden = true;
   lockWorldInteraction();
   policyGame.resume(policyNow());
@@ -2243,13 +2383,16 @@ function resetDemoPanel() {
   refreshPolicy();
   showRankSummary = false;
   forceSoulRewardCoach = false;
+  forceRewardClaim = false;
+  rewardStageOverrides.clear();
+  demoRewardStageState.value = '';
   hideSoulRewardCoach();
   centerWorldView();
   renderPingWorld({spawnIds:defaultIds.filter(id=>!previousIds.has(id))});
   updateRankSummary();
   syncDemoPanel();
   savePolicy();
-  showToast(`기본 ${DEFAULT_OWNED_PING_COUNT}종과 XP 상태를 복원했어요`);
+  showToast(tr("기본 {n}종과 XP 상태를 복원했어요", {n:DEFAULT_OWNED_PING_COUNT}));
 }
 
 function bridgeAction(type) {
@@ -2260,10 +2403,7 @@ function bridgeAction(type) {
   } else if (window.Android?.postMessage) {
     window.Android.postMessage(payload);
   } else {
-    const message = type === "draw"
-      ? "컬렉템 이동 브리지가 호출됐어요"
-      : "인앱 브리지 연결 전 미리보기입니다";
-    showToast(message);
+    showToast(tr("인앱 브리지 연결 전 미리보기입니다"));
   }
 }
 
@@ -2288,8 +2428,6 @@ function chargeAll() {
   sheetPrimary.disabled = true;
   const result = policyGame.charge(policyNow(),chargeQuote?.cost);
   if (!result.ok) {
-    const message = {full:'모든 티니핑의 XP가 가득 차 있어요',changed:'충전 조건이 바뀌었어요. 다시 확인해주세요',gems:'보유 젬이 부족해요'}[result.reason];
-    showToast(message);
     openSheet('charge');
     return;
   }
@@ -2299,14 +2437,18 @@ function chargeAll() {
   savePolicy();
   closeSheet();
   playChargeWave();
-  showToast(`${result.count}마리 충전 · 소울 +${Math.floor(result.xp + 1e-7).toLocaleString()}`);
 }
 
 function claimReward(level) {
   if (!rewardReceivedLayer.hidden || activeSheet !== 'soul' || sheetLayer.hidden) return;
   const numericLevel = Number(level);
   const reward = MILESTONES.find((item) => item.level === numericLevel);
-  if (!reward || policyGame.soulTotal() < reward.need || claimedRewards.has(numericLevel)) return;
+  const xp = policyGame.soulTotal();
+  if (!reward || soulRewardState(reward,xp) !== 'available') return;
+  if (rewardStageOverrides.has(numericLevel) || xp < reward.need) {
+    showRewardReceived(reward);
+    return;
+  }
   claimedRewards.add(numericLevel);
   syncSoulRewardNotice();
   savePolicy();
@@ -2323,10 +2465,11 @@ function claimAllRewards() {
   syncSoulRewardNotice();
   rerenderActiveSheet();
   savePolicy();
-  showToast("보상 수령 요청을 기록했어요 (미리보기)");
+  showToast(tr("보상 수령 요청을 기록했어요 (미리보기)"));
 }
 
 function goBack() {
+  if (!collectionDrawPreview.hidden) { closeCollectionDrawPreview(); return; }
   if (!rewardReceivedLayer.hidden) { closeRewardReceived(); return; }
   if (!demoLayer.hidden) { closeDemoPanel(); return; }
   if (!sheetLayer.hidden) { closeSheet(); return; }
@@ -2337,14 +2480,14 @@ function goBack() {
   } else if (window.history.length > 1) {
     window.history.back();
   } else {
-    showToast("뒤로 갈 화면이 없어요");
+    showToast(tr("뒤로 갈 화면이 없어요"));
   }
 }
 
 document.addEventListener("click", (event) => {
   const backgroundTarget=event.target.closest('[data-background-id]');
   if(backgroundTarget) {
-    if(!suppressBackgroundClick)selectBackground(Number(backgroundTarget.dataset.backgroundId));
+    selectBackground(Number(backgroundTarget.dataset.backgroundId));
     return;
   }
   const pingTarget = event.target.closest("[data-ping]");
@@ -2357,6 +2500,11 @@ document.addEventListener("click", (event) => {
   if (tabTarget) {
     activeHelpTab = tabTarget.dataset.sheetTab;
     rerenderActiveSheet();
+    waitForPopup(bottomSheet, {
+      scope: sheetContent.querySelector('.help-popup-panel'),
+      onClose: closeSheet,
+      onReady: () => sheetContent.querySelector('[data-sheet-tab].is-active')?.focus({preventScroll:true}),
+    });
     return;
   }
 
@@ -2364,6 +2512,11 @@ document.addEventListener("click", (event) => {
   if (rankingTabTarget) {
     activeRankingTab = rankingTabTarget.dataset.rankingTab;
     rerenderActiveSheet();
+    waitForPopup(bottomSheet, {
+      variant: 'ranking',
+      onClose: closeSheet,
+      onReady: () => sheetContent.querySelector('.ranking-popup-tab.is-active')?.focus({preventScroll:true}),
+    });
     return;
   }
 
@@ -2419,133 +2572,19 @@ document.addEventListener("click", (event) => {
   else openSheet(action);
 });
 
-const BACKGROUND_DRAG_GAIN=1.5;
-const BACKGROUND_WHEEL_GAIN=1.75;
+const BACKGROUND_ARROW_STEPS = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -3, ArrowDown: 3 };
 
-function advanceBackgroundMotion(motion,elapsed,max) {
-  const dt=Math.min(24,Math.max(1,elapsed));
-  const bound=Math.max(0,Math.min(max,motion.position));
-  if(motion.springTarget==null&&motion.position!==bound)motion.springTarget=bound;
-  if(motion.springTarget!=null) {
-    motion.velocity+=((motion.springTarget-motion.position)*.00085-motion.velocity*.022)*dt;
-  } else motion.velocity*=Math.pow(.992,dt);
-  motion.position+=motion.velocity*dt;
-  const restingBound=motion.springTarget??Math.max(0,Math.min(max,motion.position));
-  if(Math.abs(motion.velocity)<.012&&Math.abs(motion.position-restingBound)<.35) {
-    motion.position=restingBound;motion.velocity=0;motion.springTarget=null;return false;
-  }
-  return true;
-}
-
-function paintBackgroundMotion(motion) {
-  const max=Math.max(0,motion.scroll.scrollWidth-motion.scroll.clientWidth);
-  const bounded=Math.max(0,Math.min(max,motion.position));
-  motion.scroll.scrollLeft=bounded;
-  const over=motion.position-bounded;
-  const rubber=reducedMotion?0:-Math.sign(over)*32*(1-Math.exp(-Math.abs(over)/95));
-  motion.scroll.querySelector('.bg-popup-options').style.transform=`translate3d(${rubber}px,0,0)`;
-}
-
-function stopBackgroundMotion(reset=true) {
-  if(!backgroundMotion)return;
-  const motion=backgroundMotion;backgroundMotion=null;
-  cancelAnimationFrame(motion.frame);
-  if(reset) {
-    motion.scroll.querySelector('.bg-popup-options')?.style.removeProperty('transform');
-    motion.scroll.classList.remove('is-dragging');
-  }
-}
-
-function getBackgroundMotion(scroll) {
-  if(backgroundMotion?.scroll===scroll) {
-    cancelAnimationFrame(backgroundMotion.frame);
-    backgroundMotion.springTarget=null;
-    return backgroundMotion;
-  }
-  stopBackgroundMotion();
-  backgroundMotion={scroll,position:scroll.scrollLeft,velocity:0,springTarget:null,frame:0,lastTime:0};
-  return backgroundMotion;
-}
-
-function coastBackground(motion) {
-  cancelAnimationFrame(motion.frame);
-  if(reducedMotion) {
-    motion.position=Math.max(0,Math.min(motion.scroll.scrollWidth-motion.scroll.clientWidth,motion.position));
-    motion.velocity=0;paintBackgroundMotion(motion);return;
-  }
-  motion.lastTime=performance.now();
-  const frame=now=>{
-    if(backgroundMotion!==motion)return;
-    if(!motion.scroll.isConnected||sheetLayer.hidden||activeSheet!=='background') { stopBackgroundMotion();return; }
-    const max=Math.max(0,motion.scroll.scrollWidth-motion.scroll.clientWidth);
-    const moving=advanceBackgroundMotion(motion,now-motion.lastTime,max);
-    motion.lastTime=now;paintBackgroundMotion(motion);
-    if(moving)motion.frame=requestAnimationFrame(frame);
-    else { motion.frame=0;motion.scroll.querySelector('.bg-popup-options').style.removeProperty('transform'); }
-  };
-  motion.frame=requestAnimationFrame(frame);
-}
-
-sheetContent.addEventListener('wheel',event=>{
-  const scroll=event.target.closest('.bg-popup-scroll');
-  if(!scroll)return;
+sheetContent.addEventListener('keydown', event => {
+  const target = event.target.closest('[data-background-id]');
+  const step = BACKGROUND_ARROW_STEPS[event.key];
+  if (!target || !step) return;
   event.preventDefault();
-  if(backgroundSwipe)return;
-  const units=event.deltaMode===1?16:event.deltaMode===2?scroll.clientWidth:1;
-  const delta=(Math.abs(event.deltaX)>Math.abs(event.deltaY)?event.deltaX:event.deltaY)*units*BACKGROUND_WHEEL_GAIN;
-  if(!delta)return;
-  const motion=getBackgroundMotion(scroll);
-  motion.position+=delta*.6;
-  motion.velocity=Math.max(-2.8,Math.min(2.8,motion.velocity*.35+delta*.012));
-  if(reducedMotion)motion.position+=delta*.4;
-  paintBackgroundMotion(motion);coastBackground(motion);
-},{passive:false});
-
-sheetContent.addEventListener('keydown',event=>{
-  const target=event.target.closest('[data-background-id]');
-  if(!target||!['ArrowLeft','ArrowRight'].includes(event.key))return;
-  event.preventDefault();stopBackgroundMotion();
-  const current=BACKGROUND_OPTIONS.findIndex(bg=>bg.id===pendingBackgroundId);
-  const next=Math.max(0,Math.min(BACKGROUND_OPTIONS.length-1,current+(event.key==='ArrowRight'?1:-1)));
-  selectBackground(BACKGROUND_OPTIONS[next].id);
-  const button=sheetContent.querySelector(`[data-background-id="${pendingBackgroundId}"]`);
-  button.focus({preventScroll:true});button.scrollIntoView({block:'nearest',inline:'nearest'});
+  const current = BACKGROUND_OPTIONS.findIndex(option => option.id === pendingBackgroundId);
+  const next = BACKGROUND_OPTIONS[current + step];
+  if (!next) return;
+  selectBackground(next.id);
+  sheetContent.querySelector(`[data-background-id="${next.id}"]`).focus({preventScroll:true});
 });
-
-sheetContent.addEventListener('pointerdown',event=>{
-  const scroll=event.target.closest('.bg-popup-scroll');
-  if(!scroll||event.button!==0||!event.isPrimary)return;
-  const motion=getBackgroundMotion(scroll);motion.velocity=0;
-  backgroundSwipe={scroll,motion,id:event.pointerId,startX:event.clientX,startY:event.clientY,
-    position:motion.position,lastX:event.clientX,lastTime:performance.now(),moved:false};
-});
-sheetContent.addEventListener('pointermove',event=>{
-  if(!backgroundSwipe||backgroundSwipe.id!==event.pointerId)return;
-  const swipe=backgroundSwipe,dx=event.clientX-swipe.startX,dy=event.clientY-swipe.startY;
-  if(!swipe.moved&&Math.abs(dx)<4)return;
-  if(!swipe.moved&&event.pointerType==='touch'&&Math.abs(dy)>Math.abs(dx))return;
-  if(!swipe.moved) {
-    swipe.moved=true;swipe.scroll.setPointerCapture(event.pointerId);swipe.scroll.classList.add('is-dragging');
-  }
-  const scale=gameScreen.getBoundingClientRect().width/DESIGN_WIDTH;
-  const now=performance.now(),dt=Math.max(8,now-swipe.lastTime);
-  const speed=-(event.clientX-swipe.lastX)/scale*BACKGROUND_DRAG_GAIN/dt;
-  swipe.motion.position=swipe.position-dx/scale*BACKGROUND_DRAG_GAIN;
-  swipe.motion.velocity=Math.max(-2.8,Math.min(2.8,swipe.motion.velocity*.35+speed*.65));
-  swipe.lastX=event.clientX;swipe.lastTime=now;
-  paintBackgroundMotion(swipe.motion);event.preventDefault();
-});
-function finishBackgroundSwipe(event) {
-  if(!backgroundSwipe||backgroundSwipe.id!==event.pointerId)return;
-  const swipe=backgroundSwipe;backgroundSwipe=null;swipe.scroll.classList.remove('is-dragging');
-  if(swipe.moved) { suppressBackgroundClick=true;setTimeout(()=>{suppressBackgroundClick=false;},0); }
-  if(event.type!=='pointerup'||performance.now()-swipe.lastTime>90)swipe.motion.velocity=0;
-  if(swipe.scroll.hasPointerCapture(event.pointerId))swipe.scroll.releasePointerCapture(event.pointerId);
-  coastBackground(swipe.motion);
-}
-sheetContent.addEventListener('pointerup',finishBackgroundSwipe);
-sheetContent.addEventListener('pointercancel',finishBackgroundSwipe);
-sheetContent.addEventListener('lostpointercapture',finishBackgroundSwipe);
 
 sheetPrimary.addEventListener("click", () => primaryHandler());
 demoColorPreview.addEventListener('change', () => {
@@ -2587,6 +2626,15 @@ document.querySelectorAll('[data-demo-reward-effect]').forEach(button => {
     showRewardReceived(MILESTONES[1], button);
   });
 });
+document.getElementById('demoPopupLoadingPlay').addEventListener('click', event => {
+  const type = document.getElementById('demoPopupLoadingType').value;
+  if (type === 'reward-received') {
+    openSheet('soul', { behindDemoPreview: true });
+    showRewardReceived(MILESTONES[1], event.currentTarget, DEMO_POPUP_LOADING_DURATION);
+  } else {
+    openSheet(type, { previewMs: DEMO_POPUP_LOADING_DURATION });
+  }
+});
 demoXpRange.addEventListener("input", () => setAllPingXp(demoXpRange.value));
 demoXpNumber.addEventListener("input", () => {
   if (demoXpNumber.value === "") return;
@@ -2605,9 +2653,28 @@ demoRewardCoachVisibility.addEventListener('change', () => {
   syncDemoPanel();
   syncSoulRewardNotice();
 });
+demoForceRewardClaim.addEventListener('change', () => {
+  forceRewardClaim = demoForceRewardClaim.checked;
+  syncDemoPanel();
+  syncSoulPopup();
+});
+demoRewardStage.replaceChildren(...MILESTONES.map(item =>
+  new Option(`${item.need.toLocaleString('ko')} · ${item.name}`, String(item.level))
+));
+demoRewardStage.addEventListener('change', () => {
+  demoRewardStageState.value = rewardStageOverrides.get(Number(demoRewardStage.value)) ?? '';
+});
+demoRewardStageState.addEventListener('change', () => {
+  const level = Number(demoRewardStage.value);
+  const state = demoRewardStageState.value;
+  if (state) rewardStageOverrides.set(level, state);
+  else rewardStageOverrides.delete(level);
+  syncSoulPopup();
+});
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  if (!rewardReceivedLayer.hidden) closeRewardReceived();
+  if (!collectionDrawPreview.hidden) closeCollectionDrawPreview();
+  else if (!rewardReceivedLayer.hidden) closeRewardReceived();
   else if (!demoLayer.hidden) closeDemoPanel();
   else if (!sheetLayer.hidden) closeSheet();
 });
@@ -2626,6 +2693,25 @@ document.addEventListener("visibilitychange", () => {
     lastXpPaintTime = 0;
     animationFrame = requestAnimationFrame(animatePingWorld);
   }
+});
+
+const demoLanguageSelect = document.getElementById('demoLanguage');
+prepareStaticTranslations();
+translateStaticUI();
+demoLanguageSelect.value = demoLanguage;
+demoLanguageSelect.addEventListener('change', () => {
+  const selected = demoLanguageSelect.value;
+  if (!demoLanguages.includes(selected) || selected === demoLanguage) return;
+  demoLanguage = selected;
+  try { localStorage.setItem(demoLanguageKey, selected); } catch { /* Keep the current selection in memory. */ }
+  translateStaticUI();
+  for (const actor of pingActors) {
+    actor.label.querySelector('.ping-name').textContent = tr(actor.data.name);
+    updatePingElement(actor);
+  }
+  toast.classList.remove('is-visible');
+  updateSoulFromPings();
+  updateRankSummary();
 });
 
 initializeColorPreview();
@@ -2654,23 +2740,24 @@ helpControl.addEventListener("click", event => {
 
 
 window.addEventListener('pagehide',()=>{ refreshPolicy(); savePolicy(); });
-// Host acquisition integration: duplicate species never modify XP or ranking.
-window.addEventListener('teenieping:acquired',event=>{
-  const id = event.detail?.id;
+// The preview and host share the same acquisition and summon behavior.
+function acquirePing(id) {
   if (!policyGame.catalog.has(id)) return;
   captureWorldState();
   const result = policyGame.acquire(id,policyNow());
   refreshPolicy();
   if (result.added) renderPingWorld({spawnIds:[id],focusSpawnId:id});
   savePolicy();
-});
+}
+
+window.addEventListener('teenieping:acquired',event=>acquirePing(event.detail?.id));
 
 
 // Same-document guard lets mobile browser Back close the latest sheet first.
 try {
   history.pushState({teeniepingGuard:true},'',location.href);
   window.addEventListener('popstate',()=>{
-    if (!demoLayer.hidden || !sheetLayer.hidden) {
+    if (!collectionDrawPreview.hidden || !demoLayer.hidden || !sheetLayer.hidden) {
       goBack();history.pushState({teeniepingGuard:true},'',location.href);
     } else history.back();
   });
