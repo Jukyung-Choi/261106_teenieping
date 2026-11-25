@@ -317,9 +317,11 @@
 .help-popup-number { flex:none;width:16px;color:#ff35b5;font-size:14px;font-weight:700;line-height:17px; }
 .bottom-sheet.is-help-popup .help-popup-row p { flex:none;width:262px;margin:0;padding:0;color:#5c0041;font-size:14px;font-weight:500;line-height:17px; }
 .bottom-sheet.is-help-popup .help-popup-row:nth-child(n+4) p { line-height:20px; }
-.help-popup-tip { display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px 14px 20px; }
+.help-popup-tip { display:flex;flex-direction:column;align-items:flex-start;gap:6px;width:100%;padding:14px 2px 20px; }
 .help-popup-tip > span { display:flex;align-items:center;justify-content:center;height:18px;padding:0 8px;border-radius:6px;background:#ff48b6;color:white;font-size:12px;font-weight:600;line-height:20px; }
+.help-popup-tip-copy { display:flex;align-items:center;justify-content:center;width:100%;padding:0 2px; }
 .bottom-sheet.is-help-popup .help-popup-tip p {
+  flex:1;min-width:0;
   margin:0;padding:0;color:#af97a6;
   font-family:"SF Pro Text","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
   font-size:12px;font-weight:500;line-height:16px;font-synthesis:none;
@@ -363,99 +365,12 @@
 .bg-choice-selected[hidden] { display:none; }
 .bg-popup-confirm { position:absolute;top:352px;left:100px;display:flex;align-items:center;justify-content:center;width:140px;height:40px;padding:0 30px 2px;border:0;border-radius:999px;background:#ff35b5;box-shadow:inset 0 -3.5px 1px rgba(209,0,132,.8);color:white;font-size:16px;font-weight:600;line-height:22px;cursor:pointer; }
 
-/* Reference FX: white silhouette rim, colored radial rays and crisp star glints. */
-.teenieping.is-legend { --legend-glow:255 156 220;--legend-ray:255 192 231;--legend-rim:255 229 246; }
-.teenieping[data-ping="dalkomping"] { --legend-glow:255 175 64;--legend-ray:255 214 112;--legend-rim:255 236 189; }
-.teenieping[data-ping="ping-21"] { --legend-glow:229 238 153;--legend-ray:255 245 190;--legend-rim:252 255 222; }
+/* Legend world artwork: retain only the existing white silhouette rim and glow. */
 .teenieping.is-legend .ping-art {
   z-index:1;
   filter:drop-shadow(1px 0 0 white) drop-shadow(-1px 0 0 white)
     drop-shadow(0 1px 0 white) drop-shadow(0 -1px 0 white)
-    drop-shadow(0 0 3px white) drop-shadow(0 0 9px rgb(var(--legend-glow) / .95));
-}
-.legend-radiance {
-  position:absolute;inset:-36% -42%;z-index:0;border-radius:50%;pointer-events:none;
-  background:radial-gradient(ellipse,rgba(255,255,255,.98) 3%,rgb(var(--legend-glow) / .66) 25%,rgb(var(--legend-glow) / .32) 48%,transparent 72%);
-  animation:legend-radiance-breathe 4.2s ease-in-out infinite;
-  animation-delay:var(--bob-delay);
-}
-.legend-radiance::before,.legend-radiance::after { content:"";position:absolute;inset:12%;border-radius:50%;pointer-events:none;filter:blur(.8px); }
-.legend-radiance::before {
-  background:repeating-conic-gradient(from 12deg,transparent 0deg 12deg,rgb(var(--legend-ray) / .08) 15deg,rgba(255,255,255,.73) 18deg 19deg,rgb(var(--legend-ray) / .59) 23deg,rgb(var(--legend-ray) / .08) 28deg,transparent 31.5deg 40deg);
-  -webkit-mask-image:radial-gradient(ellipse,#000 12%,rgba(0,0,0,.8) 30%,rgba(0,0,0,.32) 49%,transparent 67%);
-  mask-image:radial-gradient(ellipse,#000 12%,rgba(0,0,0,.8) 30%,rgba(0,0,0,.32) 49%,transparent 67%);
-  animation:legend-radiance-turn 28s linear infinite;
-  animation-delay:var(--bob-delay);
-}
-.legend-radiance::after {
-  background:linear-gradient(0deg,transparent 46.5%,rgba(255,255,255,.68) 50%,transparent 53.5%),
-    linear-gradient(65deg,transparent 47.25%,rgb(var(--legend-ray) / .62) 50%,transparent 52.75%),
-    linear-gradient(124deg,transparent 48.15%,rgba(255,255,255,.59) 50%,transparent 51.85%);
-  -webkit-mask-image:radial-gradient(ellipse,#000 9%,rgba(0,0,0,.63) 30%,transparent 64.5%);
-  mask-image:radial-gradient(ellipse,#000 9%,rgba(0,0,0,.63) 30%,transparent 64.5%);
-}
-@keyframes legend-radiance-breathe { 0%,100% { opacity:.8;transform:scale(.97); } 50% { opacity:1;transform:scale(1.045); } }
-@keyframes legend-radiance-turn { to { transform:rotate(360deg); } }
-.legend-aura-sparkles { position:absolute;inset:-22px;z-index:3;pointer-events:none;filter:drop-shadow(0 0 3px rgba(255,255,255,.95)); }
-.legend-aura-sparkles > i {
-  position:absolute;display:block;width:12px;height:20px;opacity:.16;
-  background:radial-gradient(ellipse,#fff 34%,rgb(var(--legend-rim)) 70%,white);
-  clip-path:polygon(50% 0,56% 40%,100% 50%,56% 60%,50% 100%,44% 60%,0 50%,44% 40%);
-  animation:legend-aura-twinkle 3.6s ease-in-out infinite;
-}
-.legend-aura-sparkles > i:nth-child(1) { left:10%;top:14%;width:16px;height:24px;animation-delay:calc(var(--bob-delay) - 0.00s); }
-.legend-aura-sparkles > i:nth-child(2) { left:85%;top:17%;width:14px;height:22px;animation-delay:calc(var(--bob-delay) - 0.30s); }
-.legend-aura-sparkles > i:nth-child(3) { left:0%;top:48%;width:12px;height:18px;animation-delay:calc(var(--bob-delay) - 0.60s); }
-.legend-aura-sparkles > i:nth-child(4) { left:91%;top:49%;width:16px;height:24px;animation-delay:calc(var(--bob-delay) - 0.90s); }
-.legend-aura-sparkles > i:nth-child(5) { left:11%;top:80%;width:12px;height:20px;animation-delay:calc(var(--bob-delay) - 1.20s); }
-.legend-aura-sparkles > i:nth-child(6) { left:80%;top:85%;width:13px;height:21px;animation-delay:calc(var(--bob-delay) - 1.50s); }
-.legend-aura-sparkles > i:nth-child(7) { left:44%;top:-2%;width:10px;height:16px;animation-delay:calc(var(--bob-delay) - 1.80s); }
-.legend-aura-sparkles > i:nth-child(8) { left:46%;top:99%;width:10px;height:16px;animation-delay:calc(var(--bob-delay) - 2.10s); }
-.legend-aura-sparkles > i:nth-child(9) { left:-3%;top:69%;width:8px;height:13px;animation-delay:calc(var(--bob-delay) - 2.40s); }
-.legend-aura-sparkles > i:nth-child(10) { left:100%;top:72%;width:9px;height:15px;animation-delay:calc(var(--bob-delay) - 2.70s); }
-.legend-aura-sparkles > i:nth-child(11) { left:65%;top:9%;width:8px;height:13px;animation-delay:calc(var(--bob-delay) - 3.00s); }
-.legend-aura-sparkles > i:nth-child(12) { left:26%;top:94%;width:9px;height:15px;animation-delay:calc(var(--bob-delay) - 3.30s); }
-@keyframes legend-aura-twinkle {
-  0%,10% { opacity:.14;transform:scale(.6) rotate(-5deg); }
-  30% { opacity:1;transform:scale(1.14) rotate(0); }
-  45% { opacity:.82;transform:scale(.95) rotate(5deg); }
-  70%,100% { opacity:.14;transform:scale(.58) rotate(0); }
-}
-.teenieping.is-low-xp .legend-radiance { animation:none;opacity:.48; }
-.teenieping.is-low-xp .legend-radiance::before { animation:none; }
-.teenieping.is-low-xp .legend-aura-sparkles > i { animation:none;opacity:.3; }
-@media (prefers-reduced-motion:reduce) {
-  .legend-radiance,.legend-radiance::before,.legend-aura-sparkles > i { animation:none; }
-  .legend-aura-sparkles > i { opacity:.7;transform:none; }
-}
-
-/* A short, masked sweep every 6.8s: follows the bobbing artwork and leaves labels untouched. */
-.legend-body-sheen {
-  position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;
-  -webkit-mask-image:var(--ping-image);mask-image:var(--ping-image);
-  -webkit-mask-position:center;mask-position:center;
-  -webkit-mask-size:contain;mask-size:contain;
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-}
-.legend-body-sheen::before {
-  content:"";position:absolute;left:-30%;top:-25%;width:30%;height:150%;opacity:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.7) 40%,rgb(var(--legend-rim) / .95) 54%,transparent);
-  transform:translateX(0) skewX(-18deg);
-}
-.teenieping.is-legend:not(.is-low-xp) .legend-body-sheen::before {
-  animation:legend-body-sweep 6.8s ease-in-out infinite;
-  animation-delay:var(--legend-sheen-delay,0s);
-}
-/* Let the existing charge flash take precedence over the ambient sheen. */
-.teenieping.is-charge-wave .legend-body-sheen { visibility:hidden; }
-@keyframes legend-body-sweep {
-  0%,76% { opacity:0;transform:translateX(0) skewX(-18deg); }
-  80% { opacity:.78; }
-  94% { opacity:.78;transform:translateX(550%) skewX(-18deg); }
-  98%,100% { opacity:0;transform:translateX(550%) skewX(-18deg); }
-}
-@media (prefers-reduced-motion:reduce) {
-  .teenieping.is-legend:not(.is-low-xp) .legend-body-sheen::before { animation:none; }
+    drop-shadow(0 0 3px white);
 }
 
 /* Figma 1661:54620: zero-owned guidance, centered in the 393×852 design screen. */
@@ -553,7 +468,6 @@
 .reward-received-layer[hidden] { display:none; }
 .reward-received-layer { position:absolute;inset:0;z-index:40;overflow:hidden; }
 .reward-received-dim { position:absolute;inset:0;background:rgba(0,0,0,.9); }
-.reward-received-glow { position:absolute;left:-17.84px;top:171.03px;display:block;pointer-events:none;animation:reward-received-glow-turn 24s linear infinite; }
 /* Pink/cyan star field inspired by the supplied galaxy reference. */
 .reward-received-galaxy { position:absolute;inset:0;overflow:hidden;pointer-events:none; }
 .reward-galaxy-haze {
@@ -597,7 +511,7 @@
 }
 @media (prefers-reduced-motion:reduce) { .reward-star-burst { display:none; } }
 .reward-received-layer[data-effect-preview]:not([hidden]) ~ .demo-layer { visibility:hidden; }
-.demo-reward-tests { grid-template-columns:1fr; }
+.demo-reward-tests { grid-template-columns:repeat(2,minmax(0,1fr)); }
 .demo-reward-claim-control { margin-top:8px; }
 .demo-reward-tests button { min-height:40px;font-size:14px; }
 
@@ -625,13 +539,13 @@
     animation:
       reward-star-twinkle var(--duration) ease-in-out var(--delay) infinite,
       reward-star-drift var(--drift) ease-in-out var(--delay) infinite alternate,
-      reward-galaxy-confetti 700ms linear var(--pop-delay,0ms) both;
+      reward-galaxy-confetti 560ms linear var(--pop-delay,0ms) both;
   }
   [data-effect-preview="1"] .reward-received-galaxy > .reward-galaxy-particle:nth-of-type(3n+1) { --pop-delay:4ms;--fall-distance:136px; }
   [data-effect-preview="1"] .reward-received-galaxy > .reward-galaxy-particle:nth-of-type(3n+2) { --pop-delay:8ms;--fall-distance:180px; }
   .reward-galaxy-afterglow .reward-galaxy-particle {
     animation:
-      reward-star-twinkle var(--duration) ease-in-out var(--delay) infinite,
+      reward-afterglow-twinkle calc(var(--duration) * .78) ease-in-out var(--delay) infinite,
       reward-star-drift var(--drift) ease-in-out var(--delay) infinite alternate,
       reward-afterglow-appear 280ms ease-out var(--reveal-delay) backwards;
   }
@@ -675,8 +589,6 @@
 .reward-received-content p { width:max-content;min-width:176px;max-width:340px;margin:0;font:600 18px/normal 'SF Pro Text',-apple-system,BlinkMacSystemFont,sans-serif;color:#fff;text-align:center;overflow-wrap:anywhere; }
 .reward-received-confirm { position:absolute;left:calc(50% + .5px);top:722px;translate:-50% 0;width:158px;height:44px;padding:0 20px 2px;border:0;border-radius:999px;background:#ff35b5;box-shadow:inset 0 -3.5px 0 rgba(209,0,132,.8);color:#fff;font:600 16px/22px 'SF Pro Text',-apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer; }
 .reward-received-confirm:focus-visible { outline:2px solid #fff;outline-offset:4px; }
-@keyframes reward-received-glow-turn { to { transform:rotate(360deg); } }
-@media (prefers-reduced-motion:reduce) { .reward-received-glow { animation:none; } }
 
 .demo-color-values { margin:10px 0 0;color:#e7d6e2;font-size:12px;line-height:18px; }
 .demo-color-values strong { color:#ff8fc6;font-weight:700; }
@@ -687,7 +599,7 @@
 .teenieping.is-legend .ping-art {
   filter:var(--ping-color-filter,none) drop-shadow(1px 0 0 white) drop-shadow(-1px 0 0 white)
     drop-shadow(0 1px 0 white) drop-shadow(0 -1px 0 white)
-    drop-shadow(0 0 3px white) drop-shadow(0 0 9px rgb(var(--legend-glow) / .95));
+    drop-shadow(0 0 3px white);
 }
 .demo-color-comparison { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px; }
 .demo-color-comparison figure { margin:0;display:flex;flex-direction:column;align-items:center;background:#3b2c38;border-radius:12px;padding:8px;color:#f7eaf3;font-size:13px; }
@@ -764,3 +676,40 @@ html:not([lang="ko"]) #collectionResultScreen .collection-draw-backdrop {
   display:grid;place-items:center;background:linear-gradient(165deg,#899bdc,#505f9c);color:white;font-size:15px;
 }
 .collection-localized-next { top:760px;font-size:14px; }
+
+/* Demo comparison: lightweight art and motion; game policy and hit areas stay intact. */
+.demo-performance-options { display:flex;gap:8px;margin:12px 0; }
+.demo-performance-options button { flex:1; }
+.is-lite-mode .teenieping,.is-lite-mode .teenieping *,.is-lite-mode .teenieping::before,.is-lite-mode .teenieping::after { animation:none!important; }
+.is-lite-mode .teenieping.is-legend .ping-art { filter:var(--ping-color-filter,none) drop-shadow(0 0 2px white); }
+.is-lite-mode .reward-received-galaxy,.is-lite-mode .reward-galaxy-afterglow,.is-lite-mode .reward-star-burst { display:none!important; }
+.is-lite-mode .dex-legend-starglow { display:none; }
+.is-lite-mode .soul-reward-coach { animation:none; }
+.is-lite-mode .charge-flash,.is-lite-mode .charge-sparkle { display:none; }
+
+/* Stronger twinkle only after the one-shot confetti has cleared. */
+@keyframes reward-afterglow-twinkle {
+  0%,100% { opacity:.2;scale:.88;text-shadow:0 0 2px var(--color); }
+  34% { opacity:1;scale:1.16;text-shadow:0 0 3px white,0 0 9px var(--color),0 0 18px var(--color); }
+  55% { opacity:.42;scale:.96;text-shadow:0 0 2px white,0 0 4px var(--color); }
+  72% { opacity:.92;scale:1.08;text-shadow:0 0 2px white,0 0 7px var(--color),0 0 14px var(--color); }
+}
+
+/* Test 2 reuses the same afterglow, with no launch particles or burst flash. */
+[data-effect-preview="2"] .reward-star-burst,
+[data-effect-preview="2"] .reward-received-galaxy > .reward-galaxy-particle { display:none; }
+[data-effect-preview="2"] .reward-galaxy-afterglow .reward-galaxy-particle { --reveal-delay:0ms!important; }
+
+
+/* The first-entry tutorial advances through its confirmation button. */
+.bottom-sheet.is-entry-tutorial > .sheet-close { display:none!important; }
+
+.is-entry-preview-empty #pingWorld .teenieping { visibility:hidden; }
+
+/* Numbered demo controls, matching the review order. */
+.demo-entry-options { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.demo-entry-options button { min-width:0;min-height:40px;font-size:13px; }
+.demo-full-width { grid-template-columns:minmax(0,1fr); }
+.demo-full-width button { width:100%;min-height:40px;text-align:center;font-size:14px; }
+.demo-reward-coach-control { margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12); }
+.demo-language-picker { margin-bottom:0; }

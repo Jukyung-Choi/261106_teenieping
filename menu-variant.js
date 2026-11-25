@@ -38,6 +38,37 @@ const demoXpRange = document.querySelector("#demoXpRange");
 const demoXpNumber = document.querySelector("#demoXpNumber");
 const demoSoulNumber = document.querySelector('#demoSoulNumber');
 const demoColorPreview = document.getElementById('demoColorPreview');
+const PERFORMANCE_MODE_STORAGE = 'teenieping-performance-mode-v1';
+let performanceMode = 'basic';
+try { if (localStorage.getItem(PERFORMANCE_MODE_STORAGE) === 'lite') performanceMode = 'lite'; } catch {}
+const isLiteMode = () => performanceMode === 'lite';
+gameScreen.classList.toggle('is-lite-mode', isLiteMode());
+function syncPerformanceControls() {
+  document.querySelectorAll('[data-demo-performance]').forEach(button => {
+    const active = button.dataset.demoPerformance === performanceMode;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  document.getElementById('demoPerformanceStatus').textContent = isLiteMode()
+    ? '저사양 모드: 가벼운 정지 이미지 · 유영 30fps 목표 · 흔들림과 장식 효과 최소화'
+    : '기본: 애니메이션 이미지 · 기존 유영 · 전체 화면 효과';
+}
+function setPerformanceMode(mode) {
+  if (!['basic','lite'].includes(mode) || mode === performanceMode) return;
+  performanceMode = mode;
+  gameScreen.classList.toggle('is-lite-mode', isLiteMode());
+  lastAnimationTime = 0;
+  pingActors.forEach(actor => { updatePingElement(actor); positionActor(actor); });
+  if (isLiteMode()) {
+    rewardReceivedAnimations.forEach(animation => animation.cancel());
+    rewardReceivedAnimations = [];
+    rewardGalaxyAfterglow.replaceChildren();
+    soulTouchGlowAnimation?.cancel();
+    soulTouchShineAnimation?.cancel();
+  }
+  try { localStorage.setItem(PERFORMANCE_MODE_STORAGE, mode); } catch {}
+  syncPerformanceControls();
+}
 const COLOR_PREVIEW_STORAGE = 'teenieping-live-color-v2';
 const colorControlNames = {saturation:'Saturation',black:'Black',gamma:'Gamma',white:'White'};
 let colorPreviewEnabled = true;
@@ -137,12 +168,9 @@ function downloadColorSettings() {
 }
 const demoCountRange = document.querySelector("#demoCountRange");
 const demoCountOutput = document.querySelector("#demoCountOutput");
-const demoGaugeSummary = document.querySelector("#demoGaugeSummary");
-const demoCountSummary = document.querySelector("#demoCountSummary");
 const rankSummary = document.querySelector("#rankSummary");
 const rankScoreValue = document.querySelector("#rankScoreValue");
 const rankPositionValue = document.querySelector("#rankPositionValue");
-const demoRankVisibility = document.querySelector("#demoRankVisibility");
 const demoRewardCoachVisibility = document.querySelector('#demoRewardCoachVisibility');
 const demoForceRewardClaim = document.querySelector('#demoForceRewardClaim');
 const demoRewardStage = document.querySelector('#demoRewardStage');
@@ -1111,7 +1139,7 @@ const DEX = [
   ["로열", 167, "바로핑"], ["로열", 211, "아자핑"], ["로열", 223, "차차핑"],
   ["로열", 227, "라라핑"], ["로열", 229, "해핑"], ["로열", 233, "포실핑"],
   ["로열", 239, "말랑핑"], ["로열", 241, "사샤핑"], ["로열", 251, "빛나핑"],
-  ["로열", 337, "초롱핑"], ["로열", 347, "반짝핑"], ["일반", 353, "왕자핑"],
+  ["로열", 337, "초롱핑"], ["로열", 347, "반짝핑"], ["로열", 353, "왕자핑"],
   ["로열", 359, "라임핑"], ["로열", 367, "체리핑"], ["로열", 373, "레몬핑"],
   ["로열", 521, "하츄핑"],
   ["레전드", 541, "새콤핑"], ["레전드", 557, "달콤핑"], ["레전드", 809, "오로라핑"],
@@ -1121,6 +1149,13 @@ let soul = 75;
 let gems = 1200;
 let activeSheet = null;
 let emptyOwnedPromptShown = false;
+const ENTRY_TUTORIAL_KEY = 'teenieping-entry-tutorial-confirmed-v1';
+let entryTutorialSeen = false;
+try { entryTutorialSeen = localStorage.getItem(ENTRY_TUTORIAL_KEY) === '1'; } catch {}
+let entryFlowReady = false;
+let entryTutorialActive = false;
+let entryFlowPreview = false;
+
 let activeHelpTab = "how";
 let activeRankingTab = "ranking";
 let rankingScroll = {ranking:0,rewards:0};
@@ -1136,7 +1171,7 @@ const soulRewardAnnouncement = document.getElementById('soulRewardAnnouncement')
 const announcedSoulRewards = new Set();
 let soulRewardCoachTimer;
 let forceSoulRewardCoach = false;
-let forceRewardClaim = false;
+let forceRewardClaim = true;
 const rewardStageOverrides = new Map();
 
 // Policy values are shared by the main screen, collection and confirmation sheet.
@@ -1154,6 +1189,19 @@ const policyGame = new TeeniepingPolicy.Game(policyCatalog, {
   initialIds:PINGS.slice(0,DEFAULT_OWNED_PING_COUNT).map(p=>p.id),
   initialRatio:42.968/74, timeZone:'Asia/Seoul',
 });
+// Apply this demo's 10-character entry baseline once per browser, including
+// browsers with an older saved demo count. Preserve Soul and reward history.
+const DEMO_OWNED_BASELINE_STORAGE = 'teenieping-demo-owned-default-10-v1';
+let demoOwnedBaselineApplied = false;
+try { demoOwnedBaselineApplied = localStorage.getItem(DEMO_OWNED_BASELINE_STORAGE) === '1'; } catch {}
+if (!demoOwnedBaselineApplied) {
+  policyGame.setOwned(PINGS.slice(0, DEFAULT_OWNED_PING_COUNT).map(p => p.id), policyNow());
+  try {
+    // Save ownership before the marker so a failed write can retry next time.
+    localStorage.setItem(POLICY_STORAGE, policyGame.serialize());
+    localStorage.setItem(DEMO_OWNED_BASELINE_STORAGE, '1');
+  } catch { /* Without storage, each visit starts with the demo baseline. */ }
+}
 let lastPolicySave = 0;
 let chargeQuote = null;
 let policyStorageAvailable = true;
@@ -1221,6 +1269,7 @@ function updateRankSummary() {
 function isExhausted(ping) { return ping.xp <= 30 + 1e-6; }
 
 function pingWorldArt(ping) {
+  if (isLiteMode()) return `assets/teeniepings-lite/${isExhausted(ping)?'closed':'still'}/${ping.name}.webp`;
   return pingColorSource(isExhausted(ping) ? `assets/teeniepings-closed/${ping.name}.png` : ping.image);
 }
 
@@ -1384,9 +1433,7 @@ function renderPingWorld({ spawnIds = [], focusSpawnId = null } = {}) {
         </span>
         <span class="ping-art-wrap">
           <span class="ping-bob-layer">
-            ${ping.grade==='레전드' ? '<span class="legend-radiance" aria-hidden="true"></span>' : ''}
             <img class="ping-art" src="${pingWorldArt(ping)}" alt="" draggable="false" />
-            ${ping.grade==='레전드' ? `<span class="legend-body-sheen" aria-hidden="true" style="--legend-sheen-delay:${ping.name==='오로라핑'?0:ping.name==='달콤핑'?-2.2:-4.4}s"></span><span class="legend-aura-sparkles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>` : ''}
           </span>
         </span>
       </span>
@@ -1462,7 +1509,7 @@ pingWorld.addEventListener('animationend',event=>{
 
 function positionActor(actor) {
   const lowXpBounceScale = isExhausted(actor.data) ? 0 : actor.data.xp <= 50 ? 0.35 : 1;
-  const bounceY = reducedMotion
+  const bounceY = reducedMotion || isLiteMode()
     ? 0
     : Math.sin(actor.bouncePhase) * actor.bounceAmplitude * lowXpBounceScale;
   actor.element.style.zIndex = actor.element.classList.contains('is-fed') ? '20000' : String(Math.round(actor.y));
@@ -1532,7 +1579,12 @@ function keepActorInWorld(actor) {
 }
 
 function animatePingWorld(timestamp) {
-  const elapsed = lastAnimationTime ? Math.min(32, timestamp - lastAnimationTime) : 16;
+  // Cap visual updates only; policy time continues to come from the existing clock.
+  if (isLiteMode() && lastAnimationTime && timestamp - lastAnimationTime < 1000 / 30 - .5) {
+    animationFrame = requestAnimationFrame(animatePingWorld);
+    return;
+  }
+  const elapsed = lastAnimationTime ? Math.min(isLiteMode()?64:32, timestamp - lastAnimationTime) : 16;
   lastAnimationTime = timestamp;
 
   updateSummonFocus(timestamp);
@@ -1599,6 +1651,7 @@ function animatePingWorld(timestamp) {
 let soulTouchGlowAnimation = null;
 let soulTouchShineAnimation = null;
 function playSoulTouchFeedback() {
+  if (isLiteMode()) return;
   const track=document.querySelector('.soul-card .gauge-track');
   const shine=track.querySelector('.gauge-touch-shine');
   soulTouchGlowAnimation?.cancel();
@@ -1670,9 +1723,17 @@ function syncSoulRewardNotice() {
   const baseLabel = `${tr('나의 소울 게이지')} ${Math.floor(xp + 1e-7).toLocaleString(demoLanguage)} XP`;
   card.setAttribute('aria-label', baseLabel + (hasReward ? tr(', 받을 수 있는 보상 {n}개', {n:available.length}) : ''));
   if (forceSoulRewardCoach && sheetLayer.hidden && demoLayer.hidden && !document.hidden) {
-    clearTimeout(soulRewardCoachTimer);
-    if (soulRewardCoach.hidden) soulRewardAnnouncement.textContent = tr('데모: 소울 보상 말풍선 미리보기입니다.');
-    soulRewardCoach.hidden = false;
+    if (soulRewardCoach.hidden) {
+      soulRewardAnnouncement.textContent = tr('데모: 소울 보상 말풍선 미리보기입니다.');
+      soulRewardCoach.hidden = false;
+      available.forEach(item => announcedSoulRewards.add(item.level));
+      clearTimeout(soulRewardCoachTimer);
+      soulRewardCoachTimer = setTimeout(() => {
+        forceSoulRewardCoach = false;
+        hideSoulRewardCoach();
+        syncDemoPanel();
+      }, 5000);
+    }
     return;
   }
   if (!hasReward || !sheetLayer.hidden || !demoLayer.hidden || document.hidden) {
@@ -1714,16 +1775,24 @@ function setRewardConfettiOrigins() {
 }
 
 function prepareRewardAfterglow() {
+  const dense = rewardReceivedLayer.dataset.effectPreview === '2';
+  const sourceTotals = {star:0,dust:0};
   const particles = document.createDocumentFragment();
   rewardReceivedLayer.querySelectorAll('.reward-received-galaxy > .reward-galaxy-particle').forEach((source, index) => {
     const x = parseFloat(source.style.getPropertyValue('--x'));
     const y = parseFloat(source.style.getPropertyValue('--y'));
-    const copies = index % 3 === 0 ? 2 : 1;
+    const kind = source.classList.contains('is-dust') ? 'dust' : 'star';
+    const previous = sourceTotals[kind];
+    const baseCopies = index % 3 === 0 ? 2 : 1;
+    sourceTotals[kind] += baseCopies;
+    // Round cumulative counts so both stars and dust stay close to exactly 1.5×.
+    const copies = dense ? Math.round(sourceTotals[kind] * 1.5) - Math.round(previous * 1.5) : baseCopies;
     for (let copy = 0; copy < copies; copy++) {
       const particle = source.cloneNode(true);
       particle.style.setProperty('--x', `${Math.max(2, Math.min(97, x + Math.random() * 24 - 12))}%`);
       particle.style.setProperty('--y', `${Math.max(2, Math.min(97, y + Math.random() * 22 - 11))}%`);
-      particle.style.setProperty('--reveal-delay', `${540 + Math.random() * 450}ms`);
+      if (dense) particle.style.setProperty('--delay', `${-Math.random() * 7}s`);
+      particle.style.setProperty('--reveal-delay', `${300 + Math.random() * 200}ms`);
       particles.append(particle);
     }
   });
@@ -1737,9 +1806,9 @@ function showRewardReceived(reward, previewTrigger = null, previewMs = 0) {
   if (previewTrigger) {
     rewardReceivedConfirm.setAttribute('aria-label', tr('보상 확인 후 데모 패널로 돌아가기'));
   }
-  if (rewardReceivedLayer.dataset.effectPreview === '1') {
+  if (['1','2'].includes(rewardReceivedLayer.dataset.effectPreview) && !isLiteMode()) {
     prepareRewardAfterglow();
-    if (!reducedMotion) setRewardConfettiOrigins();
+    if (!reducedMotion && rewardReceivedLayer.dataset.effectPreview === '1') setRewardConfettiOrigins();
   }
   rewardReceivedThumb.innerHTML = `<span class="reward-received-art">${soulRewardArt(reward)}</span>`;
   rewardReceivedText.textContent = demoLanguage === "ko"
@@ -1756,7 +1825,7 @@ function showRewardReceived(reward, previewTrigger = null, previewMs = 0) {
     previewMs,
     onClose: closeRewardReceived,
     onReady: () => {
-      if (!reducedMotion) {
+      if (!reducedMotion && !isLiteMode()) {
         rewardReceivedAnimations = [rewardReceivedThumb.animate([
           {transform:'scale(.88)'},{transform:'scale(1.03)',offset:.65},{transform:'scale(1)'},
         ],{duration:220,easing:'ease-out'})];
@@ -1857,7 +1926,7 @@ function renderHelp() {
     `).join('')}</ol>
     <div class="help-popup-tip">
       <span>${tr("Tip")}</span>
-      <p>${tr("자주 들어와서 소울 게이지를 높게 오래 유지할수록 높은<br>랭킹 점수를 유지할 수 있어요!")}</p>
+      <div class="help-popup-tip-copy"><p>${tr("자주 들어와서 소울 게이지를 높게 유지할수록 높은 랭킹<br>점수를 유지할 수 있어요!")}</p></div>
     </div>`;
   const snsContent = `
     <div class="help-popup-sns-copy">
@@ -1950,7 +2019,7 @@ function renderDex() {
   const aliases = { '또네핑':'또너핑', '사샤핑':'샤샤핑' };
   const characters = new Map(BASE_PINGS.map(p=>[p.name,p]));
   const order = ['레전드','로열','일반'];
-  const displayOrder = ['오로라핑','달콤핑','새콤핑','하츄핑','바로핑','아자핑','차차핑','라라핑','해핑','포실핑','말랑핑','샤샤핑','빛나핑','초롱핑','반짝핑','라임핑','체리핑','레몬핑'];
+  const displayOrder = ['오로라핑','달콤핑','새콤핑','하츄핑','바로핑','아자핑','차차핑','라라핑','해핑','포실핑','말랑핑','샤샤핑','빛나핑','초롱핑','반짝핑','왕자핑','레몬핑','체리핑','라임핑'];
   const items = DEX.map(([grade,xp,name])=>({grade,xp,name:aliases[name]||name}));
   items.sort((a,b)=>{
     const ai=displayOrder.indexOf(a.name),bi=displayOrder.indexOf(b.name);
@@ -1967,7 +2036,7 @@ function renderDex() {
       const owned=ownedIds.has(character.id);
       const dimmed=!owned&&stars!==3;
       const artwork=stars>1
-        ? `${base}${character.name}.png`
+        ? character.name==='왕자핑' ? 'assets/teeniepings-still/왕자핑.png' : `${base}${character.name}.png`
         : owned ? character.image : `assets/teeniepings-still/${character.name}.png`;
       const background=stars===3
         ? `<span class="dex-popup-card-bg dex-legend-bg" aria-hidden="true">
@@ -2026,6 +2095,8 @@ function renderEmptyOwned() {
 }
 
 function syncEmptyOwnedPopup() {
+  // Hold the empty-state prompt until the first-entry tutorial has been confirmed.
+  if (!entryFlowReady || entryTutorialActive || (entryFlowPreview && activeSheet === 'empty-owned')) return;
   if(policyGame.ownedIds().length>0) {
     emptyOwnedPromptShown=false;
     if(activeSheet==='empty-owned') closeSheet();
@@ -2037,7 +2108,44 @@ function syncEmptyOwnedPopup() {
   openSheet('empty-owned');
 }
 
+function runEntryFlow({preview = false, first = !entryTutorialSeen} = {}) {
+  if (entryTutorialActive) return;
+  if (!demoLayer.hidden) closeDemoPanel();
+  closeSheet();
+  entryFlowPreview = preview;
+  gameScreen.classList.toggle('is-entry-preview-empty', preview);
+  if (first) {
+    entryTutorialActive = true;
+    bottomSheet.classList.add('is-entry-tutorial');
+    sheetLayer.querySelector('.sheet-dim').disabled = true;
+    openSheet('help');
+  } else if (preview) {
+    openSheet('empty-owned');
+  } else {
+    syncEmptyOwnedPopup();
+  }
+}
+
+function confirmEntryTutorial() {
+  if (!entryTutorialActive || activeSheet !== 'help') return;
+  const preview = entryFlowPreview;
+  entryTutorialActive = false;
+  if (!preview) {
+    entryTutorialSeen = true;
+    try { localStorage.setItem(ENTRY_TUTORIAL_KEY, '1'); } catch {}
+  }
+  closeSheet();
+  if (preview || policyGame.ownedIds().length === 0) {
+    entryFlowPreview = preview;
+    gameScreen.classList.toggle('is-entry-preview-empty', preview);
+    if (!preview) emptyOwnedPromptShown = true;
+    openSheet('empty-owned');
+  }
+}
+
+let collectionDrawFromEntryPreview = false;
 function openCollectionDrawPreview() {
+  collectionDrawFromEntryPreview = entryFlowPreview && activeSheet === 'empty-owned';
   closeSheet();
   collectionDrawScreen.hidden = false;
   collectionResultScreen.hidden = true;
@@ -2066,14 +2174,18 @@ function showCollectionDrawResult() {
 function closeCollectionDrawPreview() {
   clearPopupLoading(collectionDrawPreview);
   const drewCharacter = !collectionResultScreen.hidden;
+  const entryPreview = collectionDrawFromEntryPreview;
+  collectionDrawFromEntryPreview = false;
   collectionDrawPreview.hidden = true;
   collectionPreviewInert.forEach(element => { element.inert = false; });
   collectionPreviewInert = [];
-  if (!drewCharacter && policyGame.ownedIds().length === 0) {
+  if (!drewCharacter && (policyGame.ownedIds().length === 0 || entryPreview)) {
+    entryFlowPreview = entryPreview;
+    gameScreen.classList.toggle('is-entry-preview-empty', entryPreview);
     openSheet('empty-owned');
     return;
   }
-  if (drewCharacter) acquirePing('hachuping');
+  if (drewCharacter) acquirePing('hachuping', {focusExisting:entryPreview});
   document.querySelector('.demo-toggle').focus({preventScroll:true});
 }
 
@@ -2091,7 +2203,7 @@ function renderCharge() {
       <div class="charge-popup-copy">
         <p class="charge-popup-description">${tr("<strong>무료 충전</strong>은 <strong>하루에 3번</strong>까지 가능해요.<br>4번째 충전부터는 <strong>1젬</strong>이 필요해요.")}</p>
       </div>
-      <p class="charge-popup-used">${tr("오늘 무료 : {n} / 3 사용", {n:3-chargeQuote.freeLeft})}</p>
+      <p class="charge-popup-used">${tr("오늘 무료 : {n}/3 사용", {n:3-chargeQuote.freeLeft})}</p>
     </div>
     <div class="charge-popup-footer" aria-hidden="true"></div>
   </div>`;
@@ -2102,7 +2214,7 @@ function syncChargePopup() {
   const content=sheetContent.querySelector('.charge-popup-content');
   if (!content) return;
   chargeQuote=policyGame.quote(policyNow());
-  content.querySelector('.charge-popup-used').textContent=tr("오늘 무료 : {n} / 3 사용", {n:3-chargeQuote.freeLeft});
+  content.querySelector('.charge-popup-used').textContent=tr("오늘 무료 : {n}/3 사용", {n:3-chargeQuote.freeLeft});
   sheetPrimary.disabled=!chargeQuote.count || policyGame.state.gems<chargeQuote.cost;
   sheetPrimary.textContent=tr(!chargeQuote.count?'충전 완료':chargeQuote.freeLeft===0?'1젬으로 충전하기':'무료로 충전하기');
 }
@@ -2169,6 +2281,7 @@ function sheetLoadingVariant(type) {
 }
 
 function openSheet(type, { behindDemoPreview = false, previewMs = 0 } = {}) {
+  if (entryTutorialActive && type !== 'help') return;
   if (!demoLayer.hidden && !behindDemoPreview) closeDemoPanel();
   if (type === "draw") {
     openCollectionDrawPreview();
@@ -2276,6 +2389,11 @@ function rerenderActiveSheet() {
 }
 
 function closeSheet() {
+  if (entryTutorialActive) return;
+  entryFlowPreview = false;
+  gameScreen.classList.remove('is-entry-preview-empty');
+  sheetLayer.querySelector('.sheet-dim').disabled = false;
+  bottomSheet.classList.remove('is-entry-tutorial');
   clearPopupLoading(bottomSheet);
   closeRewardReceived(false);
   sheetLayer.hidden = true;
@@ -2288,6 +2406,7 @@ function clampDemoValue(value, min, max) {
 }
 
 function syncDemoPanel() {
+  syncPerformanceControls();
   syncColorControls();
   const cumulativeSoul = Math.floor(policyGame.soulTotal() + 1e-7);
   if (document.activeElement !== demoSoulNumber) demoSoulNumber.value = String(cumulativeSoul);
@@ -2298,14 +2417,10 @@ function syncDemoPanel() {
   if (document.activeElement !== demoXpNumber) demoXpNumber.value = String(soul);
   demoCountRange.value = String(ownedPingCount);
   demoCountOutput.value = `${ownedPingCount}마리`;
-  demoGaugeSummary.textContent = `${soul}%`;
-  demoCountSummary.textContent = `${ownedPingCount} / ${PINGS.length}`;
-  demoRankVisibility.checked = showRankSummary;
   demoRewardCoachVisibility.checked = forceSoulRewardCoach;
   demoForceRewardClaim.checked = forceRewardClaim;
   demoForceRewardClaim.closest('.demo-switch').querySelector('em').textContent = forceRewardClaim ? '켜짐' : '꺼짐';
   demoRewardCoachVisibility.closest('.demo-switch').querySelector('em').textContent = forceSoulRewardCoach ? '켜짐' : '꺼짐';
-  demoRankVisibility.closest(".demo-switch").querySelector("em").textContent = showRankSummary ? "표시" : "숨김";
 
   document.querySelectorAll("[data-demo-xp]").forEach((button) => {
     button.classList.toggle("is-active", Number(button.dataset.demoXp) === soul);
@@ -2351,6 +2466,7 @@ function setOwnedPingCount(value) {
 }
 
 function openDemoPanel() {
+  if (entryTutorialActive) return;
   if (!collectionDrawPreview.hidden) return;
   if (!sheetLayer.hidden) closeSheet();
   policyGame.pause(policyNow());
@@ -2383,7 +2499,7 @@ function resetDemoPanel() {
   refreshPolicy();
   showRankSummary = false;
   forceSoulRewardCoach = false;
-  forceRewardClaim = false;
+  forceRewardClaim = true;
   rewardStageOverrides.clear();
   demoRewardStageState.value = '';
   hideSoulRewardCoach();
@@ -2561,7 +2677,10 @@ document.addEventListener("click", (event) => {
   const actionTarget = event.target.closest("[data-action]");
   if (!actionTarget) return;
   const action = actionTarget.dataset.action;
-  if (action === "close-sheet") closeSheet();
+  if (action === "close-sheet") {
+    if (entryTutorialActive && actionTarget.classList.contains('help-popup-confirm')) confirmEntryTutorial();
+    else closeSheet();
+  }
   else if (action === "open-demo") openDemoPanel();
   else if (action === "close-demo") closeDemoPanel();
   else if (action === "reset-demo") resetDemoPanel();
@@ -2642,11 +2761,6 @@ demoXpNumber.addEventListener("input", () => {
 });
 demoXpNumber.addEventListener("change", () => setAllPingXp(demoXpNumber.value));
 demoCountRange.addEventListener("input", () => setOwnedPingCount(demoCountRange.value));
-demoRankVisibility.addEventListener("change", () => {
-  showRankSummary = demoRankVisibility.checked;
-  updateRankSummary();
-  syncDemoPanel();
-});
 demoRewardCoachVisibility.addEventListener('change', () => {
   forceSoulRewardCoach = demoRewardCoachVisibility.checked;
   hideSoulRewardCoach();
@@ -2714,11 +2828,20 @@ demoLanguageSelect.addEventListener('change', () => {
   updateRankSummary();
 });
 
+document.querySelectorAll('[data-demo-performance]').forEach(button => {
+  button.addEventListener('click', () => setPerformanceMode(button.dataset.demoPerformance));
+});
+document.querySelectorAll('[data-demo-entry]').forEach(button => {
+  button.addEventListener('click', () => runEntryFlow({preview:true, first:button.dataset.demoEntry === 'first'}));
+});
+syncPerformanceControls();
 initializeColorPreview();
 restoreWorldView();
 renderPingWorld();
 updateRankSummary();
 resizeScreen();
+entryFlowReady = true;
+runEntryFlow();
 
 // Desktop shortcut; on touch, hold the help button to open the existing demo panel.
 document.addEventListener("keydown", event => {
@@ -2741,12 +2864,18 @@ helpControl.addEventListener("click", event => {
 
 window.addEventListener('pagehide',()=>{ refreshPolicy(); savePolicy(); });
 // The preview and host share the same acquisition and summon behavior.
-function acquirePing(id) {
+function acquirePing(id, {focusExisting=false} = {}) {
   if (!policyGame.catalog.has(id)) return;
   captureWorldState();
   const result = policyGame.acquire(id,policyNow());
   refreshPolicy();
   if (result.added) renderPingWorld({spawnIds:[id],focusSpawnId:id});
+  else if (focusExisting) {
+    // Entry-flow replay can return a character already owned by this demo browser.
+    // Reuse the acquisition pan without granting a duplicate or changing XP/Soul.
+    const actor = pingActors.find(item => item.data.id === id);
+    if (actor) beginSummonFocus(actor);
+  }
   savePolicy();
 }
 

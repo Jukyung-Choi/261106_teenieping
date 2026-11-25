@@ -1,0 +1,20 @@
+/* Figma 1666:68939: original assets retain their native root dimensions. */
+.connection-error-layer[hidden] { display:none; }
+.connection-error-layer { position:absolute;inset:0;z-index:80; }
+.connection-error-dim { position:absolute;inset:0;background:rgba(0,0,0,.5); }
+.connection-error-popup { position:absolute;left:calc(50% + .5px);top:50%;transform:translate(-50%,-50%);width:340px;height:348px;color:#5c0041; }
+.connection-error-top { position:absolute;left:0;top:0;width:340px;height:70px; }
+.connection-error-top-mask { position:absolute;left:0;top:0;width:340px;height:70px;overflow:hidden;-webkit-mask:url('assets/connection-error/header-mask.svg') 0 0 / 340px 70px no-repeat;mask:url('assets/connection-error/header-mask.svg') 0 0 / 340px 70px no-repeat; }
+.connection-error-top-mask img { position:absolute;left:0;top:1px;max-width:none; }
+.connection-error-body { position:absolute;left:0;top:69px;width:340px;height:212px;background:white;border-left:3px solid #ffd0e8;border-right:3px solid #ffd0e8;box-sizing:border-box; }
+.connection-error-bottom { position:absolute;left:0;top:280px;width:340px;height:68px;background:white;border:3px solid #ffd0e8;border-top:0;border-radius:0 0 26px 26px;box-sizing:border-box; }
+.connection-error-retry { position:absolute;left:50%;transform:translateX(-50%);top:280px;min-width:140px;width:max-content;height:40px;padding:0 30px;border:0;border-radius:999px;background:#ff35b5;box-shadow:inset 0 -3.5px 1px rgba(209,0,132,.8);font-family:inherit;font-size:16px;font-weight:600;line-height:22px;color:white;cursor:pointer; }
+.connection-error-retry::after { content:'';position:absolute;inset:-2px 0; }
+.connection-error-retry:disabled { cursor:wait;opacity:.75; }
+.connection-error-copy { position:absolute;left:16px;top:174.5px;width:308px;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:15px; }
+.connection-error-icon { flex:none;display:block;max-width:none; }
+.connection-error-copy-text { width:308px;box-sizing:border-box;padding:0 24px 20px;display:flex;justify-content:center; }
+.connection-error-copy-text p { width:252px;margin:0;font-family:'SF Pro Text',-apple-system,BlinkMacSystemFont,sans-serif;font-size:14px;font-weight:400;line-height:normal;text-align:center;overflow-wrap:anywhere; }
+.connection-error-retry:focus-visible { outline:2px solid #c3358c;outline-offset:4px; }
+
+.connection-error-header-hearts { position:absolute;left:16px;top:46px;max-width:none; }

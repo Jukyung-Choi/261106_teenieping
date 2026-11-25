@@ -11,6 +11,15 @@ const demoTranslations = new Map(`
 티니핑 세상 미니게임|Teenieping World mini-game|ティニピンワールド ミニゲーム|提尼平世界小游戏
 상태 표시줄|Status bar|ステータスバー|状态栏
 뒤로 가기|Go back|戻る|返回
+연결이 끊겼어요|Connection lost|接続が切れました|连接已断开
+연결 안내 닫기|Close connection notice|接続案内を閉じる|关闭连接提示
+인터넷 연결을 확인 한 후<br>다시 시도해 주세요.|Check your internet connection<br>and try again.|インターネット接続を確認して<br>もう一度お試しください。|请检查网络连接后<br>重试。
+다시 연결|Reconnect|再接続|重新连接
+다시 시도|Try again|再試行|重试
+연결 확인 중…|Checking connection…|接続を確認中…|正在检查连接…
+아직 연결할 수 없어요. 잠시 후 다시 시도해 주세요.|Still unable to connect. Please try again shortly.|まだ接続できません。しばらくしてからお試しください。|暂时无法连接，请稍后重试。
+다시 연결됐어요|Connected again|再接続しました|已重新连接
+
 나의 소울 게이지|My Soul Gauge|マイソウルゲージ|我的灵魂能量
 나의 소울게이지|My Soul Gauge|マイソウルゲージ|我的灵魂能量
 받을 수 있는 소울 보상 확인하기|View available Soul rewards|受け取れるソウル報酬を見る|查看可领取的灵魂奖励
@@ -56,7 +65,7 @@ DEMO|DEMO|デモ|演示
 보상 단계|Reward Stage|報酬段階|奖励阶段
 표시 상태|Status|表示状態|显示状态
 기본 상태|Default|デフォルト|默认状态
-테스트 1|Test 1|テスト1|测试 1
+보상수령 1|Reward Claim 1|報酬受取1|领取奖励 1
 누를 때마다 별빛을 다시 볼 수 있어요.|Tap to replay the star effect.|タップするたびに星の演出を再生できます。|每次点击都可重播星光效果。
 게이지양|Gauge Level|ゲージ量|能量值
 게이지 직접 입력|Enter a gauge level|ゲージ量を直接入力|直接输入能量值
@@ -72,8 +81,8 @@ DEMO|DEMO|デモ|演示
 표시|Show|表示|显示
 숨김|Hide|非表示|隐藏
 상단 소울게이지 아래의 랭킹점수와 순위 노출 여부를 변경합니다.|Show or hide the score and rank below the Soul Gauge.|ソウルゲージの下に表示されるスコアと順位を切り替えます。|切换灵魂能量条下方的积分和排名显示。
-보상 말풍선 미리보기|Preview Reward Tooltip|報酬吹き出しのプレビュー|预览奖励提示气泡
-켜고 ‘적용 완료’를 누르면 보상 달성 여부와 관계없이 표시합니다. 이 옵션을 끌 때까지 유지돼요.|Turn on and tap Done to show the tooltip until you turn this off.|オンにして「完了」を押すと、オフにするまで達成状況にかかわらず表示します。|开启并点击「完成」后，气泡将持续显示，直到关闭此设置。
+소울 보상 말풍선 미리보기|Preview Reward Tooltip|報酬吹き出しのプレビュー|预览奖励提示气泡
+켜고 ‘적용 완료’를 누르면 보상 달성 여부와 관계없이 5초 동안 표시한 뒤 자동으로 꺼져요.|Turn on and tap Done to preview the tooltip for 5 seconds. This option then turns off automatically.|オンにして「完了」を押すと、達成状況にかかわらず5秒間表示され、自動的にオフになります。|开启并点击「完成」后，气泡将显示5秒，然后自动关闭此设置。
 나의 소울 게이지 직접 입력|Enter your Soul Gauge value|ソウルゲージの値を直接入力|直接输入灵魂能量值
 소울 게이지 빠른 설정|Soul Gauge presets|ソウルゲージのプリセット|灵魂能量预设
 직접 입력하거나 목표 수치를 선택하세요. 티니핑별 게이지와 기존 보상 수령 기록은 유지돼요.|Enter a value or choose a preset. Individual XP and claimed rewards are kept.|値を入力するかプリセットを選択してください。個別XPと報酬の受取履歴は維持されます。|输入数值或选择预设。提尼平的 XP 和领取记录会保留。
@@ -153,11 +162,11 @@ SNS 이벤트|Social Event|SNSイベント|社交媒体活动
 티니핑을 잘 돌봐줄수록 점수가 더 많이<br>쌓여요!|The better you care for them, the more points you earn!|たくさんお世話すると、<br>スコアがもっと貯まります！|照顾得越好，获得的积分就越多！
 쌓인 점수에 따라 랭킹이 정해져요.|Your score determines your rank.|貯まったスコアで順位が決まります。|累计积分决定排名。
 100위 안에 들면 보상을 받을 수 있어요!|Finish in the top 100 to earn rewards!|100位以内に入ると報酬がもらえます！|进入前 100 名即可获得奖励！
-자주 들어와서 소울 게이지를 높게 오래 유지할수록 높은<br>랭킹 점수를 유지할 수 있어요!|Visit often and keep your Soul Gauge high to maintain a higher ranking score!|こまめに遊んでソウルゲージを高く保つと、<br>高いランキングスコアを維持できます！|经常回来并保持较高的灵魂能量，就能维持更高的排名积分！
+자주 들어와서 소울 게이지를 높게 유지할수록 높은 랭킹<br>점수를 유지할 수 있어요!|Visit often and keep your Soul Gauge high to maintain a higher ranking score!|こまめに遊んでソウルゲージを高く保つと、<br>高いランキングスコアを維持できます！|经常回来并保持较高的灵魂能量，就能维持更高的排名积分！
 Tip|Tip|ヒント|提示
 나의 티니핑세상을 피드 또는<br>SNS에 자랑해주세요!|Share your Teenieping World<br>on your feed or social media!|自分のティニピンワールドを<br>フィードやSNSでシェアしよう！|在动态或社交平台上<br>分享你的提尼平世界吧！
 이벤트 종료 후, 추첨하여<br>특별한 보상을 제공합니다!|After the event, we’ll draw winners<br>for special rewards!|イベント終了後、抽選で<br>特別な報酬をプレゼントします！|活动结束后，将抽取幸运玩家<br>并赠送特别奖励！
-해시태그 필수!|is required!|のハッシュタグをお忘れなく！|为必填话题标签！
+해시태그 필수!|is required!|をつけて投稿！|为必填话题标签！
 안내 메뉴|Help tabs|案内メニュー|帮助选项
 Follow|Follow|フォロー|关注
 Following|Following|フォロー中|已关注
@@ -183,7 +192,7 @@ TOP|TOP|上位|前
 컬렉템으로 이동해서<br>첫 번째 티니핑을 획득해보세요!|Go to Collectem to get<br>your first Teenieping!|コレクテムに移動して、<br>最初のティニピンをゲットしよう！|前往收藏，<br>获得你的第一只提尼平吧！
 컬렉템으로 가기|Go to Collectem|コレクテムへ|前往收藏
 <strong>무료 충전</strong>은 <strong>하루에 3번</strong>까지 가능해요.<br>4번째 충전부터는 <strong>1젬</strong>이 필요해요.|Charge for free <strong>3 times a day</strong>.<br>Each extra charge costs <strong>1 ZEM</strong>.|<strong>無料チャージ</strong>は<strong>1日3回</strong>まで。<br>4回目からは<strong>1 ZEM</strong>が必要です。|每天可<strong>免费充能 3 次</strong>。<br>从第 4 次起需花费 <strong>1 ZEM</strong>。
-오늘 무료 : {n} / 3 사용|Free charges used: {n} / 3|本日の無料チャージ：{n} / 3 回使用済み|今日免费次数：已用 {n} / 3 次
+오늘 무료 : {n}/3 사용|Free charges used: {n} / 3|本日の無料チャージ：{n} / 3 回使用済み|今日免费次数：已用 {n} / 3 次
 충전 완료|Fully Charged|チャージ完了|已充满
 1젬으로 충전하기|Charge for 1 ZEM|1 ZEMでチャージ|花费 1 ZEM 充能
 무료로 충전하기|Charge for Free|無料でチャージ|免费充能
